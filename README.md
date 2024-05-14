@@ -1,3 +1,3 @@
-# Finance Managment System
+# Finance Management System
 
 __TODO__

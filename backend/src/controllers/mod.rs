@@ -4,7 +4,7 @@ use actix_web::web;
 
 pub fn routes() -> actix_web::Scope {
     web::scope("/api")
-        .service( web::scope("/test")
+        .service(web::scope("/test")
             .service(test_controller::test)
         )
 }

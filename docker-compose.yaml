@@ -1,0 +1,45 @@
+version: "3.7"
+services:
+  postgres:
+    image: postgres:16.1
+    volumes:
+      - ./backend/docker:/docker-entrypoint-initdb.d
+    ports:
+      - "5433:5433"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      PGUSER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGPORT: ${POSTGRES_PORT}
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q"]
+
+  fms_frontend:
+    depends_on:
+      - openapi_generator
+      - fms_backend
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+  fms_backend:
+    depends_on:
+      postgres:
+        condition: service_healthy
+    build:
+      context: ./backend
+    ports:
+      - "3333:3333"
+    env_file:
+      - .env
+
+  openapi_generator:
+    build:
+      context: ./openapi_generator
+    volumes:
+      - ./openapi:/openapi:ro
+      - ./frontend/generated:/frontend/generated

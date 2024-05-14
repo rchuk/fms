@@ -1,0 +1,22 @@
+openapi: 3.0.3
+info:
+  title: FMS
+  description: API for Finance Management System backend
+  version: 1.0.0
+servers:
+  - url: http://localhost:3333
+tags:
+  - name: test
+    description: Test controller
+
+paths:
+  /api/test:
+    get:
+      tags:
+        - test
+      summary: Test endpoint
+      description: Test endpoint
+      operationId: test
+      responses:
+        200:
+          description: Successful response

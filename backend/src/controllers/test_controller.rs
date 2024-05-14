@@ -1,6 +1,6 @@
 use actix_web::{get, HttpResponse, Responder};
 
-#[get("/test")]
+#[get("/")]
 async fn test() -> impl Responder {
     HttpResponse::Ok()
 }

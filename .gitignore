@@ -3,4 +3,4 @@
 .vscode/*
 
 # Secrets
-secret.env
+secrets.env

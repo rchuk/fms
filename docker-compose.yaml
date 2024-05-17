@@ -16,8 +16,12 @@ services:
 
   fms_frontend:
     depends_on:
-      - openapi_generator
-      - fms_backend
+      secret_generator:
+        condition: service_completed_successfully
+      openapi_generator:
+        condition: service_completed_successfully
+      fms_backend:
+        condition: service_started
     build:
       context: ./frontend
     ports:
@@ -36,6 +40,8 @@ services:
       - "3333:3333"
     environment:
       POSTGRES_HOST: postgres
+    volumes:
+      - ./secrets.env:/secrets.env
     env_file:
       - .env
 

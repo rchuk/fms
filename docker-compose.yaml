@@ -41,7 +41,13 @@ services:
 
   openapi_generator:
     build:
-      context: ./openapi_generator
+      context: ./utils/openapi_generator
     volumes:
       - ./openapi:/openapi:ro
       - ./frontend/generated:/frontend/generated
+
+  secret_generator:
+    build:
+        context: ./utils/secret_generator
+    volumes:
+        - .:/out

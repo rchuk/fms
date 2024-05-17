@@ -1,0 +1,20 @@
+_version: 2
+validation.field.email.empty:
+  en: Email can't be empty
+  uk: Електронна пошта не може бути порожньою
+validation.field.email.short:
+  en: Email can't contain less than %{count} characters
+  uk: Електронна пошта не може містити менше за %{count} символів
+validation.field.email.long:
+  en: Email can't contain more than %{count} characters
+  uk: Електронна пошта не може містити більше за %{count} символів
+
+validation.field.password.empty:
+  en: Password can't be empty
+  uk: Пароль не може бути порожнім
+validation.field.password.short:
+  en: Password can't contain less than %{count} characters
+  uk: Пароль не може містити менше за %{count} символів
+validation.field.password.long:
+  en: Password can't contain more than %{count} characters
+  uk: Пароль не може містити більше за %{count} символів

@@ -1,0 +1,10 @@
+_version: 2
+error.user-already-exists-by-email:
+  en: User with given email already exist
+  uk: Користувач з вказаною адресою електронної пошти уже зареєстрований
+error.user-doesnt-exist-by-email:
+  en: User with given email doesn't exist
+  uk: Користувача з вказаною адресою електронної пошти не існує
+error.wrong-password:
+  en: Wrong password
+  uk: Вказано неправильний пароль

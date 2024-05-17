@@ -4,6 +4,7 @@ use log::LevelFilter;
 use sqlx::ConnectOptions;
 use sqlx::postgres::PgConnectOptions;
 
+
 pub fn get_postgres_connect_options() -> Result<PgConnectOptions> {
     fn get_env(name: &str) -> Result<String> {
         env::var(name).with_context(|| format!("Environment variable '{name}' is not defined"))

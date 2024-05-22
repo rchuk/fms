@@ -2,6 +2,7 @@ use std::future::Future;
 use actix_web::{HttpResponse, Responder};
 use anyhow::Result;
 use serde::Serialize;
+use crate::errors::auth_error::AuthError;
 use crate::errors::client_error::ClientError;
 use crate::errors::public_error::PublicError;
 
@@ -18,7 +19,6 @@ impl ResponseManager {
         ResT: Serialize
     {
         // TODO: Refactor errors to be a enum (PublicError) to use only one downcast
-        // TODO: Add forbidden error (403)
         match func().await {
             Ok(res) => HttpResponse::Ok().json(res),
             Err(err) => {
@@ -28,6 +28,8 @@ impl ResponseManager {
                     HttpResponse::InternalServerError().json(err)
                 } else if let Some(err) = err.downcast_ref::<ClientError>() {
                     HttpResponse::BadRequest().json(err)
+                } else if let Some(err) = err.downcast_ref::<AuthError>() {
+                    HttpResponse::Unauthorized().json(err)
                 } else {
                     HttpResponse::InternalServerError().finish()
                 }

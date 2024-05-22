@@ -1,4 +1,8 @@
-use actix_web::{get, HttpResponse, Responder, web};
+use actix_web::{get, HttpRequest, Responder, web};
+use tokio::sync::RwLock;
+use crate::application::Application;
+use crate::application::auth_manager::{Auth, NoAuth};
+use crate::services::ServiceProvider;
 
 
 pub fn routes() -> actix_web::Scope {
@@ -7,6 +11,11 @@ pub fn routes() -> actix_web::Scope {
 }
 
 #[get("")]
-pub async fn test() -> impl Responder {
-    HttpResponse::Ok()
+pub async fn test(
+    req: HttpRequest,
+    services: web::Data<RwLock<ServiceProvider>>
+) -> impl Responder {
+    Application::handle_request(services, req, Auth, || async move {
+        Ok(())
+    }).await
 }

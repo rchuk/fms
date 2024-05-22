@@ -8,3 +8,6 @@ error.user-doesnt-exist-by-email:
 error.wrong-password:
   en: Wrong password
   uk: Вказано неправильний пароль
+error.authorization-general:
+  en: Authorization error
+  uk: Помилка авторизації

@@ -1,13 +1,13 @@
 use actix_web::web;
 use anyhow::Result;
 use async_trait::async_trait;
-use rust_i18n::t;
 use tokio::sync::RwLock;
 use crate::application::session_manager::SessionManager;
 use crate::common::dependency_extractor::{DependencyExtractor, DependencyProvider};
 use crate::errors::public_error::PublicError;
 use crate::services::auth_service::AuthService;
 use crate::services::ServiceProvider;
+use crate::text;
 
 #[async_trait]
 pub trait AuthHandler {
@@ -42,11 +42,11 @@ impl AuthHandler for Auth {
                 return Ok(())
             }
 
-            Err(PublicError::auth(t!("error.authorization-general"))
+            Err(PublicError::auth(text!("error.authorization-general"))
                 .dev_description("User doesn't exist".to_owned())
                 .into())
         } else {
-            Err(PublicError::auth(t!("error.authorization-general"))
+            Err(PublicError::auth(text!("error.authorization-general"))
                 .dev_description("Missing 'Authorization' header".to_owned())
                 .into())
         }

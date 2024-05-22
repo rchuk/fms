@@ -1,9 +1,10 @@
+use std::borrow::Cow;
 use std::future::Future;
 use actix_web::{HttpResponse, Responder};
 use anyhow::Result;
-use rust_i18n::t;
 use serde::Serialize;
 use crate::errors::public_error::{PublicError, PublicErrorKind};
+use crate::text;
 
 
 pub struct ResponseManager {
@@ -29,10 +30,15 @@ impl ResponseManager {
                         PublicErrorKind::Server => HttpResponse::InternalServerError()
                     }.json(err)
                 } else {
-                    HttpResponse::InternalServerError()
-                        .json(PublicError::server(t!("error.unknown-general")))
+                    let text = Self::unknown_error_message().await.unwrap_or("Unknown error".into());
+
+                    HttpResponse::InternalServerError().json(PublicError::server(text))
                 }
             }
         }
+    }
+
+    async fn unknown_error_message() -> Result<Cow<'static, str>> {
+        Ok(text!("error.unknown-general"))
     }
 }

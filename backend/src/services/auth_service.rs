@@ -1,8 +1,6 @@
 use std::sync::Arc;
 use anyhow::Result;
 use chrono::{Duration, Utc};
-use rust_i18n::t;
-use crate::application::session_manager::SessionManager;
 use crate::configuration::secrets::Secrets;
 use crate::dto_validators::auth::auth_password_request_validator::AuthPasswordRequestValidator;
 use crate::dto_validators::auth::auth_register_request_validator::AuthRegisterRequestValidator;
@@ -15,6 +13,7 @@ use crate::entities::user::{UserEntity, UserId};
 use crate::errors::public_error::PublicError;
 use crate::services::postgres_service::PostgresService;
 use crate::services::user_service::UserService;
+use crate::text;
 
 static PBKDF2_ALG: ring::pbkdf2::Algorithm = ring::pbkdf2::PBKDF2_HMAC_SHA256;
 const CREDENTIAL_LEN: usize = ring::digest::SHA256_OUTPUT_LEN;
@@ -39,9 +38,7 @@ impl AuthService {
         self.db.begin_transaction().await?;
 
         if let Some(_) = self.user_service.find_by_email(&auth_register_request_dto.username).await? {
-            return Err(PublicError::client(
-                t!("error.user-already-exists-by-email", locale = &SessionManager::locale().await?)
-            ).into());
+            return Err(PublicError::client(text!("error.user-already-exists-by-email")).into());
         }
 
         let password_hash = self.hash_password(&auth_register_request_dto.username, &auth_register_request_dto.password)?;
@@ -63,16 +60,12 @@ impl AuthService {
 
         let access_token = if let Some(user) = self.user_service.find_by_email(&auth_password_request_dto.username).await? {
             if !self.verify_password(&user, &auth_password_request_dto.password) {
-                return Err(PublicError::client(
-                    t!("error.wrong-password", locale = &SessionManager::locale().await?)
-                ).into());
+                return Err(PublicError::client(text!("error.wrong-password")).into());
             }
 
             self.create_token(user.id)?
         } else {
-            return Err(PublicError::client(
-                t!("error.user-doesnt-exist-by-email", locale = &SessionManager::locale().await?)
-            ).into());
+            return Err(PublicError::client(text!("error.user-doesnt-exist-by-email")).into());
         };
 
         Ok(self.build_auth_token_dto(access_token))

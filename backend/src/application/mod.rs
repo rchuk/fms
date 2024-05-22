@@ -2,6 +2,7 @@ pub mod response_manager;
 pub mod transaction_manager;
 pub mod session_manager;
 pub mod auth_manager;
+pub mod macros;
 
 use std::future::Future;
 use actix_web::{HttpRequest, Responder, web};

@@ -76,6 +76,28 @@ paths:
               schema:
                 $ref: '#/components/schemas/PublicError'
 
+  /api/auth/me:
+    get:
+      tags:
+        - auth
+      summary: Retrieve id of the user
+      description: Retrieve id of the current user
+      operationId: authMe
+      responses:
+        200:
+          description: Sucessful response
+          content:
+            application/json:
+              schema:
+                type: integer
+                example: 154
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+
 components:
   schemas:
     AuthPasswordRequest:

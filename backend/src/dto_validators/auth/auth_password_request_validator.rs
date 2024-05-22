@@ -1,7 +1,7 @@
 use anyhow::Result;
+use crate::application::macros::lazy_text;
 use crate::dtos::auth::auth_password_request::AuthPasswordRequestDto;
 use crate::errors::public_error::PublicError;
-use crate::{lazy_text};
 
 
 pub struct AuthPasswordRequestValidator;

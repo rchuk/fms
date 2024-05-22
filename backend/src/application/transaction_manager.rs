@@ -1,5 +1,5 @@
 use std::sync::Arc;
-use anyhow::Result;
+use anyhow::{anyhow, Result};
 use futures::future::BoxFuture;
 use futures::FutureExt;
 use sqlx::{PgConnection, Pool, Postgres};
@@ -18,8 +18,8 @@ impl TransactionManager {
     }
 
     pub fn with_conn<FnT, ResT>(self: Arc<Self>, fallback: Pool<Postgres>, func: FnT) -> BoxFuture<'static, Result<ResT>>
-        where
-            FnT: for<'any> FnOnce(&'any mut PgConnection) -> BoxFuture<'any, Result<ResT, sqlx::Error>> + Send + 'static
+    where
+        FnT: for<'any> FnOnce(&'any mut PgConnection) -> BoxFuture<'any, Result<ResT, sqlx::Error>> + Send + 'static
     {
         let self_clone = self.clone();
         async move {
@@ -55,11 +55,11 @@ impl TransactionManager {
         let mut guard = self.transaction.lock().await;
         if let Some(transaction) = guard.take() {
             transaction.commit().await?;
+
+            Ok(())
+        } else {
+            Err(anyhow!("Tried to commit outside of any transaction"))
         }
-
-        // TODO: Return error? no transaction present
-
-        Ok(())
     }
 
     pub async fn rollback(&self) -> Result<()> {
@@ -68,7 +68,7 @@ impl TransactionManager {
             transaction.rollback().await?;
         }
 
-        // TODO: Return error? no transaction present
+        log::warn!("Using rollback outside of a transaction");
 
         Ok(())
     }

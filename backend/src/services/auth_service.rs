@@ -1,6 +1,7 @@
 use std::sync::Arc;
 use anyhow::Result;
 use chrono::{Duration, Utc};
+use crate::application::macros::text;
 use crate::configuration::secrets::Secrets;
 use crate::dto_validators::auth::auth_password_request_validator::AuthPasswordRequestValidator;
 use crate::dto_validators::auth::auth_register_request_validator::AuthRegisterRequestValidator;
@@ -13,7 +14,7 @@ use crate::entities::user::{UserEntity, UserId};
 use crate::errors::public_error::PublicError;
 use crate::services::postgres_service::PostgresService;
 use crate::services::user_service::UserService;
-use crate::text;
+
 
 static PBKDF2_ALG: ring::pbkdf2::Algorithm = ring::pbkdf2::PBKDF2_HMAC_SHA256;
 const CREDENTIAL_LEN: usize = ring::digest::SHA256_OUTPUT_LEN;

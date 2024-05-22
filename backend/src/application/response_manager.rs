@@ -3,8 +3,8 @@ use std::future::Future;
 use actix_web::{HttpResponse, Responder};
 use anyhow::Result;
 use serde::Serialize;
+use crate::application::macros::text;
 use crate::errors::public_error::{PublicError, PublicErrorKind};
-use crate::text;
 
 
 pub struct ResponseManager {

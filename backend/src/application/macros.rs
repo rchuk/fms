@@ -1,5 +1,4 @@
 
-#[macro_export]
 macro_rules! text {
     ($key:expr, $($var_name:tt = $var_val:expr),+ $(,)?) => {
         rust_i18n::t!(
@@ -16,7 +15,6 @@ macro_rules! text {
     };
 }
 
-#[macro_export]
 macro_rules! lazy_text {
     ($key:expr, $($var_name:tt = $var_val:expr),+ $(,)?) => {
         Box::new(|| Box::pin(async {
@@ -42,3 +40,5 @@ macro_rules! lazy_text {
         as Box<dyn FnOnce() -> futures::future::BoxFuture<'static, anyhow::Result<std::borrow::Cow<'static, str>>>>
     };
 }
+
+pub(crate) use {text, lazy_text};

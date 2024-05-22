@@ -2,12 +2,12 @@ use actix_web::web;
 use anyhow::Result;
 use async_trait::async_trait;
 use tokio::sync::RwLock;
+use crate::application::macros::text;
 use crate::application::session_manager::SessionManager;
 use crate::common::dependency_extractor::{DependencyExtractor, DependencyProvider};
 use crate::errors::public_error::PublicError;
 use crate::services::auth_service::AuthService;
 use crate::services::ServiceProvider;
-use crate::text;
 
 #[async_trait]
 pub trait AuthHandler {

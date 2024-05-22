@@ -43,9 +43,10 @@ impl Application {
         AuthHandlerT: AuthHandler
     {
         // TODO: Provide configuration for default locale
-        let locale = Self::get_header(&req, "Accept-Language").unwrap_or("uk".to_owned());
+        let locale = Self::get_header(&req, "Accept-Language").unwrap_or("uk").to_owned();
         let authorization = Self::get_header(&req, "Authorization")
-            .and_then(|value| value.strip_prefix("Bearer ").map(ToOwned::to_owned)); //TODO
+            .and_then(|value| value.strip_prefix("Bearer "))
+            .map(ToOwned::to_owned);
 
         SessionManager::scope(locale.to_string(), async move {
             ResponseManager::with_handle_errors(move || async move {
@@ -56,11 +57,10 @@ impl Application {
         }).await
     }
 
-    fn get_header(req: &HttpRequest, name: &str) -> Option<String> {
+    fn get_header<'a>(req: &'a HttpRequest, name: &str) -> Option<&'a str> {
         req.headers()
             .get(name)
             .map(|value| value.to_str().ok())
             .flatten()
-            .map(ToOwned::to_owned)
     }
 }

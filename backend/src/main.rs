@@ -16,7 +16,6 @@ use anyhow::Result;
 use actix_web::{App, HttpServer, middleware, web};
 use tokio::sync::RwLock;
 
-
 rust_i18n::i18n!("locales", fallback = "uk");
 
 #[tokio::main]

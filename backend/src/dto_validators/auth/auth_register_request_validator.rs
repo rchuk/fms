@@ -1,8 +1,7 @@
-use rust_i18n::t;
 use anyhow::Result;
+use crate::application::macros::lazy_text;
 use crate::dtos::auth::auth_register_request::AuthRegisterRequestDto;
 use crate::errors::public_error::PublicError;
-use crate::lazy_text;
 
 
 pub struct AuthRegisterRequestValidator;

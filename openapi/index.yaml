@@ -83,14 +83,22 @@ paths:
       summary: Retrieve id of the user
       description: Retrieve id of the current user
       operationId: authMe
+      security:
+        - BearerAuth: []
       responses:
         200:
-          description: Sucessful response
+          description: Successful response
           content:
             application/json:
               schema:
                 type: integer
                 example: 154
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
         500:
           description: Internal server error
           content:
@@ -157,3 +165,15 @@ components:
           example: "If present doesn't need to be shown to the user"
       required:
         - description
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+    OAuth2:
+      type: oauth2
+      flows:
+        password:
+          tokenUrl: http://localhost:3333/api/auth/token

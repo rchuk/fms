@@ -5,7 +5,7 @@ use rust_i18n::t;
 use tokio::sync::RwLock;
 use crate::application::session_manager::SessionManager;
 use crate::common::dependency_extractor::{DependencyExtractor, DependencyProvider};
-use crate::errors::auth_error::AuthError;
+use crate::errors::public_error::PublicError;
 use crate::services::auth_service::AuthService;
 use crate::services::ServiceProvider;
 
@@ -42,15 +42,13 @@ impl AuthHandler for Auth {
                 return Ok(())
             }
 
-            Err(AuthError {
-                description: t!("error.authorization-general").to_string(),
-                dev_description: Some("User doesn't exist".to_owned())
-            }.into())
+            Err(PublicError::auth(t!("error.authorization-general"))
+                .dev_description("User doesn't exist".to_owned())
+                .into())
         } else {
-            Err(AuthError {
-                description: t!("error.authorization-general").to_string(),
-                dev_description: Some("Missing 'Authorization' header".to_owned())
-            }.into())
+            Err(PublicError::auth(t!("error.authorization-general"))
+                .dev_description("Missing 'Authorization' header".to_owned())
+                .into())
         }
     }
 }

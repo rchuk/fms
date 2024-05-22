@@ -12,7 +12,7 @@ use crate::dtos::auth::auth_token::AuthTokenDto;
 use crate::entities::json_web_token::JwtClaims;
 use crate::entities::common::NoId;
 use crate::entities::user::{UserEntity, UserId};
-use crate::errors::client_error::ClientError;
+use crate::errors::public_error::PublicError;
 use crate::services::postgres_service::PostgresService;
 use crate::services::user_service::UserService;
 
@@ -39,9 +39,9 @@ impl AuthService {
         self.db.begin_transaction().await?;
 
         if let Some(_) = self.user_service.find_by_email(&auth_register_request_dto.username).await? {
-            return Err(ClientError {
-                description: t!("error.user-already-exists-by-email", locale = &SessionManager::locale().await?).to_string()
-            }.into());
+            return Err(PublicError::client(
+                t!("error.user-already-exists-by-email", locale = &SessionManager::locale().await?)
+            ).into());
         }
 
         let password_hash = self.hash_password(&auth_register_request_dto.username, &auth_register_request_dto.password)?;
@@ -63,16 +63,16 @@ impl AuthService {
 
         let access_token = if let Some(user) = self.user_service.find_by_email(&auth_password_request_dto.username).await? {
             if !self.verify_password(&user, &auth_password_request_dto.password) {
-                return Err(ClientError {
-                    description: t!("error.wrong-password", locale = &SessionManager::locale().await?).to_string()
-                }.into());
+                return Err(PublicError::client(
+                    t!("error.wrong-password", locale = &SessionManager::locale().await?)
+                ).into());
             }
 
             self.create_token(user.id)?
         } else {
-            return Err(ClientError {
-                description: t!("error.user-doesnt-exist-by-email", locale = &SessionManager::locale().await?).to_string()
-            }.into());
+            return Err(PublicError::client(
+                t!("error.user-doesnt-exist-by-email", locale = &SessionManager::locale().await?)
+            ).into());
         };
 
         Ok(self.build_auth_token_dto(access_token))

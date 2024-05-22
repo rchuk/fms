@@ -2,7 +2,7 @@ use anyhow::Result;
 use rust_i18n::t;
 use crate::application::session_manager::SessionManager;
 use crate::dtos::auth::auth_password_request::AuthPasswordRequestDto;
-use crate::errors::client_error::ClientError;
+use crate::errors::public_error::PublicError;
 
 
 pub struct AuthPasswordRequestValidator;
@@ -21,7 +21,7 @@ impl AuthPasswordRequestValidator {
             }
         }).map_or(Ok(()), |msg|{
             // TODO: Create validation error
-            Err(ClientError { description: msg.to_string() }.into())
+            Err(PublicError::client(msg).into())
         })
     }
 }

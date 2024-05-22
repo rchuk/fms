@@ -11,3 +11,6 @@ error.wrong-password:
 error.authorization-general:
   en: Authorization error
   uk: Помилка авторизації
+error.unknown-general:
+  en: Unknown error
+  uk: Невідома помилка

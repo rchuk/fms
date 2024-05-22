@@ -6,17 +6,132 @@ info:
 servers:
   - url: http://localhost:3333
 tags:
-  - name: test
-    description: Test controller
+  - name: auth
+    description: Authentication controller
 
 paths:
-  /api/test:
-    get:
+  /api/auth/register:
+    post:
       tags:
-        - test
-      summary: Test endpoint
-      description: Test endpoint
-      operationId: test
+        - auth
+      summary: Register new user
+      description: Register new user
+      operationId: authRegister
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthRegisterRequest'
       responses:
         200:
           description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthToken'
+        400:
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+
+  /api/auth/token:
+    post:
+      tags:
+        - auth
+      summary: Retrieve new access token
+      description: Retrieve new access token for user by their credentials
+      operationId: authToken
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AuthPasswordRequest'
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthToken'
+        400:
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+
+components:
+  schemas:
+    AuthPasswordRequest:
+      type: object
+      properties:
+        grant_type:
+          type: string
+          enum: [password]
+        username:
+          type: string
+          example: meowmeow@gmail.com
+        password:
+          type: string
+          example: password1
+      required:
+        - grant_type
+        - username
+        - password
+
+    AuthRegisterRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          example: meowmeow@gmail.com
+        password:
+          type: string
+          example: password1
+      required:
+        - username
+        - password
+
+    AuthToken:
+      type: object
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+          enum: [Bearer]
+        expires_in:
+          type: integer
+          example: 3600
+      required:
+        - access_token
+        - token_type
+        - expires_in
+
+    PublicError:
+      type: object
+      properties:
+        description:
+          type: string
+          example: "Something bad happened"
+        dev_description:
+          type: string
+          example: "If present doesn't need to be shown to the user"
+      required:
+        - description

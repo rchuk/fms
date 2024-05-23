@@ -43,8 +43,6 @@ where
     }
 }
 
-// TODO: Create implementation for all tuples using macros
-
 pub trait DependencyRetrieverTuple<ExtractorT: ?Sized>: Sized {
     async fn retrieve(extractor: &ExtractorT) -> Self;
 }
@@ -56,36 +54,24 @@ impl<ExtractorT> DependencyRetrieverTuple<ExtractorT> for ()
     }
 }
 
-impl<ExtractorT, T1> DependencyRetrieverTuple<ExtractorT> for (T1,)
-where
-    ExtractorT: DependencyExtractor<T1>
-{
-    async fn retrieve(extractor: &ExtractorT) -> Self {
-        (extractor.extract().await,)
-    }
+macro_rules! tuple_retriever_impl {
+    ( $( $name:ident )+ ) => {
+        impl<ExtractorT, $($name),+> DependencyRetrieverTuple<ExtractorT> for ($($name,)+)
+        where
+            ExtractorT: $(DependencyExtractor<$name> + )+
+        {
+            async fn retrieve(extractor: &ExtractorT) -> Self {
+                join!($(<ExtractorT as DependencyExtractor<$name>>::extract(extractor),)+)
+            }
+        }
+    };
 }
 
-impl<ExtractorT, T1, T2> DependencyRetrieverTuple<ExtractorT> for (T1, T2)
-where
-    ExtractorT: DependencyExtractor<T1> + DependencyExtractor<T2>
-{
-    async fn retrieve(extractor: &ExtractorT) -> Self {
-        join!(
-            <ExtractorT as DependencyExtractor<T1>>::extract(extractor),
-            <ExtractorT as DependencyExtractor<T2>>::extract(extractor)
-        )
-    }
-}
-
-impl<ExtractorT, T1, T2, T3> DependencyRetrieverTuple<ExtractorT> for (T1, T2, T3)
-where
-    ExtractorT: DependencyExtractor<T1> + DependencyExtractor<T2> + DependencyExtractor<T3>
-{
-    async fn retrieve(extractor: &ExtractorT) -> Self {
-        join!(
-            <ExtractorT as DependencyExtractor<T1>>::extract(extractor),
-            <ExtractorT as DependencyExtractor<T2>>::extract(extractor),
-            <ExtractorT as DependencyExtractor<T3>>::extract(extractor)
-        )
-    }
-}
+tuple_retriever_impl!(T1);
+tuple_retriever_impl!(T1 T2);
+tuple_retriever_impl!(T1 T2 T3);
+tuple_retriever_impl!(T1 T2 T3 T4);
+tuple_retriever_impl!(T1 T2 T3 T4 T5);
+tuple_retriever_impl!(T1 T2 T3 T4 T5 T6);
+tuple_retriever_impl!(T1 T2 T3 T4 T5 T6 T7);
+tuple_retriever_impl!(T1 T2 T3 T4 T5 T6 T7 T8);

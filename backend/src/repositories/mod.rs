@@ -1,6 +1,5 @@
 pub mod user_repository;
 
-use std::future::Future;
 use std::sync::{Arc, Weak};
 use anyhow::Result;
 use tokio::sync::RwLock;
@@ -30,7 +29,7 @@ impl RepositoryProvider {
 }
 
 impl DependencyExtractor<UserRepository> for RepositoryProvider {
-    fn extract(&self) -> impl Future<Output = UserRepository> {
-        async { UserRepository::new(self.service_provider().provide().await) }
+    async fn extract(&self) -> UserRepository {
+        UserRepository::new(self.service_provider().provide().await)
     }
 }

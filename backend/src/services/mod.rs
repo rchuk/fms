@@ -2,7 +2,6 @@ pub mod auth_service;
 pub mod user_service;
 pub mod postgres_service;
 
-use std::future::Future;
 use std::sync::{Arc, Weak};
 use anyhow::Result;
 use sqlx::postgres::PgConnectOptions;
@@ -48,25 +47,25 @@ impl ServiceProvider {
 }
 
 impl DependencyExtractor<AuthService> for ServiceProvider {
-    fn extract(&self) -> impl Future<Output = AuthService> {
-        async { AuthService::new(self.provide().await) }
+    async fn extract(&self) -> AuthService {
+        AuthService::new(self.provide().await)
     }
 }
 
 impl DependencyExtractor<PostgresService> for ServiceProvider {
-    fn extract(&self) -> impl Future<Output = PostgresService> {
-        async { self.postgres.clone() }
+    async fn extract(&self) -> PostgresService {
+        self.postgres.clone()
     }
 }
 
 impl DependencyExtractor<UserService> for ServiceProvider {
-    fn extract(&self) -> impl Future<Output = UserService> {
-        async { UserService::new(self.repository_provider().provide().await) }
+    async fn extract(&self) -> UserService {
+        UserService::new(self.repository_provider().provide().await)
     }
 }
 
 impl DependencyExtractor<Arc<Secrets>> for ServiceProvider {
-    fn extract(&self) -> impl Future<Output = Arc<Secrets>> {
-        async { self.secrets.clone() }
+    async fn extract(&self) -> Arc<Secrets> {
+        self.secrets.clone()
     }
 }

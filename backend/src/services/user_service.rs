@@ -9,7 +9,7 @@ pub struct UserService {
 }
 
 impl UserService {
-    pub fn new(repository: UserRepository) -> Self {
+    pub fn new((repository,): (UserRepository,)) -> Self {
         UserService { repository }
     }
 

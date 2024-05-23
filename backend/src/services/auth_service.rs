@@ -29,7 +29,8 @@ pub struct AuthService {
 }
 
 impl AuthService {
-    pub fn new(db: PostgresService, user_service: UserService, secrets: Arc<Secrets>) -> Self {
+    //pub fn new(db: PostgresService, user_service: UserService, secrets: Arc<Secrets>) -> Self {
+    pub fn new((db, user_service, secrets): (PostgresService, UserService, Arc<Secrets>)) -> Self {
         AuthService { db, user_service, secrets }
     }
 

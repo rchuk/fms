@@ -34,25 +34,6 @@ impl ServiceProvider {
         })
     }
 
-    pub async fn auth_service(&self) -> AuthService {
-        // TODO: Create dependency injection for tuples
-        AuthService::new(self.provide().await, self.provide().await, self.provide().await)
-    }
-
-    pub async fn user_service(&self) -> UserService {
-        let user_repository = self.repository_provider().extract().await;
-
-        UserService::new(user_repository)
-    }
-
-    pub async fn postgres(&self) -> PostgresService {
-        self.postgres.clone()
-    }
-
-    pub async fn secrets(&self) -> Arc<Secrets> {
-        self.secrets.clone()
-    }
-
     pub fn set_repository_provider(&mut self, repository_provider: &Arc<RwLock<RepositoryProvider>>) {
         self.repository_provider = Arc::downgrade(repository_provider);
     }
@@ -68,24 +49,24 @@ impl ServiceProvider {
 
 impl DependencyExtractor<AuthService> for ServiceProvider {
     fn extract(&self) -> impl Future<Output = AuthService> {
-        self.auth_service()
+        async { AuthService::new(self.provide().await) }
     }
 }
 
 impl DependencyExtractor<PostgresService> for ServiceProvider {
     fn extract(&self) -> impl Future<Output = PostgresService> {
-        self.postgres()
+        async { self.postgres.clone() }
     }
 }
 
 impl DependencyExtractor<UserService> for ServiceProvider {
     fn extract(&self) -> impl Future<Output = UserService> {
-        self.user_service()
+        async { UserService::new(self.repository_provider().provide().await) }
     }
 }
 
 impl DependencyExtractor<Arc<Secrets>> for ServiceProvider {
     fn extract(&self) -> impl Future<Output = Arc<Secrets>> {
-        self.secrets()
+        async { self.secrets.clone() }
     }
 }

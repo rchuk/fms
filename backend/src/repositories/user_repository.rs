@@ -10,7 +10,7 @@ pub struct UserRepository {
 }
 
 impl UserRepository {
-    pub fn new(db: PostgresService) -> Self {
+    pub fn new((db,): (PostgresService,)) -> Self {
         UserRepository { db }
     }
 

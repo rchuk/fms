@@ -4,7 +4,7 @@ use std::future::Future;
 use std::sync::{Arc, Weak};
 use anyhow::Result;
 use tokio::sync::RwLock;
-use crate::common::dependency_extractor::DependencyExtractor;
+use crate::common::dependency_extractor::{DependencyExtractor, DependencyProvider};
 use crate::repositories::user_repository::UserRepository;
 use crate::services::ServiceProvider;
 
@@ -20,12 +20,6 @@ impl RepositoryProvider {
         })
     }
 
-    pub async fn user_repository(&self) -> UserRepository {
-        let db = self.service_provider().extract().await;
-
-        UserRepository::new(db)
-    }
-
     pub fn set_service_provider(&mut self, service_provider: &Arc<RwLock<ServiceProvider>>) {
         self.service_provider = Arc::downgrade(service_provider);
     }
@@ -37,6 +31,6 @@ impl RepositoryProvider {
 
 impl DependencyExtractor<UserRepository> for RepositoryProvider {
     fn extract(&self) -> impl Future<Output = UserRepository> {
-        self.user_repository()
+        async { UserRepository::new(self.service_provider().provide().await) }
     }
 }

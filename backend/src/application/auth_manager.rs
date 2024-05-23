@@ -33,7 +33,7 @@ impl AuthHandler for Auth {
     where ServiceProvider: DependencyExtractor<AuthService>
     {
         if let Some(token) = token {
-            let service: AuthService = provider.into_inner().provide().await;
+            let service: AuthService = provider.into_inner().provide_one().await;
 
             if let Some(user_id) = service.get_user_id(token).await? {
                 let session_user_id = SessionManager::session_data(|data| data.user_id.clone())?;

@@ -1,4 +1,5 @@
 pub mod user_repository;
+mod workspace_repository;
 
 use std::sync::{Arc, Weak};
 use anyhow::Result;

@@ -26,3 +26,40 @@ impl<'de> Deserialize<'de> for NoId {
         Ok(NoId)
     }
 }
+
+macro_rules! define_serial_id {
+    ($name:ident) => {
+        #[derive(Serialize, Deserialize, PartialEq, Eq, Hash, Debug, Clone, Copy, sqlx::Type)]
+        #[sqlx(transparent)]
+        #[serde(transparent)]
+        pub struct $name(pub i32);
+
+        impl IdType<$name> for $name {
+            type Id = i32;
+
+            fn id(self) -> Self::Id {
+                self.0
+            }
+        }
+    };
+}
+
+macro_rules! define_compound_id2 {
+    ($name:ident, $name1:ident: $ty1:ty, $name2:ident: $ty2:ty) => {
+        #[derive(Serialize, Deserialize, PartialEq, Eq, Hash, Debug, Clone, Copy, sqlx::FromRow)]
+        pub struct $name {
+            pub $name1: $ty1,
+            pub $name2: $ty2
+        }
+
+        impl IdType<$name> for $name {
+            type Id = ($ty1, $ty2);
+
+            fn id(self) -> Self::Id {
+                (self.$name1, self.$name2)
+            }
+        }
+    };
+}
+
+pub(crate) use {define_serial_id, define_compound_id2};

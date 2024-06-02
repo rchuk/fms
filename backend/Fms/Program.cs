@@ -176,9 +176,7 @@ app.MapControllers();
 
 if (!EF.IsDesignTime && Environment.GetEnvironmentVariable("SWAGGER_TOFILE") != "true")
 {
-    using var scope = app.Services.CreateScope();
-    var dbContext = scope.ServiceProvider.GetRequiredService<FmsDbContext>();
-    dbContext.Database.Migrate();
+    MigrationManager.Migrate(app.Services);
 }
 
 app.Run();

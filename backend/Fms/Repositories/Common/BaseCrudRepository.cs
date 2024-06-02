@@ -1,8 +1,8 @@
 ﻿using Fms.Application;
 
-namespace Fms.Repositories.Implementations;
+namespace Fms.Repositories.Common;
 
-public abstract class BaseRepository<TEntity, TId> (FmsDbContext ctx, Func<TEntity, TId> idExtractor)
+public abstract class BaseCrudRepository<TEntity, TId> (FmsDbContext ctx, Func<TEntity, TId> idExtractor)
 where TEntity: class
 {
     protected FmsDbContext Ctx => ctx;

@@ -16,4 +16,6 @@ public class UserEntity
     public string FirstName { get; set; } = null!;
     [Required, MaxLength(255)]
     public string LastName { get; set; } = null!;
+
+    public List<OrganizationToUserEntity> Organizations { get; set; } = null!;
 }

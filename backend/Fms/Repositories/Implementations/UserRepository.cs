@@ -1,10 +1,11 @@
 ﻿using Fms.Application;
 using Fms.Entities;
+using Fms.Repositories.Common;
 using Microsoft.EntityFrameworkCore;
 
 namespace Fms.Repositories.Implementations;
 
-public class UserRepository: BaseRepository<UserEntity, int>, IUserRepository
+public class UserRepository: BaseCrudRepository<UserEntity, int>, IUserRepository
 {
     public UserRepository(FmsDbContext ctx) : base(ctx, entity => entity.Id)
     {}

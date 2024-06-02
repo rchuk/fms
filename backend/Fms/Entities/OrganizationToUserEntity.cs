@@ -9,11 +9,11 @@ public class OrganizationToUserEntity
     [Required]
     public int OrganizationId { get; set; }
     [Required]
-    public OrganizationEntity Organization { get; set; } = null!;
+    public virtual OrganizationEntity Organization { get; set; } = null!;
     [Required]
     public int UserId { get; set; }
     [Required]
-    public UserEntity User { get; set; } = null!;
+    public virtual UserEntity User { get; set; } = null!;
     [Required]
     public OrganizationRoleEntity Role { get; set; } = null!;
 }

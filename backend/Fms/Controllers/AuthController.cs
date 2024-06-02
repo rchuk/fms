@@ -52,6 +52,6 @@ public class AuthController(
     [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> Me()
     {
-        return Ok(await authService.GetUserId());
+        return Ok(await authService.GetCurrentUserId());
     }
 }

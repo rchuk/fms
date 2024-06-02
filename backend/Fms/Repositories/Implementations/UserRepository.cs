@@ -7,8 +7,7 @@ namespace Fms.Repositories.Implementations;
 
 public class UserRepository: BaseCrudRepository<UserEntity, int>, IUserRepository
 {
-    public UserRepository(FmsDbContext ctx) : base(ctx, entity => entity.Id)
-    {}
+    public UserRepository(FmsDbContext ctx) : base(ctx) {}
 
     public async Task<UserEntity?> FindByEmail(string email)
     {

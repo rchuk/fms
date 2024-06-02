@@ -13,7 +13,7 @@ public abstract class EnumEntity<TEnum>
 
     protected EnumEntity()
     {
-        // https://stackoverflow.com/questions/50375357/how-to-create-a-table-corresponding-to-enum-in-ef-core-code-first
+        
     }
 
     public static IEnumerable<TSelf> GetVariants<TSelf>() 
@@ -30,7 +30,7 @@ public abstract class EnumEntity<TEnum>
         Name = enumVariant.ToString().ToUpper();
     }
     
-    protected TEnum ToEnum()
+    public TEnum ToEnum()
     {
         return Enum.Parse<TEnum>(Name, true);
     }

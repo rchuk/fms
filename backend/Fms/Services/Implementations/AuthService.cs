@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using Fms.Application;
+using Fms.Application.Attributes;
 using Fms.Data;
 using Fms.Dtos;
 using Fms.Entities;
@@ -19,45 +19,40 @@ public class AuthService : IAuthService
 
     private readonly IConfiguration _configuration;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly FmsDbContext _dbCtx;
     private readonly IStringLocalizer<ErrorMessages> _errorLocalizer;
     private readonly IUserRepository _userRepository;
     
     private readonly int _jwtExpirationTime;
     private readonly int _pbkdf2Iterations;
 
-    public AuthService(IConfiguration configuration, IHttpContextAccessor httpContextAccessor, FmsDbContext dbCtx, IStringLocalizer<ErrorMessages> errorLocalizer, IUserRepository userRepository)
+    public AuthService(IConfiguration configuration, IHttpContextAccessor httpContextAccessor, IStringLocalizer<ErrorMessages> errorLocalizer, IUserRepository userRepository)
     {
         _configuration = configuration;
         _httpContextAccessor = httpContextAccessor;
-        _dbCtx = dbCtx;
         _errorLocalizer = errorLocalizer;
         _userRepository = userRepository;
         _jwtExpirationTime = int.TryParse(configuration["Jwt:ExpirationTime"], out var jwtExpirationTime) ? jwtExpirationTime : 3600;
         _pbkdf2Iterations = int.TryParse(configuration["Security:Pbkdf2Iterations"], out var pbkdf2Iterations) ? pbkdf2Iterations : 100001;
     }
         
+    [Transactional]
     public async Task<AccessTokenResponseDto> Register(UserRegisterRequestDto requestDto)
     {
-        await using var transaction = await _dbCtx.Database.BeginTransactionAsync();
-
         if (await _userRepository.FindByEmail(requestDto.Email) is not null)
             throw new PublicClientException(_errorLocalizer[Localization.ErrorMessages.user_already_exists_by_email]);
         
         // TODO: Create user service
 
         var passwordHash = Convert.ToBase64String(HashPassword(requestDto.Email, requestDto.Password));
-        var userId = await _userRepository.Create(new UserEntity
+        var user = await _userRepository.Create(new UserEntity
         {
             Email = requestDto.Email,
             PasswordHash = passwordHash,
             FirstName = "Test",
             LastName = "Test"
         });
-        
-        await transaction.CommitAsync();
 
-        return CreateAccessTokenResponseDto(CreateJwtToken(userId));
+        return CreateAccessTokenResponseDto(CreateJwtToken(user.Id));
     }
 
     public async Task<AccessTokenResponseDto> Login(UserLoginRequestDto requestDto)
@@ -75,7 +70,7 @@ public class AuthService : IAuthService
         throw new PublicClientException(_errorLocalizer[Localization.ErrorMessages.user_doesnt_exist_by_email]);
     }
 
-    public Task<int> GetUserId()
+    public Task<int> GetCurrentUserId()
     {
         var user = _httpContextAccessor.HttpContext!.User;
         
@@ -84,6 +79,15 @@ public class AuthService : IAuthService
             if (identity.FindFirst(UserIdClaim) is { } claim)
                 return Task.FromResult(int.Parse(claim.Value));
         }
+        
+        throw new PublicClientException(_errorLocalizer[Localization.ErrorMessages.unathorized]);
+    }
+
+    public async Task<UserEntity> GetCurrentUser()
+    {
+        var id = await GetCurrentUserId();
+        if (await _userRepository.Read(id) is {} user)
+            return user;
         
         throw new PublicClientException(_errorLocalizer[Localization.ErrorMessages.unathorized]);
     }
@@ -99,7 +103,7 @@ public class AuthService : IAuthService
     
     private string CreateJwtToken(int userId)
     {
-        var securityKey = new SymmetricSecurityKey(Convert.FromBase64String(_configuration["Secrets:JwtSecret"]));
+        var securityKey = new SymmetricSecurityKey(Convert.FromBase64String(_configuration["Secrets:JwtSecret"]!));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
@@ -131,7 +135,7 @@ public class AuthService : IAuthService
 
     private byte[] SaltPassword(string email)
     {
-        var passwordSalt = Convert.FromBase64String(_configuration["Secrets:PasswordSalt"]);
+        var passwordSalt = Convert.FromBase64String(_configuration["Secrets:PasswordSalt"]!);
         
         var bytes = new byte[passwordSalt.Length + email.Length];
         Array.Copy(passwordSalt, 0, bytes, 0, passwordSalt.Length);

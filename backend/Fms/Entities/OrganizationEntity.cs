@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace Fms.Entities;
@@ -11,5 +12,5 @@ public class OrganizationEntity
     [Required, MaxLength(255)]
     public string Name { get; set; } = null!;
     
-    public List<OrganizationToUserEntity> Users { get; set; } = null!;
+    public virtual List<OrganizationToUserEntity> Users { get; set; } = null!;
 }

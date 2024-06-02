@@ -115,10 +115,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PublicError'
-  /api/organization:
+  /api/organizations:
     put:
       tags:
         - Organization
+      summary: Create new organization
       requestBody:
         content:
           application/json:
@@ -144,7 +145,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/PublicError'
         '200':
-          description: Success
+          description: Organization id
           content:
             application/json:
               schema:
@@ -156,14 +157,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PublicClientError'
-  '/api/organization/{id}':
     get:
       tags:
         - Organization
+      summary: Get list of current user's organizations
       parameters:
-        - name: id
-          in: path
-          required: true
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            format: int32
+        - name: limit
+          in: query
           schema:
             type: integer
             format: int32
@@ -185,9 +190,46 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OrganizationResponse'
+                $ref: '#/components/schemas/OrganizationListResponse'
         '400':
           description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+  '/api/organizations/{id}':
+    get:
+      tags:
+        - Organization
+      summary: Get organization
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '200':
+          description: Organization data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationResponse'
+        '404':
+          description: Not Found
           content:
             application/json:
               schema:
@@ -195,6 +237,7 @@ paths:
     post:
       tags:
         - Organization
+      summary: Update organization
       parameters:
         - name: id
           in: path
@@ -228,12 +271,20 @@ paths:
                 $ref: '#/components/schemas/PublicError'
         '200':
           description: Success
+        '403':
+          description: Forbidden
           content:
             application/json:
               schema:
-                type: boolean
+                $ref: '#/components/schemas/PublicClientError'
         '400':
           description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+        '404':
+          description: Not Found
           content:
             application/json:
               schema:
@@ -241,6 +292,7 @@ paths:
     delete:
       tags:
         - Organization
+      summary: Delete organization
       parameters:
         - name: id
           in: path
@@ -263,20 +315,23 @@ paths:
                 $ref: '#/components/schemas/PublicError'
         '200':
           description: Success
-          content:
-            application/json:
-              schema:
-                type: boolean
-        '400':
-          description: Bad Request
+        '403':
+          description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/PublicClientError'
-  '/api/organization/{organizationId}/users/{userId}':
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+  '/api/organizations/{organizationId}/users/{userId}':
     put:
       tags:
         - Organization
+      summary: Add user to organization
       parameters:
         - name: organizationId
           in: path
@@ -305,8 +360,14 @@ paths:
                 $ref: '#/components/schemas/PublicError'
         '200':
           description: Success
-        '400':
-          description: Bad Request
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+        '404':
+          description: Not Found
           content:
             application/json:
               schema:
@@ -314,6 +375,7 @@ paths:
     delete:
       tags:
         - Organization
+      summary: Remove user from organization
       parameters:
         - name: organizationId
           in: path
@@ -342,8 +404,14 @@ paths:
                 $ref: '#/components/schemas/PublicError'
         '200':
           description: Success
-        '400':
-          description: Bad Request
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+        '404':
+          description: Not Found
           content:
             application/json:
               schema:
@@ -351,6 +419,7 @@ paths:
     get:
       tags:
         - Organization
+      summary: Get user role in organization
       parameters:
         - name: organizationId
           in: path
@@ -389,9 +458,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PublicClientError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
     post:
       tags:
         - Organization
+      summary: Update user role in organization
       parameters:
         - name: organizationId
           in: path
@@ -437,6 +513,71 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PublicClientError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+  '/api/organizations/{organizationId}/users':
+    get:
+      tags:
+        - Organization
+      summary: Get list of users in organization
+      parameters:
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            format: int32
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '200':
+          description: List of users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationUserListResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
 components:
   schemas:
     AccessTokenResponse:
@@ -459,10 +600,26 @@ components:
           format: int32
           example: 3600
       additionalProperties: false
+    OrganizationListResponse:
+      required:
+        - items
+        - totalCount
+      type: object
+      properties:
+        totalCount:
+          type: integer
+          format: int32
+          example: 165
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationResponse'
+      additionalProperties: false
     OrganizationResponse:
       required:
         - id
         - name
+        - role
       type: object
       properties:
         id:
@@ -473,6 +630,8 @@ components:
           minLength: 1
           type: string
           example: Cool Organization Inc.
+        role:
+          $ref: '#/components/schemas/OrganizationRole'
       additionalProperties: false
     OrganizationRole:
       enum:
@@ -489,6 +648,44 @@ components:
           minLength: 1
           type: string
           example: New Organization Name
+      additionalProperties: false
+    OrganizationUserListResponse:
+      required:
+        - items
+        - totalCount
+      type: object
+      properties:
+        totalCount:
+          type: integer
+          format: int32
+          example: 165
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationUserResponse'
+      additionalProperties: false
+    OrganizationUserResponse:
+      required:
+        - firstName
+        - id
+        - lastName
+        - role
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 25
+        firstName:
+          minLength: 1
+          type: string
+          example: John
+        lastName:
+          minLength: 1
+          type: string
+          example: Snow
+        role:
+          $ref: '#/components/schemas/OrganizationRole'
       additionalProperties: false
     PublicClientError:
       required:

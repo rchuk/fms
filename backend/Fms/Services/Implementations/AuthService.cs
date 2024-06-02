@@ -18,6 +18,7 @@ public class AuthService : IAuthService
     private const string UserIdClaim = "user_id";
 
     private readonly IConfiguration _configuration;
+    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly FmsDbContext _dbCtx;
     private readonly IStringLocalizer<ErrorMessages> _errorLocalizer;
     private readonly IUserRepository _userRepository;
@@ -25,9 +26,10 @@ public class AuthService : IAuthService
     private readonly int _jwtExpirationTime;
     private readonly int _pbkdf2Iterations;
 
-    public AuthService(IConfiguration configuration, FmsDbContext dbCtx, IStringLocalizer<ErrorMessages> errorLocalizer, IUserRepository userRepository)
+    public AuthService(IConfiguration configuration, IHttpContextAccessor httpContextAccessor, FmsDbContext dbCtx, IStringLocalizer<ErrorMessages> errorLocalizer, IUserRepository userRepository)
     {
         _configuration = configuration;
+        _httpContextAccessor = httpContextAccessor;
         _dbCtx = dbCtx;
         _errorLocalizer = errorLocalizer;
         _userRepository = userRepository;
@@ -73,8 +75,10 @@ public class AuthService : IAuthService
         throw new PublicClientException(_errorLocalizer[Localization.ErrorMessages.user_doesnt_exist_by_email]);
     }
 
-    public Task<int> GetUserId(ClaimsPrincipal user)
+    public Task<int> GetUserId()
     {
+        var user = _httpContextAccessor.HttpContext!.User;
+        
         if (user.Identity is ClaimsIdentity identity)
         {
             if (identity.FindFirst(UserIdClaim) is { } claim)

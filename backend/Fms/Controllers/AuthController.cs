@@ -20,7 +20,7 @@ public class AuthController(
     /// Attempts to register new user using credentials
     /// </summary>
     /// <response code="200">Returns access token</response>
-    [HttpPost("register")]
+    [HttpPost("register", Name = "register")]
     [ProducesResponseType(typeof(AccessTokenResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Register([FromBody] UserRegisterRequestDto requestDto)
@@ -32,7 +32,7 @@ public class AuthController(
     /// Attempts to login using user credentials
     /// </summary>
     /// <response code="200">Returns access token</response>
-    [HttpPost("login")]
+    [HttpPost("login", Name = "login")]
     [Consumes("application/x-www-form-urlencoded")]
     [ProducesResponseType(typeof(AccessTokenResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
@@ -45,7 +45,7 @@ public class AuthController(
     /// Get id of the current user
     /// </summary>
     /// <response code="200">Returns id of the current user</response>
-    [HttpGet("me")]
+    [HttpGet("me", Name = "me")]
     [Authorize]
     [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]

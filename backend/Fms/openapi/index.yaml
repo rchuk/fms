@@ -10,6 +10,7 @@ paths:
       tags:
         - Auth
       summary: Attempts to register new user using credentials
+      operationId: register
       requestBody:
         content:
           application/json:
@@ -45,6 +46,7 @@ paths:
       tags:
         - Auth
       summary: Attempts to login using user credentials
+      operationId: login
       requestBody:
         content:
           application/x-www-form-urlencoded:
@@ -89,6 +91,7 @@ paths:
       tags:
         - Auth
       summary: Get id of the current user
+      operationId: me
       responses:
         '500':
           description: Server Error
@@ -120,6 +123,7 @@ paths:
       tags:
         - Organization
       summary: Create new organization
+      operationId: createOrganization
       requestBody:
         content:
           application/json:
@@ -161,6 +165,7 @@ paths:
       tags:
         - Organization
       summary: Get list of current user's organizations
+      operationId: listUserOrganizations
       parameters:
         - name: offset
           in: query
@@ -202,6 +207,7 @@ paths:
       tags:
         - Organization
       summary: Get organization
+      operationId: getOrganization
       parameters:
         - name: id
           in: path
@@ -238,6 +244,7 @@ paths:
       tags:
         - Organization
       summary: Update organization
+      operationId: updateOrganization
       parameters:
         - name: id
           in: path
@@ -293,6 +300,7 @@ paths:
       tags:
         - Organization
       summary: Delete organization
+      operationId: deleteOrganization
       parameters:
         - name: id
           in: path
@@ -332,6 +340,7 @@ paths:
       tags:
         - Organization
       summary: Add user to organization
+      operationId: organizationAddUser
       parameters:
         - name: organizationId
           in: path
@@ -376,6 +385,7 @@ paths:
       tags:
         - Organization
       summary: Remove user from organization
+      operationId: organizationRemoveUser
       parameters:
         - name: organizationId
           in: path
@@ -420,6 +430,7 @@ paths:
       tags:
         - Organization
       summary: Get user role in organization
+      operationId: organizationGetUserRole
       parameters:
         - name: organizationId
           in: path
@@ -468,6 +479,7 @@ paths:
       tags:
         - Organization
       summary: Update user role in organization
+      operationId: organizationUpdateUserRole
       parameters:
         - name: organizationId
           in: path
@@ -530,6 +542,7 @@ paths:
       tags:
         - Organization
       summary: Get list of users in organization
+      operationId: listOrganizationUsers
       parameters:
         - name: organizationId
           in: path

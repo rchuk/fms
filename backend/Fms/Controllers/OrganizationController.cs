@@ -24,7 +24,7 @@ public class OrganizationController(
     /// Create new organization
     /// </summary>
     /// <response code="200">Organization id</response>
-    [HttpPut]
+    [HttpPut(Name = "createOrganization")]
     [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Create([FromBody] OrganizationUpsertRequestDto requestDto)
@@ -36,7 +36,7 @@ public class OrganizationController(
     /// Get organization
     /// </summary>
     /// <response code="200">Organization data</response>
-    [HttpGet("{id:int}")]
+    [HttpGet("{id:int}", Name = "getOrganization")]
     [ProducesResponseType(typeof(OrganizationResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetOrganization([FromRoute] int id)
@@ -49,7 +49,7 @@ public class OrganizationController(
     /// <summary>
     /// Update organization
     /// </summary>
-    [HttpPost("{id:int}")]
+    [HttpPost("{id:int}", Name = "updateOrganization")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
@@ -64,7 +64,7 @@ public class OrganizationController(
     /// <summary>
     /// Delete organization
     /// </summary>
-    [HttpDelete("{id:int}")]
+    [HttpDelete("{id:int}", Name = "deleteOrganization")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
@@ -78,7 +78,7 @@ public class OrganizationController(
     /// <summary>
     /// Get list of current user's organizations
     /// </summary>
-    [HttpGet]
+    [HttpGet(Name = "listUserOrganizations")]
     [ProducesResponseType(typeof(OrganizationListResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ListCurrentUserOrganizations([FromQuery] int? offset, [FromQuery] int? limit)
@@ -89,7 +89,7 @@ public class OrganizationController(
     /// <summary>
     /// Add user to organization
     /// </summary>
-    [HttpPut("{organizationId:int}/users/{userId:int}")]
+    [HttpPut("{organizationId:int}/users/{userId:int}", Name = "organizationAddUser")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
@@ -101,7 +101,7 @@ public class OrganizationController(
     /// <summary>
     /// Remove user from organization
     /// </summary>
-    [HttpDelete("{organizationId:int}/users/{userId:int}")]
+    [HttpDelete("{organizationId:int}/users/{userId:int}", Name = "organizationRemoveUser")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
@@ -113,7 +113,7 @@ public class OrganizationController(
     /// <summary>
     /// Get user role in organization
     /// </summary>
-    [HttpGet("{organizationId:int}/users/{userId:int}")]
+    [HttpGet("{organizationId:int}/users/{userId:int}", Name = "organizationGetUserRole")]
     [ProducesResponseType(typeof(OrganizationRole), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
@@ -125,7 +125,7 @@ public class OrganizationController(
     /// <summary>
     /// Update user role in organization
     /// </summary>
-    [HttpPost("{organizationId:int}/users/{userId:int}")]
+    [HttpPost("{organizationId:int}/users/{userId:int}", Name = "organizationUpdateUserRole")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status403Forbidden)]
@@ -139,7 +139,7 @@ public class OrganizationController(
     /// Get list of users in organization
     /// </summary>
     /// <response code="200">List of users</response>
-    [HttpGet("{organizationId:int}/users")]
+    [HttpGet("{organizationId:int}/users", Name = "listOrganizationUsers")]
     [ProducesResponseType(typeof(OrganizationUserListResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]

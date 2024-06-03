@@ -12,12 +12,21 @@ public class FmsDbContext(DbContextOptions<FmsDbContext> options) : DbContext(op
 
     public DbSet<AccountEntity> Accounts { get; set; } = null!;
 
+    public DbSet<WorkspaceEntity> Workspaces { get; set; } = null!;
+    public DbSet<WorkspaceKindEntity> WorkspaceKinds { get; set; } = null!;
+    public DbSet<WorkspaceRoleEntity> WorkspaceRoles { get; set; } = null!;
+    public DbSet<WorkspaceToAccountEntity> WorkspaceToAccount { get; set; } = null!;
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
+        OnModelCreatingUser(modelBuilder);
+        OnModelCreatingOrganization(modelBuilder);
         OnModelCreatingOrganizationToUser(modelBuilder);
         OnModelCreatingAccount(modelBuilder);
+        OnModelCreatingWorkspace(modelBuilder);
+        OnModelCreatingWorkspaceToAccount(modelBuilder);
     }
     
     private void OnModelCreatingUser(ModelBuilder modelBuilder)
@@ -61,6 +70,30 @@ public class FmsDbContext(DbContextOptions<FmsDbContext> options) : DbContext(op
         modelBuilder.Entity<AccountEntity>()
             .HasOne(map => map.User)
             .WithOne(user => user.Account)
+            .OnDelete(DeleteBehavior.Cascade);
+    }
+
+    private void OnModelCreatingWorkspace(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<WorkspaceEntity>()
+            .Navigation(entity => entity.Kind).AutoInclude();
+    }
+    
+    private void OnModelCreatingWorkspaceToAccount(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<WorkspaceToAccountEntity>()
+            .Navigation(map => map.Account).AutoInclude();
+        modelBuilder.Entity<WorkspaceToAccountEntity>()
+            .Navigation(map => map.Role).AutoInclude();
+        
+        modelBuilder.Entity<WorkspaceToAccountEntity>()
+            .HasOne(map => map.Workspace)
+            .WithMany(workspace => workspace.Accounts)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<WorkspaceToAccountEntity>()
+            .HasOne(map => map.Account)
+            .WithMany(account => account.Workspaces)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

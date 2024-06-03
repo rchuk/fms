@@ -10,4 +10,6 @@ public class AccountEntity
     public int? UserId { get; set; }
     public virtual OrganizationEntity? Organization { get; set; }
     public int? OrganizationId { get; set; }
+
+    public virtual List<WorkspaceToAccountEntity> Workspaces { get; set; } = null!;
 }

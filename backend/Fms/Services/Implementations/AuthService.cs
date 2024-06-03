@@ -21,16 +21,21 @@ public class AuthService : IAuthService
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IStringLocalizer<ErrorMessages> _errorLocalizer;
     private readonly IUserRepository _userRepository;
+    private readonly IUserService _userService;
     
     private readonly int _jwtExpirationTime;
     private readonly int _pbkdf2Iterations;
 
-    public AuthService(IConfiguration configuration, IHttpContextAccessor httpContextAccessor, IStringLocalizer<ErrorMessages> errorLocalizer, IUserRepository userRepository)
+    public AuthService(
+        IConfiguration configuration, IHttpContextAccessor httpContextAccessor, IStringLocalizer<ErrorMessages> errorLocalizer,
+        IUserRepository userRepository, IUserService userService
+        )
     {
         _configuration = configuration;
         _httpContextAccessor = httpContextAccessor;
         _errorLocalizer = errorLocalizer;
         _userRepository = userRepository;
+        _userService = userService;
         _jwtExpirationTime = int.TryParse(configuration["Jwt:ExpirationTime"], out var jwtExpirationTime) ? jwtExpirationTime : 3600;
         _pbkdf2Iterations = int.TryParse(configuration["Security:Pbkdf2Iterations"], out var pbkdf2Iterations) ? pbkdf2Iterations : 100001;
     }
@@ -40,11 +45,9 @@ public class AuthService : IAuthService
     {
         if (await _userRepository.FindByEmail(requestDto.Email) is not null)
             throw new PublicClientException(_errorLocalizer[Localization.ErrorMessages.user_already_exists_by_email]);
-        
-        // TODO: Create user service
 
         var passwordHash = Convert.ToBase64String(HashPassword(requestDto.Email, requestDto.Password));
-        var user = await _userRepository.Create(new UserEntity
+        var user = await _userService.CreateUser(new UserEntity
         {
             Email = requestDto.Email,
             PasswordHash = passwordHash,

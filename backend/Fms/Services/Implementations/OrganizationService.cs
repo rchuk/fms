@@ -16,11 +16,13 @@ public class OrganizationService : IOrganizationService
     private readonly OrganizationRoleRepository _organizationRoleRepository;
     private readonly IOrganizationToUserRepository _organizationToUserRepository;
     private readonly IUserRepository _userRepository;
+    private readonly IAccountRepository _accountRepository;
     private readonly IAuthService _authService;
 
     public OrganizationService(
         IOrganizationRepository organizationRepository, OrganizationRoleRepository organizationRoleRepository,
         IOrganizationToUserRepository organizationToUserRepository, IUserRepository userRepository,
+        IAccountRepository accountRepository,
         IAuthService authService
         )
     {
@@ -28,6 +30,7 @@ public class OrganizationService : IOrganizationService
         _organizationRoleRepository = organizationRoleRepository;
         _organizationToUserRepository = organizationToUserRepository;
         _userRepository = userRepository;
+        _accountRepository = accountRepository;
         _authService = authService;
     }
     
@@ -44,6 +47,10 @@ public class OrganizationService : IOrganizationService
             Name = request.Name,
             
             Users = []
+        });
+        await _accountRepository.Create(new AccountEntity
+        {
+            OrganizationId = organization.Id
         });
         await _organizationToUserRepository.Create(new OrganizationToUserEntity
         {
@@ -175,7 +182,7 @@ public class OrganizationService : IOrganizationService
         return map?.Role.ToEnum();
     }
 
-    private static OrganizationResponseDto BuildOrganizationResponseDto(OrganizationToUserEntity entity)
+    public static OrganizationResponseDto BuildOrganizationResponseDto(OrganizationToUserEntity entity)
     {
         return new OrganizationResponseDto
         {
@@ -185,7 +192,16 @@ public class OrganizationService : IOrganizationService
         };
     }
     
-    private static OrganizationUserResponseDto BuildOrganizationUserResponseDto(OrganizationToUserEntity entity)
+    public static OrganizationShortResponseDto BuildOrganizationShortResponseDto(OrganizationEntity entity)
+    {
+        return new OrganizationShortResponseDto
+        {
+            Id = entity.Id,
+            Name = entity.Name
+        };
+    }
+    
+    public static OrganizationUserResponseDto BuildOrganizationUserResponseDto(OrganizationToUserEntity entity)
     {
         return new OrganizationUserResponseDto
         {

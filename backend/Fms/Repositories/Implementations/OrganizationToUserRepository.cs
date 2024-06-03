@@ -35,4 +35,20 @@ public class OrganizationToUserRepository : BaseCrudRepository<OrganizationToUse
             await query.Skip(pagination.Offset).Take(pagination.Limit).ToListAsync()
         );
     }
+
+    public async Task<bool> AreRelatedUsers(int userIdFirst, int userIdSecond)
+    {
+        if (userIdFirst == userIdSecond)
+            return true;
+
+        return await Ctx.OrganizationToUser
+            .Where(map => map.UserId == userIdFirst)
+            .Select(map => map.OrganizationId)
+            .Intersect(
+                Ctx.OrganizationToUser
+                    .Where(map => map.UserId == userIdSecond)
+                    .Select(map => map.OrganizationId)
+            )
+            .AnyAsync();
+    }
 }

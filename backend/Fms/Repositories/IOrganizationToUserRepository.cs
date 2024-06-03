@@ -12,4 +12,6 @@ public interface IOrganizationToUserRepository
     
     Task<(int total, IEnumerable<OrganizationToUserEntity> items)> ListOrganizationUsers(int organizationId, Pagination pagination);
     Task<(int total, IEnumerable<OrganizationToUserEntity> items)> ListUserOrganizations(int userId, Pagination pagination);
+    
+    Task<bool> AreRelatedUsers(int userIdFirst, int userIdSecond);
 }

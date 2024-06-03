@@ -17,5 +17,6 @@ public class UserEntity
     [Required, MaxLength(255)]
     public string LastName { get; set; } = null!;
 
+    public AccountEntity Account { get; set; } = null!;
     public virtual List<OrganizationToUserEntity> Organizations { get; set; } = null!;
 }

@@ -4,12 +4,12 @@ using Fms.Entities.Enums;
 
 namespace Fms.Dtos;
 
-public class OrganizationUserResponseDto
+public class WorkspaceUserResponseDto
 {
     [Required]
     public required UserResponseDto User { get; set; }
     [Required]
-    public required OrganizationRole Role { get; set; }
+    public required WorkspaceRole Role { get; set; }
 }
 
-public class OrganizationUserListResponseDto : ListResponseDto<OrganizationUserResponseDto>;
+public class WorkspaceUserListResponseDto : ListResponseDto<WorkspaceUserResponseDto>;

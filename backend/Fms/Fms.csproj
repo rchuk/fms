@@ -64,6 +64,10 @@
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>UserLoginRequestDto.Designer.cs</LastGenOutput>
       </EmbeddedResource>
+      <EmbeddedResource Update="Localization\Application.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>Application.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
@@ -81,6 +85,11 @@
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
         <DependentUpon>UserLoginRequestDto.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Localization\Application.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Application.resx</DependentUpon>
       </Compile>
     </ItemGroup>
 

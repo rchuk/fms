@@ -14,7 +14,7 @@ public class OrganizationToUserRepository : BaseCrudRepository<OrganizationToUse
     {
         var query = Ctx.OrganizationToUser
             .Where(map => map.OrganizationId == organizationId)
-            .OrderBy(map => map.User.Id)
+            .OrderBy(map => map.UserId)
             .Include(map => map.User);
             
         return (
@@ -27,7 +27,7 @@ public class OrganizationToUserRepository : BaseCrudRepository<OrganizationToUse
     {
         var query= Ctx.OrganizationToUser
             .Where(map => map.UserId == userId)
-            .OrderBy(map => map.Organization.Id)
+            .OrderBy(map => map.OrganizationId)
             .Include(map => map.Organization);
             
         return (

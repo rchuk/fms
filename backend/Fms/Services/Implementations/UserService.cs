@@ -9,13 +9,21 @@ public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
     private readonly IAccountRepository _accountRepository;
+    private readonly Lazy<IWorkspaceService> _workspaceService;
 
-    public UserService(IUserRepository userRepository, IAccountRepository accountRepository)
+    public UserService(
+        IUserRepository userRepository,
+        IAccountRepository accountRepository,
+        IServiceProvider services
+    )
     {
         _userRepository = userRepository;
         _accountRepository = accountRepository;
+        _workspaceService = new Lazy<IWorkspaceService>(services.GetRequiredService<IWorkspaceService>);
     }
 
+    // TODO: Add constraint, so workspaces without users get deleted
+    //  (private workspaces of a deleted users)
     [Transactional]
     public async Task<UserEntity> CreateUser(UserEntity entity)
     {
@@ -24,6 +32,7 @@ public class UserService : IUserService
         {
             UserId = user.Id
         });
+        await _workspaceService.Value.CreatePrivateUserWorkspace(user.Id);
 
         return user;
     }

@@ -87,6 +87,7 @@ public class Startup
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IOrganizationService, OrganizationService>();
         services.AddScoped<IAccountService, AccountService>();
+        services.AddScoped<IWorkspaceService, WorkspaceService>();
     }
 
     private void AddRepositories(IServiceCollection services)
@@ -96,6 +97,10 @@ public class Startup
         services.AddScoped<OrganizationRoleRepository>();
         services.AddScoped<IOrganizationToUserRepository, OrganizationToUserRepository>();
         services.AddScoped<IAccountRepository, AccountRepository>();
+        services.AddScoped<IWorkspaceRepository, WorkspaceRepository>();
+        services.AddScoped<WorkspaceRoleRepository>();
+        services.AddScoped<WorkspaceKindRepository>();
+        services.AddScoped<IWorkspaceToAccountRepository, WorkspaceToAccountRepository>();
     }
 
     private void AddDatabase(IServiceCollection services)
@@ -157,7 +162,7 @@ public class Startup
                     RequireAudience = false,
                     ValidateAudience = false,
                     ValidateIssuer = false,
-                    IssuerSigningKey = new SymmetricSecurityKey(Convert.FromBase64String(Configuration["Secrets:JwtSecret"]))
+                    IssuerSigningKey = new SymmetricSecurityKey(Convert.FromBase64String(Configuration["Secrets:JwtSecret"]!))
                 };
             });
     }

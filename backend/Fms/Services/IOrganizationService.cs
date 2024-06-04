@@ -17,7 +17,8 @@ public interface IOrganizationService
     public Task RemoveUser(int organizationId, int userId);
     public Task<OrganizationRole?> GetUserRole(int organizationId, int userId);
     public Task UpdateUserRole(int organizationId, int userId, OrganizationRole role);
-
+    public Task<OrganizationRole?> GetCurrentUserRole(int id);
+    
     public Task<OrganizationUserListResponseDto> ListOrganizationUsers(int id, Pagination pagination);
     public Task<OrganizationListResponseDto> ListCurrentUserOrganizations(Pagination pagination);
 }

@@ -27,7 +27,7 @@ public class OrganizationController(
     [HttpPut(Name = "createOrganization")]
     [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Create([FromBody] OrganizationUpsertRequestDto requestDto)
+    public async Task<IActionResult> CreateOrganization([FromBody] OrganizationUpsertRequestDto requestDto)
     {
         return Ok(await organizationService.CreateOrganization(requestDto));
     }
@@ -44,8 +44,6 @@ public class OrganizationController(
         return Ok(await organizationService.GetOrganization(id));
     }
     
-    // TODO: Don't return booleans?
-
     /// <summary>
     /// Update organization
     /// </summary>
@@ -93,9 +91,11 @@ public class OrganizationController(
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
-    public async Task AddUser([FromRoute] int organizationId, [FromRoute] int userId)
+    public async Task<IActionResult> AddUser([FromRoute] int organizationId, [FromRoute] int userId)
     {
         await organizationService.AddUser(organizationId, userId);
+
+        return Ok();
     }
 
     /// <summary>
@@ -105,9 +105,11 @@ public class OrganizationController(
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
-    public async Task RemoveUser([FromRoute] int organizationId, [FromRoute] int userId)
+    public async Task<IActionResult> RemoveUser([FromRoute] int organizationId, [FromRoute] int userId)
     {
         await organizationService.RemoveUser(organizationId, userId);
+
+        return Ok();
     }
 
     /// <summary>
@@ -130,9 +132,11 @@ public class OrganizationController(
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
-    public async Task UpdateUserRole([FromRoute] int organizationId, [FromRoute] int userId, [FromBody] OrganizationRole role)
+    public async Task<IActionResult> UpdateUserRole([FromRoute] int organizationId, [FromRoute] int userId, [FromBody] OrganizationRole role)
     {
         await organizationService.UpdateUserRole(organizationId, userId, role);
+
+        return Ok();
     }
     
     /// <summary>

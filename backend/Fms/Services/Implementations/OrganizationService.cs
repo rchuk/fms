@@ -62,6 +62,7 @@ public class OrganizationService : IOrganizationService
         return organization.Id;
     }
 
+    [Transactional]
     public async Task<OrganizationResponseDto> GetOrganization(int id)
     {
         if (await GetCurrentUserRole(id) is null)
@@ -85,6 +86,7 @@ public class OrganizationService : IOrganizationService
             throw new PublicClientException();
     }
 
+    [Transactional]
     public async Task DeleteOrganization(int id)
     {
         if (await GetCurrentUserRole(id) is not OrganizationRole.Owner)
@@ -100,7 +102,7 @@ public class OrganizationService : IOrganizationService
         if (await GetCurrentUserRole(organizationId) is not (OrganizationRole.Admin or OrganizationRole.Owner))
             throw new PublicForbiddenException();
 
-        if (await _organizationRepository.Read(organizationId) is null || await _userRepository.Read(userId) is null)
+        if (await _userRepository.Read(userId) is null)
             throw new PublicNotFoundException();
         
         await _organizationToUserRepository.Create(new OrganizationToUserEntity
@@ -116,10 +118,12 @@ public class OrganizationService : IOrganizationService
     {
         if (await GetCurrentUserRole(organizationId) is not (OrganizationRole.Admin or OrganizationRole.Owner))
             throw new PublicForbiddenException();
-        
-        await _organizationToUserRepository.Delete((organizationId, userId));
+
+        if (!await _organizationToUserRepository.Delete((organizationId, userId)))
+            throw new PublicClientException();
     }
 
+    [Transactional]
     public async Task<OrganizationRole?> GetUserRole(int organizationId, int userId)
     {
         if (await GetCurrentUserRole(organizationId) is null)
@@ -128,21 +132,28 @@ public class OrganizationService : IOrganizationService
         return await GetUserRoleImpl(organizationId, userId);
     }
     
+    [Transactional]
     public async Task UpdateUserRole(int organizationId, int userId, OrganizationRole role)
     {
         if (await GetCurrentUserRole(organizationId) is not (OrganizationRole.Admin or OrganizationRole.Owner))
             throw new PublicForbiddenException();
         if (role is OrganizationRole.Owner)
             throw new PublicClientException();
-
-        await _organizationToUserRepository.Update(new OrganizationToUserEntity
+        var currentRole = await GetUserRole(organizationId, userId);
+        if (currentRole is OrganizationRole.Owner)
+            throw new PublicClientException();
+        
+        var success = await _organizationToUserRepository.Update(new OrganizationToUserEntity
         {
             OrganizationId = organizationId,
             UserId = userId,
             Role = await _organizationRoleRepository.Read(role)
         });
+        if (!success)
+            throw new PublicClientException();
     }
     
+    [Transactional]
     public async Task<OrganizationUserListResponseDto> ListOrganizationUsers(int id, Pagination pagination)
     {
         if (await GetCurrentUserRole(id) is null)
@@ -157,6 +168,7 @@ public class OrganizationService : IOrganizationService
         };
     }
 
+    [Transactional]
     public async Task<OrganizationListResponseDto> ListCurrentUserOrganizations(Pagination pagination)
     {
         var (total, items) = await _organizationToUserRepository.ListUserOrganizations(await _authService.GetCurrentUserId(), pagination);
@@ -168,7 +180,8 @@ public class OrganizationService : IOrganizationService
         };
     }
     
-    private async Task<OrganizationRole?> GetCurrentUserRole(int id)
+    [Transactional]
+    public async Task<OrganizationRole?> GetCurrentUserRole(int id)
     {
         var userId = await _authService.GetCurrentUserId();
 
@@ -177,6 +190,11 @@ public class OrganizationService : IOrganizationService
 
     private async Task<OrganizationRole?> GetUserRoleImpl(int organizationId, int userId)
     {
+        if (await _organizationRepository.Read(organizationId) is null)
+            throw new PublicNotFoundException();
+        if (await _userRepository.Read(userId) is null)
+            throw new PublicNotFoundException();
+        
         var map = await _organizationToUserRepository.Read((organizationId, userId));
 
         return map?.Role.ToEnum();
@@ -205,9 +223,7 @@ public class OrganizationService : IOrganizationService
     {
         return new OrganizationUserResponseDto
         {
-            Id = entity.UserId,
-            FirstName = entity.User.FirstName,
-            LastName = entity.User.LastName,
+            User = UserService.BuildUserResponseDto(entity.User),
             Role = entity.Role.ToEnum()
         };
     }

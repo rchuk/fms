@@ -171,7 +171,10 @@ public class WorkspaceService : IWorkspaceService
         var account = await _accountRepository.GetUserAccount(userId);
         if (account is null)
             throw new PublicNotFoundException();
-        
+
+        if (await _workspaceToAccountRepository.Read((workspaceId, account.Id)) is not null)
+            throw new PublicClientException();
+ 
         await _workspaceToAccountRepository.Create(new WorkspaceToAccountEntity
         {
             WorkspaceId = workspaceId,
@@ -218,13 +221,9 @@ public class WorkspaceService : IWorkspaceService
         if (account is null)
             throw new PublicNotFoundException();
 
-        var success = await _workspaceToAccountRepository.Update(new WorkspaceToAccountEntity
-        {
-            WorkspaceId = workspaceId,
-            AccountId = account.Id,
-            Role = await _workspaceRoleRepository.Read(role)
-        });
-        if (!success)
+        var entity = await _workspaceToAccountRepository.Read((workspaceId, account.Id));
+        entity!.Role = await _workspaceRoleRepository.Read(role);
+        if (!await _workspaceToAccountRepository.Update(entity))
             throw new PublicClientException();
     }
 

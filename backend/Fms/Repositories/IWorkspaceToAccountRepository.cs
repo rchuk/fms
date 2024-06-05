@@ -15,4 +15,6 @@ public interface IWorkspaceToAccountRepository
     
     Task<(int total, IEnumerable<WorkspaceToAccountEntity> items)> ListWorkspaceAccounts(int workspaceId, Pagination pagination);
     Task<(int total, IEnumerable<WorkspaceToAccountEntity> items)> ListAccountWorkspaces(int accountId, Pagination pagination);
+
+    Task DeleteAccountFromAllOwnedBy(int accountId, int ownerAccountId);
 }

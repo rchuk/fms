@@ -23,7 +23,7 @@ public class UserService : IUserService
     }
 
     // TODO: Add constraint, so workspaces without users get deleted
-    //  (private workspaces of a deleted users)
+    //  (private workspaces and shared of a deleted users)
     [Transactional]
     public async Task<UserEntity> CreateUser(UserEntity entity)
     {

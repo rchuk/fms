@@ -161,8 +161,7 @@ public class WorkspaceService : IWorkspaceService
     [Transactional]
     public async Task AddUser(int workspaceId, int userId)
     {
-        if (await GetCurrentUserRole(workspaceId) is not (WorkspaceRole.Admin or WorkspaceRole.Owner))
-            throw new PublicForbiddenException();
+        await VerifyUserCanModifyWorkspace(workspaceId);
 
         var workspace = await _workspaceRepository.Read(workspaceId);
         if (workspace!.Kind.ToEnum() is WorkspaceKind.Private)
@@ -172,6 +171,13 @@ public class WorkspaceService : IWorkspaceService
         if (account is null)
             throw new PublicNotFoundException();
 
+        var owner = await _workspaceToAccountRepository.GetOwner(workspaceId);
+        if (owner!.OrganizationId is { } organizationOwnerId)
+        {
+            if (await _organizationService.GetUserRole(organizationOwnerId, userId) is null)
+                throw new PublicClientException();
+        }
+        
         if (await _workspaceToAccountRepository.Read((workspaceId, account.Id)) is not null)
             throw new PublicClientException();
  
@@ -247,7 +253,9 @@ public class WorkspaceService : IWorkspaceService
         return new WorkspaceUserListResponseDto
         {
             TotalCount = total,
-            Items = items.Select(BuildWorkspaceUserResponseDto).ToList()
+            Items = items
+                .Where(map => map.Account.UserId is not null)
+                .Select(BuildWorkspaceUserResponseDto).ToList()
         };
     }
 

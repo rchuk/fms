@@ -6,8 +6,10 @@ namespace Fms.Dtos;
 
 public class WorkspaceResponseDto
 {
+    /// <example>3501</example>
     [Required]
     public int Id { get; set; }
+    /// <example>Family workspace</example>
     [Required]
     public required string Name { get; set; }
     [Required]

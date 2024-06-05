@@ -6,16 +6,19 @@ namespace Fms.Dtos;
 
 public class TransactionCategoryResponseDto
 {
+    /// <example>5359</example>
     [Required]
     public int Id { get; set; }
+    /// <example>Salary</example>
     [Required]
-    public string Name { get; set; }
+    public required string Name { get; set; }
     [Required]
     public required AccountResponseDto OwnerAccount { get; set; }
     [Required]
-    public TransactionCategoryKind Kind { get; set; }
+    public required TransactionCategoryKind Kind { get; set; }
+    /// <example>FF0022</example>
     [Required]
-    public string UiColor { get; set; }
+    public required string UiColor { get; set; }
     
     public WorkspaceShortResponseDto? Workspace { get; set; }
 }

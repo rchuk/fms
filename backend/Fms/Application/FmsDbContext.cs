@@ -20,6 +20,8 @@ public class FmsDbContext(DbContextOptions<FmsDbContext> options) : DbContext(op
     public DbSet<TransactionCategoryEntity> TransactionCategories { get; set; } = null!;
     public DbSet<TransactionCategoryKindEntity> TransactionCategoryKinds { get; set; } = null!;
 
+    public DbSet<TransactionEntity> Transactions { get; set; } = null!;
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

@@ -89,6 +89,7 @@ public class Startup
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<IWorkspaceService, WorkspaceService>();
         services.AddScoped<ITransactionCategoryService, TransactionCategoryService>();
+        services.AddScoped<ITransactionService, TransactionService>();
     }
 
     private void AddRepositories(IServiceCollection services)
@@ -104,6 +105,7 @@ public class Startup
         services.AddScoped<IWorkspaceToAccountRepository, WorkspaceToAccountRepository>();
         services.AddScoped<ITransactionCategoryRepository, TransactionCategoryRepository>();
         services.AddScoped<TransactionCategoryKindRepository>();
+        services.AddScoped<ITransactionRepository, TransactionRepository>();
     }
 
     private void AddDatabase(IServiceCollection services)

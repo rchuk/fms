@@ -629,6 +629,207 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PublicClientError'
+  '/api/workspaces/{workspaceId}/transactions':
+    put:
+      tags:
+        - Transaction
+      summary: Create new transaction
+      operationId: createTransaction
+      parameters:
+        - name: workspaceId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionUpsertRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/TransactionUpsertRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/TransactionUpsertRequest'
+      responses:
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int32
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+  '/api/transactions/{id}':
+    get:
+      tags:
+        - Transaction
+      summary: Get transaction
+      operationId: getTransaction
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+    post:
+      tags:
+        - Transaction
+      summary: Update transaction
+      operationId: updateTransaction
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionUpsertRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/TransactionUpsertRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/TransactionUpsertRequest'
+      responses:
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '200':
+          description: Success
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+    delete:
+      tags:
+        - Transaction
+      summary: Delete transaction
+      operationId: deleteTransaction
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '200':
+          description: Success
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
   /api/transactions/categories:
     put:
       tags:
@@ -1811,6 +2012,31 @@ components:
         - EXPENSE
         - MIXED
       type: string
+    TransactionCategoryResponse:
+      required:
+        - id
+        - kind
+        - name
+        - ownerAccount
+        - uiColor
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          minLength: 1
+          type: string
+        ownerAccount:
+          $ref: '#/components/schemas/AccountResponse'
+        kind:
+          $ref: '#/components/schemas/TransactionCategoryKind'
+        uiColor:
+          minLength: 1
+          type: string
+        workspace:
+          $ref: '#/components/schemas/WorkspaceShortResponse'
+      additionalProperties: false
     TransactionCategoryUpsertRequest:
       required:
         - kind
@@ -1825,6 +2051,66 @@ components:
           $ref: '#/components/schemas/TransactionCategoryKind'
         uiColor:
           type: string
+          nullable: true
+      additionalProperties: false
+    TransactionResponse:
+      required:
+        - amount
+        - category
+        - creationTimestamp
+        - creationUser
+        - id
+        - timestamp
+        - workspace
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        workspace:
+          $ref: '#/components/schemas/WorkspaceShortResponse'
+        category:
+          $ref: '#/components/schemas/TransactionCategoryResponse'
+        amount:
+          type: integer
+          format: int32
+        description:
+          type: string
+          nullable: true
+        timestamp:
+          type: string
+          format: date-time
+        creationTimestamp:
+          type: string
+          format: date-time
+        creationUser:
+          $ref: '#/components/schemas/UserResponse'
+        user:
+          $ref: '#/components/schemas/UserResponse'
+      additionalProperties: false
+    TransactionUpsertRequest:
+      required:
+        - amount
+        - categoryId
+      type: object
+      properties:
+        categoryId:
+          type: integer
+          format: int32
+        amount:
+          type: integer
+          format: int32
+        description:
+          maxLength: 2048
+          type: string
+          nullable: true
+        timestamp:
+          type: string
+          format: date-time
+          nullable: true
+        userId:
+          type: integer
+          format: int32
           nullable: true
       additionalProperties: false
     UserRegisterRequest:
@@ -1910,6 +2196,22 @@ components:
         - COLLABORATOR
         - VIEWER
       type: string
+    WorkspaceShortResponse:
+      required:
+        - id
+        - kind
+        - name
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          minLength: 1
+          type: string
+        kind:
+          $ref: '#/components/schemas/WorkspaceKind'
+      additionalProperties: false
     WorkspaceUpsertRequest:
       required:
         - name

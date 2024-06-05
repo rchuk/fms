@@ -17,12 +17,14 @@ public class OrganizationService : IOrganizationService
     private readonly IOrganizationToUserRepository _organizationToUserRepository;
     private readonly IUserRepository _userRepository;
     private readonly IAccountRepository _accountRepository;
+    private readonly IWorkspaceToAccountRepository _workspaceToAccountRepository;
     private readonly IAuthService _authService;
 
     public OrganizationService(
         IOrganizationRepository organizationRepository, OrganizationRoleRepository organizationRoleRepository,
         IOrganizationToUserRepository organizationToUserRepository, IUserRepository userRepository,
         IAccountRepository accountRepository,
+        IWorkspaceToAccountRepository workspaceToAccountRepository,
         IAuthService authService
         )
     {
@@ -31,6 +33,7 @@ public class OrganizationService : IOrganizationService
         _organizationToUserRepository = organizationToUserRepository;
         _userRepository = userRepository;
         _accountRepository = accountRepository;
+        _workspaceToAccountRepository = workspaceToAccountRepository;
         _authService = authService;
     }
     
@@ -124,6 +127,10 @@ public class OrganizationService : IOrganizationService
 
         if (!await _organizationToUserRepository.Delete((organizationId, userId)))
             throw new PublicClientException();
+        
+        var userAccount = await _accountRepository.GetUserAccount(userId);
+        var organizationAccount = await _accountRepository.GetOrganizationAccount(organizationId);
+        await _workspaceToAccountRepository.DeleteAccountFromAllOwnedBy(userAccount!.Id, organizationAccount!.Id);
     }
 
     [Transactional]

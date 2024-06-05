@@ -14,6 +14,7 @@ public class TransactionUpsertRequestDto
     [MaxLength(2048)]
     public string? Description { get; set; }
     
+    /// <example>null</example>
     public DateTime? Timestamp { get; set; }
     /// <example>null</example>
     public int? UserId { get; set; }

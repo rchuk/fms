@@ -2024,9 +2024,11 @@ components:
         id:
           type: integer
           format: int32
+          example: 5359
         name:
           minLength: 1
           type: string
+          example: Salary
         ownerAccount:
           $ref: '#/components/schemas/AccountResponse'
         kind:
@@ -2034,6 +2036,7 @@ components:
         uiColor:
           minLength: 1
           type: string
+          example: FF0022
         workspace:
           $ref: '#/components/schemas/WorkspaceShortResponse'
       additionalProperties: false
@@ -2047,11 +2050,13 @@ components:
           maxLength: 255
           minLength: 1
           type: string
+          example: Food
         kind:
           $ref: '#/components/schemas/TransactionCategoryKind'
         uiColor:
           type: string
           nullable: true
+          example: FF7E38
       additionalProperties: false
     TransactionResponse:
       required:
@@ -2074,9 +2079,11 @@ components:
         amount:
           type: integer
           format: int32
+          example: -530
         description:
           type: string
           nullable: true
+          example: Some optional description
         timestamp:
           type: string
           format: date-time
@@ -2097,21 +2104,26 @@ components:
         categoryId:
           type: integer
           format: int32
+          example: 6402
         amount:
           type: integer
           format: int32
+          example: 640
         description:
           maxLength: 2048
           type: string
           nullable: true
+          example: Some different optional description
         timestamp:
           type: string
           format: date-time
           nullable: true
+          example: 
         userId:
           type: integer
           format: int32
           nullable: true
+          example: 
       additionalProperties: false
     UserRegisterRequest:
       required:
@@ -2181,9 +2193,11 @@ components:
         id:
           type: integer
           format: int32
+          example: 3501
         name:
           minLength: 1
           type: string
+          example: Family workspace
         kind:
           $ref: '#/components/schemas/WorkspaceKind'
         role:
@@ -2206,9 +2220,11 @@ components:
         id:
           type: integer
           format: int32
+          example: 1402
         name:
           minLength: 1
           type: string
+          example: Family Workspace
         kind:
           $ref: '#/components/schemas/WorkspaceKind'
       additionalProperties: false
@@ -2220,6 +2236,7 @@ components:
         name:
           minLength: 1
           type: string
+          example: Cool Descriptive Workspace Name
       additionalProperties: false
     WorkspaceUserListResponse:
       required:

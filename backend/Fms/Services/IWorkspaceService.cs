@@ -18,7 +18,8 @@ public interface IWorkspaceService
     public Task RemoveUser(int workspaceId, int userId);
     public Task<WorkspaceRole?> GetUserRole(int workspaceId, int userId);
     public Task UpdateUserRole(int workspaceId, int userId, WorkspaceRole role);
-
+    public Task<WorkspaceRole?> GetCurrentUserRole(int id);
+    
     public Task<WorkspaceResponseDto> GetCurrentUserPrivateWorkspace();
     
     public Task<WorkspaceUserListResponseDto> ListWorkspaceUsers(int workspaceId, Pagination pagination);

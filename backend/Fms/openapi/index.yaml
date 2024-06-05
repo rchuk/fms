@@ -629,6 +629,453 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PublicClientError'
+  /api/transactions/categories:
+    put:
+      tags:
+        - TransactionCategory
+      summary: Create user transaction category
+      operationId: createUserTransactionCategory
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionCategoryUpsertRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/TransactionCategoryUpsertRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/TransactionCategoryUpsertRequest'
+      responses:
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int32
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+    get:
+      tags:
+        - TransactionCategory
+      summary: Get list of current user's transaction categories
+      operationId: listUserTransactionCategories
+      parameters:
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            format: int32
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceListResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+  '/api/organizations/{organizationId}/transactions/categories':
+    put:
+      tags:
+        - TransactionCategory
+      summary: Create organization transaction category
+      operationId: createOrganizationTransactionCategory
+      parameters:
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionCategoryUpsertRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/TransactionCategoryUpsertRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/TransactionCategoryUpsertRequest'
+      responses:
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int32
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+    get:
+      tags:
+        - TransactionCategory
+      summary: Get list of organization's transaction categories
+      operationId: listOrganizationTransactionCategories
+      parameters:
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            format: int32
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceListResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+  '/api/workspaces/{workspaceId}/transactions/categories':
+    put:
+      tags:
+        - TransactionCategory
+      summary: Create workspace transaction category
+      operationId: createWorkspaceTransactionCategory
+      parameters:
+        - name: workspaceId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionCategoryUpsertRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/TransactionCategoryUpsertRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/TransactionCategoryUpsertRequest'
+      responses:
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int32
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+    get:
+      tags:
+        - TransactionCategory
+      summary: Get list of workspace transaction categories
+      operationId: listWorkspaceTransactionCategories
+      parameters:
+        - name: workspaceId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            format: int32
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceListResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+  '/api/transactions/categories/{id}':
+    get:
+      tags:
+        - TransactionCategory
+      summary: Get transaction category
+      operationId: getTransactionCategory
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+    post:
+      tags:
+        - TransactionCategory
+      summary: Update transaction category
+      operationId: updateTransactionCategory
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionCategoryUpsertRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/TransactionCategoryUpsertRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/TransactionCategoryUpsertRequest'
+      responses:
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '200':
+          description: Success
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+    delete:
+      tags:
+        - TransactionCategory
+      summary: Delete transaction category
+      operationId: deleteTransactionCategory
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '200':
+          description: Success
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
   /api/workspaces:
     put:
       tags:
@@ -1335,6 +1782,28 @@ components:
           type: string
           example: Something bad happened
       additionalProperties: false
+    TransactionCategoryKind:
+      enum:
+        - INCOME
+        - EXPENSE
+        - MIXED
+      type: string
+    TransactionCategoryUpsertRequest:
+      required:
+        - kind
+        - name
+      type: object
+      properties:
+        name:
+          maxLength: 255
+          minLength: 1
+          type: string
+        kind:
+          $ref: '#/components/schemas/TransactionCategoryKind'
+        uiColor:
+          type: string
+          nullable: true
+      additionalProperties: false
     UserRegisterRequest:
       required:
         - email
@@ -1372,19 +1841,11 @@ components:
           type: string
           example: Snow
       additionalProperties: false
-    WorkspaceKindEntity:
-      required:
-        - name
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int32
-        name:
-          maxLength: 127
-          minLength: 1
-          type: string
-      additionalProperties: false
+    WorkspaceKind:
+      enum:
+        - PRIVATE
+        - SHARED
+      type: string
     WorkspaceListResponse:
       required:
         - items
@@ -1415,7 +1876,7 @@ components:
           minLength: 1
           type: string
         kind:
-          $ref: '#/components/schemas/WorkspaceKindEntity'
+          $ref: '#/components/schemas/WorkspaceKind'
         role:
           $ref: '#/components/schemas/WorkspaceRole'
       additionalProperties: false

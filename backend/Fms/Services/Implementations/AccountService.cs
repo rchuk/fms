@@ -1,5 +1,6 @@
 ﻿using Fms.Application.Attributes;
 using Fms.Dtos;
+using Fms.Entities;
 using Fms.Exceptions;
 using Fms.Repositories;
 
@@ -39,7 +40,12 @@ public class AccountService : IAccountService
             if (await _organizationToUserRepository.Read((organizationId, currentUserId)) is null)
                 throw new PublicNotFoundException();
         }
-        
+
+        return BuildAccountResponseDto(account);
+    }
+
+    public static AccountResponseDto BuildAccountResponseDto(AccountEntity account)
+    {
         return new AccountResponseDto
         {
             Organization = account.Organization != null ? OrganizationService.BuildOrganizationShortResponseDto(account.Organization) : null,

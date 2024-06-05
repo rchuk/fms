@@ -16,7 +16,10 @@ public class FmsDbContext(DbContextOptions<FmsDbContext> options) : DbContext(op
     public DbSet<WorkspaceKindEntity> WorkspaceKinds { get; set; } = null!;
     public DbSet<WorkspaceRoleEntity> WorkspaceRoles { get; set; } = null!;
     public DbSet<WorkspaceToAccountEntity> WorkspaceToAccount { get; set; } = null!;
-    
+
+    public DbSet<TransactionCategoryEntity> TransactionCategories { get; set; } = null!;
+    public DbSet<TransactionCategoryKindEntity> TransactionCategoryKinds { get; set; } = null!;
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -27,6 +30,7 @@ public class FmsDbContext(DbContextOptions<FmsDbContext> options) : DbContext(op
         OnModelCreatingAccount(modelBuilder);
         OnModelCreatingWorkspace(modelBuilder);
         OnModelCreatingWorkspaceToAccount(modelBuilder);
+        OnModelCreatingTransactionCategory(modelBuilder);
     }
     
     private void OnModelCreatingUser(ModelBuilder modelBuilder)
@@ -95,5 +99,14 @@ public class FmsDbContext(DbContextOptions<FmsDbContext> options) : DbContext(op
             .HasOne(map => map.Account)
             .WithMany(account => account.Workspaces)
             .OnDelete(DeleteBehavior.Cascade);
+    }
+
+    private void OnModelCreatingTransactionCategory(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<TransactionCategoryEntity>()
+            .Navigation(entity => entity.Kind).AutoInclude();
+        
+        modelBuilder.Entity<TransactionCategoryEntity>()
+            .Navigation(entity => entity.OwnerAccount).AutoInclude();
     }
 }

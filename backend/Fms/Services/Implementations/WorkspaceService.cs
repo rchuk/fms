@@ -291,7 +291,7 @@ public class WorkspaceService : IWorkspaceService
         };
     }
     
-    private async Task<WorkspaceRole?> GetCurrentUserRole(int id)
+    public async Task<WorkspaceRole?> GetCurrentUserRole(int id)
     {
         var userId = await _authService.GetCurrentUserId();
 
@@ -317,8 +317,18 @@ public class WorkspaceService : IWorkspaceService
         {
             Id = entity.Workspace.Id,
             Name = entity.Workspace.Name,
-            Kind = entity.Workspace.Kind,
+            Kind = entity.Workspace.Kind.ToEnum(),
             Role = entity.Role.ToEnum()
+        };
+    }
+    
+    public static WorkspaceShortResponseDto BuildWorkspaceShortResponseDto(WorkspaceEntity entity)
+    {
+        return new WorkspaceShortResponseDto
+        {
+            Id = entity.Id,
+            Name = entity.Name,
+            Kind = entity.Kind.ToEnum()
         };
     }
     

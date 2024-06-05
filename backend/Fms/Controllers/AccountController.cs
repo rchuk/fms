@@ -23,7 +23,7 @@ public class AccountController(
     /// </summary>
     /// <response code="200">User or organization data</response>
     [HttpGet("{id:int}", Name = "getAccount")]
-    [ProducesResponseType(typeof(OrganizationResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(AccountResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetAccount([FromRoute] int id)
     {

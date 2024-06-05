@@ -36,7 +36,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OrganizationResponse'
+                $ref: '#/components/schemas/AccountResponse'
         '404':
           description: Not Found
           content:
@@ -1679,6 +1679,14 @@ components:
           format: int32
           example: 3600
       additionalProperties: false
+    AccountResponse:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/UserResponse'
+        organization:
+          $ref: '#/components/schemas/OrganizationShortResponse'
+      additionalProperties: false
     OrganizationListResponse:
       required:
         - items
@@ -1718,6 +1726,21 @@ components:
         - ADMIN
         - MEMBER
       type: string
+    OrganizationShortResponse:
+      required:
+        - id
+        - name
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 243
+        name:
+          minLength: 1
+          type: string
+          example: Cool Organization Inc.
+      additionalProperties: false
     OrganizationUpsertRequest:
       required:
         - name

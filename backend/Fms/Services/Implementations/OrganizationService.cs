@@ -17,12 +17,14 @@ public class OrganizationService : IOrganizationService
     private readonly IOrganizationToUserRepository _organizationToUserRepository;
     private readonly IUserRepository _userRepository;
     private readonly IAccountRepository _accountRepository;
+    private readonly IWorkspaceToAccountRepository _workspaceToAccountRepository;
     private readonly IAuthService _authService;
 
     public OrganizationService(
         IOrganizationRepository organizationRepository, OrganizationRoleRepository organizationRoleRepository,
         IOrganizationToUserRepository organizationToUserRepository, IUserRepository userRepository,
         IAccountRepository accountRepository,
+        IWorkspaceToAccountRepository workspaceToAccountRepository,
         IAuthService authService
         )
     {
@@ -31,6 +33,7 @@ public class OrganizationService : IOrganizationService
         _organizationToUserRepository = organizationToUserRepository;
         _userRepository = userRepository;
         _accountRepository = accountRepository;
+        _workspaceToAccountRepository = workspaceToAccountRepository;
         _authService = authService;
     }
     
@@ -104,6 +107,9 @@ public class OrganizationService : IOrganizationService
 
         if (await _userRepository.Read(userId) is null)
             throw new PublicNotFoundException();
+
+        if (await _organizationToUserRepository.Read((organizationId, userId)) is not null)
+            throw new PublicClientException();
         
         await _organizationToUserRepository.Create(new OrganizationToUserEntity
         {
@@ -121,6 +127,10 @@ public class OrganizationService : IOrganizationService
 
         if (!await _organizationToUserRepository.Delete((organizationId, userId)))
             throw new PublicClientException();
+        
+        var userAccount = await _accountRepository.GetUserAccount(userId);
+        var organizationAccount = await _accountRepository.GetOrganizationAccount(organizationId);
+        await _workspaceToAccountRepository.DeleteAccountFromAllOwnedBy(userAccount!.Id, organizationAccount!.Id);
     }
 
     [Transactional]
@@ -143,13 +153,9 @@ public class OrganizationService : IOrganizationService
         if (currentRole is OrganizationRole.Owner)
             throw new PublicClientException();
         
-        var success = await _organizationToUserRepository.Update(new OrganizationToUserEntity
-        {
-            OrganizationId = organizationId,
-            UserId = userId,
-            Role = await _organizationRoleRepository.Read(role)
-        });
-        if (!success)
+        var entity = await _organizationToUserRepository.Read((organizationId, userId));
+        entity!.Role = await _organizationRoleRepository.Read(role);
+        if (!await _organizationToUserRepository.Update(entity))
             throw new PublicClientException();
     }
     

@@ -65,4 +65,18 @@ public class WorkspaceToAccountRepository : BaseCrudRepository<WorkspaceToAccoun
             await query.Skip(pagination.Offset).Take(pagination.Limit).ToListAsync()
         );
     }
+
+    public async Task DeleteAccountFromAllOwnedBy(int accountId, int ownerAccountId)
+    {
+        var role = await _workspaceRoleRepository.Read(WorkspaceRole.Owner);
+        var workspaceIds = Ctx.WorkspaceToAccount
+            .Where(map => map.Role.Id == role.Id)
+            .Select(map => map.WorkspaceId);
+        Ctx.WorkspaceToAccount.RemoveRange(Ctx.WorkspaceToAccount
+            .Where(map => map.AccountId == accountId)
+            .Where(map => workspaceIds.Contains(map.WorkspaceId))
+        );
+        
+        await Ctx.SaveChangesAsync();
+    }
 }

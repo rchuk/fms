@@ -1,6 +1,5 @@
 ﻿using Fms.Application.Attributes;
 using Fms.Dtos;
-using Fms.Entities;
 using Fms.Exceptions;
 using Fms.Repositories;
 

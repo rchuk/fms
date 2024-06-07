@@ -22,6 +22,8 @@ namespace Fms;
 
 public class Startup
 {
+    private const string CorsPolicyName = "defaultCorsPolicy"; 
+    
     public IConfiguration Configuration { get; }
 
     public Startup(IConfiguration configuration)
@@ -43,6 +45,15 @@ public class Startup
         
         services.AddHttpLogging(o => { });
         services.AddHttpContextAccessor();
+        services.AddCors(options =>
+        {
+            options.AddPolicy(CorsPolicyName, policy =>
+            {
+                policy.WithOrigins("http://fms_frontend:3000", "http://localhost:3000")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+        });
         
         AddDatabase(services);
         AddRepositories(services);
@@ -64,6 +75,8 @@ public class Startup
         }
 
         app.UseHttpsRedirection();
+        app.UseRouting();
+        app.UseCors(CorsPolicyName);
         app.UseRequestLocalization();
         app.UseMiddleware<PublicErrorHandlerMiddleware>();
         app.UseAuthentication();

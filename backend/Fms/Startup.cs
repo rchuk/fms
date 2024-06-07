@@ -74,7 +74,7 @@ public class Startup
             app.UseHttpLogging();
         }
 
-        app.UseHttpsRedirection();
+        // app.UseHttpsRedirection();
         app.UseRouting();
         app.UseCors(CorsPolicyName);
         app.UseRequestLocalization();

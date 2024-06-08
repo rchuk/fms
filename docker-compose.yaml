@@ -25,8 +25,9 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./frontend:/app
       - /app/node_modules
+    environment:
+      - ORIGIN=http://localhost:3000
 
   fms_backend:
     depends_on:

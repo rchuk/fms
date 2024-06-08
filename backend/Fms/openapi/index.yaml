@@ -1948,7 +1948,8 @@ components:
       type: object
       properties:
         name:
-          minLength: 1
+          maxLength: 255
+          minLength: 3
           type: string
           example: New Organization Name
       additionalProperties: false
@@ -2048,7 +2049,7 @@ components:
       properties:
         name:
           maxLength: 255
-          minLength: 1
+          minLength: 3
           type: string
           example: Food
         kind:
@@ -2234,7 +2235,8 @@ components:
       type: object
       properties:
         name:
-          minLength: 1
+          maxLength: 255
+          minLength: 3
           type: string
           example: Cool Descriptive Workspace Name
       additionalProperties: false

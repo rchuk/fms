@@ -1,6 +1,7 @@
 ﻿using Fms.Application.Attributes;
 using Fms.Dtos;
 using Fms.Entities;
+using Fms.Entities.Common;
 using Fms.Entities.Enums;
 using Fms.Exceptions;
 using Fms.Repositories;
@@ -63,7 +64,7 @@ public class TransactionService : ITransactionService
     public async Task<TransactionResponseDto> GetTransaction(int id)
     {
         var transaction = await GetTransactionImpl(id);
-        await VerifyCanReadTransaction(transaction);
+        await VerifyCanReadTransaction(transaction.WorkspaceId);
         
         return BuildTransactionResponseDto(transaction);
     }
@@ -100,6 +101,20 @@ public class TransactionService : ITransactionService
             throw new PublicClientException();
     }
 
+    [Transactional]
+    public async Task<TransactionListResponseDto> ListWorkspaceTransactions(int workspaceId, TransactionCriteriaDto criteria, PaginationDto pagination)
+    {
+        await VerifyCanReadTransaction(workspaceId);
+        
+        var (count, items) = await _transactionRepository.ListWorkspaceTransactions(workspaceId, criteria, new Pagination(pagination));
+
+        return new TransactionListResponseDto
+        {
+            TotalCount = count,
+            Items = items.Select(BuildTransactionResponseDto).ToList()
+        };
+    }
+    
     public static TransactionResponseDto BuildTransactionResponseDto(TransactionEntity transaction)
     {
         return new TransactionResponseDto
@@ -183,12 +198,12 @@ public class TransactionService : ITransactionService
         }
     }
     
-    private async Task VerifyCanReadTransaction(TransactionEntity transaction)
+    private async Task VerifyCanReadTransaction(int workspaceId)
     {
-        var workspaceOwner = await _workspaceToAccountRepository.GetOwner(transaction.WorkspaceId);
+        var workspaceOwner = await _workspaceToAccountRepository.GetOwner(workspaceId);
         if (workspaceOwner is null)
             throw new PublicNotFoundException();
-        var workspaceRole = await _workspaceService.GetCurrentUserRole(transaction.WorkspaceId);
+        var workspaceRole = await _workspaceService.GetCurrentUserRole(workspaceId);
         if (workspaceRole is not null)
             return;
         

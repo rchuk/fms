@@ -1,4 +1,6 @@
-﻿using Fms.Entities;
+﻿using Fms.Dtos;
+using Fms.Entities;
+using Fms.Entities.Common;
 
 namespace Fms.Repositories;
 
@@ -8,6 +10,7 @@ public interface ITransactionRepository
     Task<TransactionEntity?> Read(int id);
     Task<bool> Update(TransactionEntity entity);
     Task<bool> Delete(int id);
-    
-    // TODO
+
+    Task<(int total, IEnumerable<TransactionEntity> items)> ListWorkspaceTransactions(int workspaceId,
+        TransactionCriteriaDto criteria, Pagination pagination);
 }

@@ -74,5 +74,16 @@ public class TransactionController(
         return Ok();
     }
     
-    // TODO: Add list; Add criteria
+    /// <summary>
+    /// Get list of workspace transactions
+    /// </summary>
+    [HttpGet("/api/workspaces/{workspaceId:int}/transactions", Name = "listTransactions")]
+    [ProducesResponseType(typeof(TransactionListResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> ListWorkspaceTransactions([FromRoute] int workspaceId,
+        [FromQuery] TransactionCriteriaDto criteria, [FromQuery] PaginationDto pagination)
+    {
+        return Ok(await transactionService.ListWorkspaceTransactions(workspaceId, criteria, pagination));
+    }
 }

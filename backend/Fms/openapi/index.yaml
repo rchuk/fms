@@ -691,6 +691,113 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PublicClientError'
+    get:
+      tags:
+        - Transaction
+      summary: Get list of workspace transactions
+      operationId: listTransactions
+      parameters:
+        - name: workspaceId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: CategoryId
+          in: query
+          schema:
+            type: integer
+            format: int32
+            example: 35
+          example: 35
+        - name: StartDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+            example: '2024-06-07T07:00:00.000Z'
+          example: '2024-06-07T07:00:00.000Z'
+        - name: EndDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+            example: 
+          example: 'null'
+        - name: UserId
+          in: query
+          schema:
+            type: integer
+            format: int32
+            example: 
+          example: 
+        - name: MinAmount
+          in: query
+          schema:
+            type: integer
+            format: int32
+            example: 300
+          example: 300
+        - name: MaxAmount
+          in: query
+          schema:
+            type: integer
+            format: int32
+            example: 
+          example: 
+        - name: CategoryKind
+          in: query
+          schema:
+            $ref: '#/components/schemas/TransactionCategoryKind'
+        - name: SortField
+          in: query
+          schema:
+            $ref: '#/components/schemas/TransactionSortField'
+        - name: SortDirection
+          in: query
+          schema:
+            $ref: '#/components/schemas/SortDirection'
+        - name: Offset
+          in: query
+          schema:
+            type: integer
+            format: int32
+        - name: Limit
+          in: query
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionListResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
   '/api/transactions/{id}':
     get:
       tags:
@@ -2007,6 +2114,11 @@ components:
           type: string
           example: Something bad happened
       additionalProperties: false
+    SortDirection:
+      enum:
+        - ASCENDING
+        - DESCENDING
+      type: string
     TransactionCategoryKind:
       enum:
         - INCOME
@@ -2059,6 +2171,21 @@ components:
           nullable: true
           example: FF7E38
       additionalProperties: false
+    TransactionListResponse:
+      required:
+        - items
+        - totalCount
+      type: object
+      properties:
+        totalCount:
+          type: integer
+          format: int32
+          example: 165
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionResponse'
+      additionalProperties: false
     TransactionResponse:
       required:
         - amount
@@ -2096,6 +2223,11 @@ components:
         user:
           $ref: '#/components/schemas/UserResponse'
       additionalProperties: false
+    TransactionSortField:
+      enum:
+        - TIMESTAMP
+        - AMOUNT
+      type: string
     TransactionUpsertRequest:
       required:
         - amount

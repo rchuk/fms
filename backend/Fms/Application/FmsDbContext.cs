@@ -21,6 +21,7 @@ public class FmsDbContext(DbContextOptions<FmsDbContext> options) : DbContext(op
     public DbSet<TransactionCategoryKindEntity> TransactionCategoryKinds { get; set; } = null!;
 
     public DbSet<TransactionEntity> Transactions { get; set; } = null!;
+    public DbSet<SubscriptionKindEntity> SubscriptionKinds { get; set; } = null!;
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -33,12 +34,16 @@ public class FmsDbContext(DbContextOptions<FmsDbContext> options) : DbContext(op
         OnModelCreatingWorkspace(modelBuilder);
         OnModelCreatingWorkspaceToAccount(modelBuilder);
         OnModelCreatingTransactionCategory(modelBuilder);
+        OnModelCreatingTransaction(modelBuilder);
     }
     
     private void OnModelCreatingUser(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<UserEntity>()
             .Navigation(entity => entity.Account).AutoInclude();
+        
+        modelBuilder.Entity<UserEntity>()
+            .Navigation(entity => entity.SubscriptionKind).AutoInclude();
     }
 
     private void OnModelCreatingOrganization(ModelBuilder modelBuilder)
@@ -83,6 +88,10 @@ public class FmsDbContext(DbContextOptions<FmsDbContext> options) : DbContext(op
     {
         modelBuilder.Entity<WorkspaceEntity>()
             .Navigation(entity => entity.Kind).AutoInclude();
+
+        modelBuilder.Entity<WorkspaceEntity>()
+            .HasMany(entity => entity.Transactions)
+            .WithOne(transaction => transaction.Workspace);
     }
     
     private void OnModelCreatingWorkspaceToAccount(ModelBuilder modelBuilder)
@@ -110,5 +119,13 @@ public class FmsDbContext(DbContextOptions<FmsDbContext> options) : DbContext(op
         
         modelBuilder.Entity<TransactionCategoryEntity>()
             .Navigation(entity => entity.OwnerAccount).AutoInclude();
+    }
+
+    private void OnModelCreatingTransaction(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<TransactionEntity>()
+            .HasOne<WorkspaceEntity>(transaction => transaction.Workspace)
+            .WithMany(workspace => workspace.Transactions)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

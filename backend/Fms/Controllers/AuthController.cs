@@ -1,5 +1,6 @@
 ﻿using Fms.Dtos;
 using Fms.Services;
+using Fms.Services.Implementations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -45,13 +46,25 @@ public class AuthController(
     /// Get id of the current user
     /// </summary>
     /// <response code="200">Returns id of the current user</response>
-    [HttpGet("me", Name = "me")]
+    [HttpGet("id", Name = "getId")]
     [Authorize]
     [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> Me()
+    public async Task<IActionResult> GetCurrentuserId()
     {
         return Ok(await authService.GetCurrentUserId());
+    }
+    
+    /// <summary>
+    /// Get current user
+    /// </summary>
+    /// <response code="200">Returns id of the current user</response>
+    [HttpGet("me", Name = "getMe")]
+    [Authorize]
+    [ProducesResponseType(typeof(UserSelfResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> GetCurrentuser()
+    {
+        return Ok(UserService.BuildSelfUserResponseDto(await authService.GetCurrentUser()));
     }
 }

@@ -18,5 +18,9 @@ public class UserEntity
     public string LastName { get; set; } = null!;
 
     public AccountEntity Account { get; set; } = null!;
+    
+    public int? SubscriptionKindId { get; set; }
+    public SubscriptionKindEntity? SubscriptionKind { get; set; } = null!;
+    
     public virtual List<OrganizationToUserEntity> Organizations { get; set; } = null!;
 }

@@ -90,9 +90,9 @@ public class WorkspaceController(
     [HttpGet(Name = "listUserWorkspaces")]
     [ProducesResponseType(typeof(WorkspaceListResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> ListCurrentUserWorkspaces([FromQuery] int? offset, [FromQuery] int? limit)
+    public async Task<IActionResult> ListCurrentUserWorkspaces([FromQuery] PaginationDto pagination)
     {
-        return Ok(await workspaceService.ListCurrentUserWorkspaces(new Pagination(offset, limit)));
+        return Ok(await workspaceService.ListCurrentUserWorkspaces(pagination));
     }
     
     /// <summary>
@@ -102,9 +102,9 @@ public class WorkspaceController(
     [ProducesResponseType(typeof(WorkspaceListResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> ListOrganizationWorkspaces([FromRoute] int organizationId, [FromQuery] int? offset, [FromQuery] int? limit)
+    public async Task<IActionResult> ListOrganizationWorkspaces([FromRoute] int organizationId, [FromQuery] PaginationDto pagination)
     {
-        return Ok(await workspaceService.ListOrganizationWorkspaces(organizationId, new Pagination(offset, limit)));
+        return Ok(await workspaceService.ListOrganizationWorkspaces(organizationId, pagination));
     }
 
     /// <summary>
@@ -170,8 +170,8 @@ public class WorkspaceController(
     [ProducesResponseType(typeof(WorkspaceUserListResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> ListWorkspaceUsers([FromRoute] int workspaceId, [FromQuery] int? offset, [FromQuery] int? limit)
+    public async Task<IActionResult> ListWorkspaceUsers([FromRoute] int workspaceId, [FromQuery] PaginationDto pagination)
     {
-        return Ok(await workspaceService.ListWorkspaceUsers(workspaceId, new Pagination(offset, limit)));
+        return Ok(await workspaceService.ListWorkspaceUsers(workspaceId, pagination));
     }
 }

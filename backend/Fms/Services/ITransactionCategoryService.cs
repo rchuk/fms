@@ -12,7 +12,7 @@ public interface ITransactionCategoryService
     public Task UpdateTransactionCategory(int id, TransactionCategoryUpsertRequestDto request);
     public Task DeleteTransactionCategory(int id);
 
-    public Task<TransactionCategoryListResponseDto> ListUserTransactionCategories(Pagination pagination);
-    public Task<TransactionCategoryListResponseDto> ListOrganizationTransactionCategories(int organizationId, Pagination pagination);
-    public Task<TransactionCategoryListResponseDto> ListWorkspaceTransactionCategories(int workspaceId, Pagination pagination);
+    public Task<TransactionCategoryListResponseDto> ListUserTransactionCategories(PaginationDto pagination);
+    public Task<TransactionCategoryListResponseDto> ListOrganizationTransactionCategories(int organizationId, PaginationDto pagination);
+    public Task<TransactionCategoryListResponseDto> ListWorkspaceTransactionCategories(int workspaceId, PaginationDto pagination);
 }

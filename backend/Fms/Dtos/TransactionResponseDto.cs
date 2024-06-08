@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Fms.Dtos.Common;
 
 namespace Fms.Dtos;
 
@@ -26,3 +27,5 @@ public class TransactionResponseDto
     
     public UserResponseDto? User { get; set; }
 }
+
+public class TransactionListResponseDto : ListResponseDto<TransactionResponseDto>;

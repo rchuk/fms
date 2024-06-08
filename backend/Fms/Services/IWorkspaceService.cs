@@ -22,7 +22,7 @@ public interface IWorkspaceService
     
     public Task<WorkspaceResponseDto> GetCurrentUserPrivateWorkspace();
     
-    public Task<WorkspaceUserListResponseDto> ListWorkspaceUsers(int workspaceId, Pagination pagination);
-    public Task<WorkspaceListResponseDto> ListCurrentUserWorkspaces(Pagination pagination);
-    public Task<WorkspaceListResponseDto> ListOrganizationWorkspaces(int organizationId, Pagination pagination);
+    public Task<WorkspaceUserListResponseDto> ListWorkspaceUsers(int workspaceId, PaginationDto pagination);
+    public Task<WorkspaceListResponseDto> ListCurrentUserWorkspaces(PaginationDto pagination);
+    public Task<WorkspaceListResponseDto> ListOrganizationWorkspaces(int organizationId, PaginationDto pagination);
 }

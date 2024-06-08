@@ -6,7 +6,9 @@ namespace Fms.Dtos;
 public class TransactionCategoryUpsertRequestDto
 {
     /// <example>Food</example>
-    [Required, MaxLength(255)]
+    [Required]
+    [MinLength(3)]
+    [MaxLength(255)]
     public required string Name { get; set; }
     [Required]
     public required TransactionCategoryKind Kind { get; set; }

@@ -20,6 +20,7 @@ public class WorkspaceService : IWorkspaceService
     private readonly IAccountRepository _accountRepository;
     private readonly IAuthService _authService;
     private readonly IOrganizationService _organizationService;
+    private readonly ISubscriptionService _subscriptionService;
     private readonly IStringLocalizer<ApplicationMessages> _localizer;
     
     public WorkspaceService(
@@ -30,6 +31,7 @@ public class WorkspaceService : IWorkspaceService
         IAccountRepository accountRepository,
         IAuthService authService,
         IOrganizationService organizationService,
+        ISubscriptionService subscriptionService,
         IStringLocalizer<ApplicationMessages> localizer
     )
     {
@@ -40,6 +42,7 @@ public class WorkspaceService : IWorkspaceService
         _accountRepository = accountRepository;
         _authService = authService;
         _organizationService = organizationService;
+        _subscriptionService = subscriptionService;
         _localizer = localizer;
     }
     
@@ -49,7 +52,7 @@ public class WorkspaceService : IWorkspaceService
         var account = await _accountRepository.GetUserAccount(userId);
         if (account is null)
             throw new PublicServerException();
-        if (await _workspaceToAccountRepository.GetPrivateWorkspace(account!.Id) is not null)
+        if (await _workspaceToAccountRepository.GetPrivateWorkspace(account.Id) is not null)
             throw new PublicServerException();
     
         var workspace = await _workspaceRepository.Create(new WorkspaceEntity
@@ -71,14 +74,20 @@ public class WorkspaceService : IWorkspaceService
     [Transactional]
     public async Task<int> CreateSharedUserWorkspace(WorkspaceUpsertRequestDto requestDto)
     {
-        // TODO: Check user's subscription model
-
+        var subscription = await _subscriptionService.GetCurrentUserSubscription();
+        if (subscription is null)
+            throw new PublicClientException();
+        
+        var account = await _accountRepository.GetUserAccount(await _authService.GetCurrentUserId());
+        var (workspaceCount, _) = await _workspaceToAccountRepository.ListAccountWorkspaces(account!.Id, new Pagination(0, 0));
+        if (subscription is SubscriptionKind.Family or SubscriptionKind.Business && workspaceCount >= 1)
+            throw new PublicClientException();
+        
         var workspace = await _workspaceRepository.Create(new WorkspaceEntity
         {
             Name = requestDto.Name,
             Kind = await _workspaceKindRepository.Read(WorkspaceKind.Shared)
         });
-        var account = await _accountRepository.GetUserAccount(await _authService.GetCurrentUserId());
         await _workspaceToAccountRepository.Create(new WorkspaceToAccountEntity
         {
             WorkspaceId = workspace.Id,
@@ -92,8 +101,6 @@ public class WorkspaceService : IWorkspaceService
     [Transactional]
     public async Task<int> CreateSharedOrganizationWorkspace(int organizationId, WorkspaceUpsertRequestDto requestDto)
     {
-        // TODO: Check organization's subscription model
-        
         var organizationRole = await _organizationService.GetCurrentUserRole(organizationId);
         if (organizationRole is null)
             throw new PublicNotFoundException();
@@ -170,7 +177,7 @@ public class WorkspaceService : IWorkspaceService
         var account = await _accountRepository.GetUserAccount(userId);
         if (account is null)
             throw new PublicNotFoundException();
-
+        
         var owner = await _workspaceToAccountRepository.GetOwner(workspaceId);
         if (owner!.OrganizationId is { } organizationOwnerId)
         {
@@ -181,6 +188,13 @@ public class WorkspaceService : IWorkspaceService
         if (await _workspaceToAccountRepository.Read((workspaceId, account.Id)) is not null)
             throw new PublicClientException();
  
+        if (owner.User is { } userOwner&& userOwner.SubscriptionKind?.ToEnum() is SubscriptionKind.Family)
+        {
+            var (workspaceMembers, _) = await _workspaceToAccountRepository.ListWorkspaceAccounts(workspaceId, new Pagination(0, 0));
+            if (workspaceMembers >= 4)
+                throw new PublicClientException();
+        }
+        
         await _workspaceToAccountRepository.Create(new WorkspaceToAccountEntity
         {
             WorkspaceId = workspaceId,
@@ -243,12 +257,12 @@ public class WorkspaceService : IWorkspaceService
     }
 
     [Transactional]
-    public async Task<WorkspaceUserListResponseDto> ListWorkspaceUsers(int id, Pagination pagination)
+    public async Task<WorkspaceUserListResponseDto> ListWorkspaceUsers(int id, PaginationDto pagination)
     {
         if (await GetCurrentUserRole(id) is null)
             throw new PublicNotFoundException();
 
-        var (total, items) = await _workspaceToAccountRepository.ListWorkspaceAccounts(id, pagination);
+        var (total, items) = await _workspaceToAccountRepository.ListWorkspaceAccounts(id, new Pagination(pagination));
 
         return new WorkspaceUserListResponseDto
         {
@@ -260,13 +274,13 @@ public class WorkspaceService : IWorkspaceService
     }
 
     [Transactional]
-    public async Task<WorkspaceListResponseDto> ListCurrentUserWorkspaces(Pagination pagination)
+    public async Task<WorkspaceListResponseDto> ListCurrentUserWorkspaces(PaginationDto pagination)
     {
         var account = await _accountRepository.GetUserAccount(await _authService.GetCurrentUserId());
         if (account is null)
             throw new PublicNotFoundException();
         
-        var (total, items) = await _workspaceToAccountRepository.ListAccountWorkspaces(account.Id, pagination);
+        var (total, items) = await _workspaceToAccountRepository.ListAccountWorkspaces(account.Id, new Pagination(pagination));
         
         return new WorkspaceListResponseDto
         {
@@ -276,13 +290,13 @@ public class WorkspaceService : IWorkspaceService
     }
 
     [Transactional]
-    public async Task<WorkspaceListResponseDto> ListOrganizationWorkspaces(int organizationId, Pagination pagination)
+    public async Task<WorkspaceListResponseDto> ListOrganizationWorkspaces(int organizationId, PaginationDto pagination)
     {
         var account = await _accountRepository.GetOrganizationAccount(organizationId);
         if (account is null)
             throw new PublicNotFoundException();
         
-        var (total, items) = await _workspaceToAccountRepository.ListAccountWorkspaces(account.Id, pagination);
+        var (total, items) = await _workspaceToAccountRepository.ListAccountWorkspaces(account.Id, new Pagination(pagination));
 
         return new WorkspaceListResponseDto
         {

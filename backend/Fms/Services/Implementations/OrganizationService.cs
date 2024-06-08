@@ -18,6 +18,7 @@ public class OrganizationService : IOrganizationService
     private readonly IUserRepository _userRepository;
     private readonly IAccountRepository _accountRepository;
     private readonly IWorkspaceToAccountRepository _workspaceToAccountRepository;
+    private readonly ISubscriptionService _subscriptionService;
     private readonly IAuthService _authService;
 
     public OrganizationService(
@@ -25,6 +26,7 @@ public class OrganizationService : IOrganizationService
         IOrganizationToUserRepository organizationToUserRepository, IUserRepository userRepository,
         IAccountRepository accountRepository,
         IWorkspaceToAccountRepository workspaceToAccountRepository,
+        ISubscriptionService subscriptionService,
         IAuthService authService
         )
     {
@@ -34,13 +36,15 @@ public class OrganizationService : IOrganizationService
         _userRepository = userRepository;
         _accountRepository = accountRepository;
         _workspaceToAccountRepository = workspaceToAccountRepository;
+        _subscriptionService = subscriptionService;
         _authService = authService;
     }
     
     [Transactional]
     public async Task<int> CreateOrganization(OrganizationUpsertRequestDto request)
     {
-        // TODO: Check user's subscription model
+        if (await _subscriptionService.GetCurrentUserSubscription() is not SubscriptionKind.BusinessUnlimited)
+            throw new PublicClientException();
         
         if (await _organizationRepository.FindByName(request.Name) is not null)
             throw new PublicClientException();
@@ -160,12 +164,12 @@ public class OrganizationService : IOrganizationService
     }
     
     [Transactional]
-    public async Task<OrganizationUserListResponseDto> ListOrganizationUsers(int id, Pagination pagination)
+    public async Task<OrganizationUserListResponseDto> ListOrganizationUsers(int id, PaginationDto pagination)
     {
         if (await GetCurrentUserRole(id) is null)
             throw new PublicNotFoundException();
         
-        var (total, items) = await _organizationToUserRepository.ListOrganizationUsers(id, pagination);
+        var (total, items) = await _organizationToUserRepository.ListOrganizationUsers(id, new Pagination(pagination));
 
         return new OrganizationUserListResponseDto
         {
@@ -175,9 +179,9 @@ public class OrganizationService : IOrganizationService
     }
 
     [Transactional]
-    public async Task<OrganizationListResponseDto> ListCurrentUserOrganizations(Pagination pagination)
+    public async Task<OrganizationListResponseDto> ListCurrentUserOrganizations(PaginationDto pagination)
     {
-        var (total, items) = await _organizationToUserRepository.ListUserOrganizations(await _authService.GetCurrentUserId(), pagination);
+        var (total, items) = await _organizationToUserRepository.ListUserOrganizations(await _authService.GetCurrentUserId(), new Pagination(pagination));
 
         return new OrganizationListResponseDto
         {

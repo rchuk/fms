@@ -104,9 +104,9 @@ public class TransactionCategoryController(
     [HttpGet(Name = "listUserTransactionCategories")]
     [ProducesResponseType(typeof(WorkspaceListResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> ListCurrentUserTransactionCategories([FromQuery] int? offset, [FromQuery] int? limit)
+    public async Task<IActionResult> ListCurrentUserTransactionCategories([FromQuery] PaginationDto pagination)
     {
-        return Ok(await transactionCategoryService.ListUserTransactionCategories(new Pagination(offset, limit)));
+        return Ok(await transactionCategoryService.ListUserTransactionCategories(pagination));
     }
     
     /// <summary>
@@ -117,9 +117,9 @@ public class TransactionCategoryController(
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ListOrganizationTransactionCategories([FromRoute] int organizationId,
-        [FromQuery] int? offset, [FromQuery] int? limit)
+        [FromQuery] PaginationDto pagination)
     {
-        return Ok(await transactionCategoryService.ListOrganizationTransactionCategories(organizationId, new Pagination(offset, limit)));
+        return Ok(await transactionCategoryService.ListOrganizationTransactionCategories(organizationId, pagination));
     }
     
     /// <summary>
@@ -131,8 +131,8 @@ public class TransactionCategoryController(
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ListWorkspaceTransactionCategories([FromRoute] int workspaceId,
-        [FromQuery] int? offset, [FromQuery] int? limit)
+        [FromQuery] PaginationDto pagination)
     {
-        return Ok(await transactionCategoryService.ListWorkspaceTransactionCategories(workspaceId, new Pagination(offset, limit)));
+        return Ok(await transactionCategoryService.ListWorkspaceTransactionCategories(workspaceId, pagination));
     }
 }

@@ -124,12 +124,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PublicClientError'
-  /api/auth/me:
+  /api/auth/id:
     get:
       tags:
         - Auth
       summary: Get id of the current user
-      operationId: me
+      operationId: getId
       responses:
         '500':
           description: Server Error
@@ -144,12 +144,31 @@ paths:
               schema:
                 type: integer
                 format: int32
-        '400':
-          description: Bad Request
+        '401':
+          description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PublicClientError'
+                $ref: '#/components/schemas/PublicError'
+  /api/auth/me:
+    get:
+      tags:
+        - Auth
+      summary: Get current user
+      operationId: getMe
+      responses:
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '200':
+          description: Returns id of the current user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSelfResponse'
         '401':
           description: Unauthorized
           content:
@@ -205,12 +224,12 @@ paths:
       summary: Get list of current user's organizations
       operationId: listUserOrganizations
       parameters:
-        - name: offset
+        - name: Offset
           in: query
           schema:
             type: integer
             format: int32
-        - name: limit
+        - name: Limit
           in: query
           schema:
             type: integer
@@ -588,12 +607,12 @@ paths:
           schema:
             type: integer
             format: int32
-        - name: offset
+        - name: Offset
           in: query
           schema:
             type: integer
             format: int32
-        - name: limit
+        - name: Limit
           in: query
           schema:
             type: integer
@@ -625,6 +644,44 @@ paths:
                 $ref: '#/components/schemas/PublicClientError'
         '404':
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+  /api/subscriptions/buy:
+    post:
+      tags:
+        - Subscription
+      summary: Buy subscription
+      operationId: buySubscription
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BuySubscriptionRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/BuySubscriptionRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/BuySubscriptionRequest'
+      responses:
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '200':
+          description: Success
+        '400':
+          description: Bad Request
           content:
             application/json:
               schema:
@@ -679,6 +736,113 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PublicClientError'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+    get:
+      tags:
+        - Transaction
+      summary: Get list of workspace transactions
+      operationId: listTransactions
+      parameters:
+        - name: workspaceId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: CategoryId
+          in: query
+          schema:
+            type: integer
+            format: int32
+            example: 35
+          example: 35
+        - name: StartDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+            example: '2024-06-07T07:00:00.000Z'
+          example: '2024-06-07T07:00:00.000Z'
+        - name: EndDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+            example: 
+          example: 'null'
+        - name: UserId
+          in: query
+          schema:
+            type: integer
+            format: int32
+            example: 
+          example: 
+        - name: MinAmount
+          in: query
+          schema:
+            type: integer
+            format: int32
+            example: 300
+          example: 300
+        - name: MaxAmount
+          in: query
+          schema:
+            type: integer
+            format: int32
+            example: 
+          example: 
+        - name: CategoryKind
+          in: query
+          schema:
+            $ref: '#/components/schemas/TransactionCategoryKind'
+        - name: SortField
+          in: query
+          schema:
+            $ref: '#/components/schemas/TransactionSortField'
+        - name: SortDirection
+          in: query
+          schema:
+            $ref: '#/components/schemas/SortDirection'
+        - name: Offset
+          in: query
+          schema:
+            type: integer
+            format: int32
+        - name: Limit
+          in: query
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionListResponse'
         '400':
           description: Bad Request
           content:
@@ -879,12 +1043,12 @@ paths:
       summary: Get list of current user's transaction categories
       operationId: listUserTransactionCategories
       parameters:
-        - name: offset
+        - name: Offset
           in: query
           schema:
             type: integer
             format: int32
-        - name: limit
+        - name: Limit
           in: query
           schema:
             type: integer
@@ -988,12 +1152,12 @@ paths:
           schema:
             type: integer
             format: int32
-        - name: offset
+        - name: Offset
           in: query
           schema:
             type: integer
             format: int32
-        - name: limit
+        - name: Limit
           in: query
           schema:
             type: integer
@@ -1103,12 +1267,12 @@ paths:
           schema:
             type: integer
             format: int32
-        - name: offset
+        - name: Offset
           in: query
           schema:
             type: integer
             format: int32
-        - name: limit
+        - name: Limit
           in: query
           schema:
             type: integer
@@ -1326,12 +1490,12 @@ paths:
       summary: Get list of current user's workspaces
       operationId: listUserWorkspaces
       parameters:
-        - name: offset
+        - name: Offset
           in: query
           schema:
             type: integer
             format: int32
-        - name: limit
+        - name: Limit
           in: query
           schema:
             type: integer
@@ -1428,12 +1592,12 @@ paths:
           schema:
             type: integer
             format: int32
-        - name: offset
+        - name: Offset
           in: query
           schema:
             type: integer
             format: int32
-        - name: limit
+        - name: Limit
           in: query
           schema:
             type: integer
@@ -1817,12 +1981,12 @@ paths:
           schema:
             type: integer
             format: int32
-        - name: offset
+        - name: Offset
           in: query
           schema:
             type: integer
             format: int32
-        - name: limit
+        - name: Limit
           in: query
           schema:
             type: integer
@@ -1888,6 +2052,14 @@ components:
         organization:
           $ref: '#/components/schemas/OrganizationShortResponse'
       additionalProperties: false
+    BuySubscriptionRequest:
+      required:
+        - kind
+      type: object
+      properties:
+        kind:
+          $ref: '#/components/schemas/SubscriptionKind'
+      additionalProperties: false
     OrganizationListResponse:
       required:
         - items
@@ -1948,7 +2120,8 @@ components:
       type: object
       properties:
         name:
-          minLength: 1
+          maxLength: 255
+          minLength: 3
           type: string
           example: New Organization Name
       additionalProperties: false
@@ -2006,6 +2179,17 @@ components:
           type: string
           example: Something bad happened
       additionalProperties: false
+    SortDirection:
+      enum:
+        - ASCENDING
+        - DESCENDING
+      type: string
+    SubscriptionKind:
+      enum:
+        - FAMILY
+        - BUSINESS
+        - BUSINESS_UNLIMITED
+      type: string
     TransactionCategoryKind:
       enum:
         - INCOME
@@ -2048,7 +2232,7 @@ components:
       properties:
         name:
           maxLength: 255
-          minLength: 1
+          minLength: 3
           type: string
           example: Food
         kind:
@@ -2057,6 +2241,21 @@ components:
           type: string
           nullable: true
           example: FF7E38
+      additionalProperties: false
+    TransactionListResponse:
+      required:
+        - items
+        - totalCount
+      type: object
+      properties:
+        totalCount:
+          type: integer
+          format: int32
+          example: 165
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionResponse'
       additionalProperties: false
     TransactionResponse:
       required:
@@ -2095,6 +2294,11 @@ components:
         user:
           $ref: '#/components/schemas/UserResponse'
       additionalProperties: false
+    TransactionSortField:
+      enum:
+        - TIMESTAMP
+        - AMOUNT
+      type: string
     TransactionUpsertRequest:
       required:
         - amount
@@ -2161,6 +2365,34 @@ components:
           minLength: 1
           type: string
           example: Snow
+      additionalProperties: false
+    UserSelfResponse:
+      required:
+        - email
+        - firstName
+        - id
+        - lastName
+        - subscriptionKind
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 25
+        firstName:
+          minLength: 1
+          type: string
+          example: John
+        lastName:
+          minLength: 1
+          type: string
+          example: Snow
+        email:
+          minLength: 1
+          type: string
+          example: meow@gmail.com
+        subscriptionKind:
+          $ref: '#/components/schemas/SubscriptionKind'
       additionalProperties: false
     WorkspaceKind:
       enum:
@@ -2234,7 +2466,8 @@ components:
       type: object
       properties:
         name:
-          minLength: 1
+          maxLength: 255
+          minLength: 3
           type: string
           example: Cool Descriptive Workspace Name
       additionalProperties: false

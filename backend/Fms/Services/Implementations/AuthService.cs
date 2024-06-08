@@ -27,8 +27,11 @@ public class AuthService : IAuthService
     private readonly int _pbkdf2Iterations;
 
     public AuthService(
-        IConfiguration configuration, IHttpContextAccessor httpContextAccessor, IStringLocalizer<ErrorMessages> errorLocalizer,
-        IUserRepository userRepository, IUserService userService
+        IConfiguration configuration,
+        IHttpContextAccessor httpContextAccessor,
+        IStringLocalizer<ErrorMessages> errorLocalizer,
+        IUserRepository userRepository,
+        IUserService userService
         )
     {
         _configuration = configuration;

@@ -51,9 +51,9 @@ public class WorkspaceService : IWorkspaceService
     {
         var account = await _accountRepository.GetUserAccount(userId);
         if (account is null)
-            throw new PublicServerException();
+            throw new PublicServerException(_localizer[Localization.ErrorMessages.account_doesnt_exist]);
         if (await _workspaceToAccountRepository.GetPrivateWorkspace(account.Id) is not null)
-            throw new PublicServerException();
+            throw new PublicServerException(_localizer[Localization.ErrorMessages.private_workspace_already_exists]);
     
         var workspace = await _workspaceRepository.Create(new WorkspaceEntity
         {
@@ -76,12 +76,12 @@ public class WorkspaceService : IWorkspaceService
     {
         var subscription = await _subscriptionService.GetCurrentUserSubscription();
         if (subscription is null)
-            throw new PublicClientException();
+            throw new PublicClientException(_localizer[Localization.ErrorMessages.subscription_cant_create_shared_workspace]);
         
         var account = await _accountRepository.GetUserAccount(await _authService.GetCurrentUserId());
         var (workspaceCount, _) = await _workspaceToAccountRepository.ListAccountWorkspaces(account!.Id, new Pagination(0, 0));
         if (subscription is SubscriptionKind.Family or SubscriptionKind.Business && workspaceCount >= 1)
-            throw new PublicClientException();
+            throw new PublicClientException(_localizer[Localization.ErrorMessages.subscription_cant_create_more_workspaces]);
         
         var workspace = await _workspaceRepository.Create(new WorkspaceEntity
         {
@@ -103,9 +103,9 @@ public class WorkspaceService : IWorkspaceService
     {
         var organizationRole = await _organizationService.GetCurrentUserRole(organizationId);
         if (organizationRole is null)
-            throw new PublicNotFoundException();
+            throw new PublicNotFoundException(_localizer[Localization.ErrorMessages.organization_doesnt_exist]);
         if (organizationRole is not (OrganizationRole.Owner or OrganizationRole.Admin))
-            throw new PublicForbiddenException();
+            throw new PublicForbiddenException(_localizer[Localization.ErrorMessages.organization_forbidden]);
 
         var workspace = await _workspaceRepository.Create(new WorkspaceEntity
         {
@@ -136,7 +136,7 @@ public class WorkspaceService : IWorkspaceService
     public async Task<WorkspaceResponseDto> GetWorkspace(int id)
     {
         if (await GetCurrentUserRole(id) is null)
-            throw new PublicNotFoundException();
+            throw new PublicNotFoundException(_localizer[Localization.ErrorMessages.workspace_forbidden]);
         
         var account = await _accountRepository.GetUserAccount(await _authService.GetCurrentUserId());
         var workspaceToUser = await _workspaceToAccountRepository.Read((id, account!.Id));
@@ -172,27 +172,27 @@ public class WorkspaceService : IWorkspaceService
 
         var workspace = await _workspaceRepository.Read(workspaceId);
         if (workspace!.Kind.ToEnum() is WorkspaceKind.Private)
-            throw new PublicClientException();
+            throw new PublicClientException(_localizer[Localization.ErrorMessages.workspace_private_cant_add_users]);
 
         var account = await _accountRepository.GetUserAccount(userId);
         if (account is null)
-            throw new PublicNotFoundException();
+            throw new PublicNotFoundException(_localizer[Localization.ErrorMessages.account_doesnt_exist]);
         
         var owner = await _workspaceToAccountRepository.GetOwner(workspaceId);
         if (owner!.OrganizationId is { } organizationOwnerId)
         {
             if (await _organizationService.GetUserRole(organizationOwnerId, userId) is null)
-                throw new PublicClientException();
+                throw new PublicClientException(_localizer[Localization.ErrorMessages.workspace_doesnt_exist]);
         }
         
         if (await _workspaceToAccountRepository.Read((workspaceId, account.Id)) is not null)
-            throw new PublicClientException();
+            throw new PublicClientException(_localizer[Localization.ErrorMessages.workspace_user_already_exists]);
  
         if (owner.User is { } userOwner&& userOwner.SubscriptionKind?.ToEnum() is SubscriptionKind.Family)
         {
             var (workspaceMembers, _) = await _workspaceToAccountRepository.ListWorkspaceAccounts(workspaceId, new Pagination(0, 0));
             if (workspaceMembers >= 4)
-                throw new PublicClientException();
+                throw new PublicClientException(_localizer[Localization.ErrorMessages.workspace_cant_add_more_users]);
         }
         
         await _workspaceToAccountRepository.Create(new WorkspaceToAccountEntity
@@ -211,7 +211,7 @@ public class WorkspaceService : IWorkspaceService
 
         var account = await _accountRepository.GetUserAccount(userId);
         if (account is null)
-            throw new PublicNotFoundException();
+            throw new PublicNotFoundException(_localizer[Localization.ErrorMessages.account_doesnt_exist]);
 
         if (!await _workspaceToAccountRepository.Delete((workspaceId, account.Id)))
             throw new PublicClientException();
@@ -221,7 +221,7 @@ public class WorkspaceService : IWorkspaceService
     public async Task<WorkspaceRole?> GetUserRole(int workspaceId, int userId)
     {
         if (await GetCurrentUserRole(workspaceId) is null)
-            throw new PublicNotFoundException();
+            throw new PublicNotFoundException(_localizer[Localization.ErrorMessages.workspace_doesnt_exist]);
 
         return await GetUserRoleImpl(workspaceId, userId);
     }
@@ -230,16 +230,16 @@ public class WorkspaceService : IWorkspaceService
     public async Task UpdateUserRole(int workspaceId, int userId, WorkspaceRole role)
     {
         if (await GetCurrentUserRole(workspaceId) is not (WorkspaceRole.Owner or WorkspaceRole.Admin))
-            throw new PublicForbiddenException();
+            throw new PublicForbiddenException(_localizer[Localization.ErrorMessages.workspace_forbidden]);
         if (role is WorkspaceRole.Owner)
-            throw new PublicClientException();
+            throw new PublicClientException(_localizer[Localization.ErrorMessages.workspace_cant_set_owner]);
         var currentRole = await GetUserRole(workspaceId, userId);
         if (currentRole is WorkspaceRole.Owner)
-            throw new PublicClientException();
+            throw new PublicClientException(_localizer[Localization.ErrorMessages.workspace_cant_change_owner]);
 
         var account = await _accountRepository.GetUserAccount(userId);
         if (account is null)
-            throw new PublicNotFoundException();
+            throw new PublicNotFoundException(_localizer[Localization.ErrorMessages.account_doesnt_exist]);
 
         var entity = await _workspaceToAccountRepository.Read((workspaceId, account.Id));
         entity!.Role = await _workspaceRoleRepository.Read(role);
@@ -260,7 +260,7 @@ public class WorkspaceService : IWorkspaceService
     public async Task<WorkspaceUserListResponseDto> ListWorkspaceUsers(int id, PaginationDto pagination)
     {
         if (await GetCurrentUserRole(id) is null)
-            throw new PublicNotFoundException();
+            throw new PublicNotFoundException(_localizer[Localization.ErrorMessages.workspace_doesnt_exist]);
 
         var (total, items) = await _workspaceToAccountRepository.ListWorkspaceAccounts(id, new Pagination(pagination));
 
@@ -278,7 +278,7 @@ public class WorkspaceService : IWorkspaceService
     {
         var account = await _accountRepository.GetUserAccount(await _authService.GetCurrentUserId());
         if (account is null)
-            throw new PublicNotFoundException();
+            throw new PublicNotFoundException(_localizer[Localization.ErrorMessages.workspace_doesnt_exist]);
         
         var (total, items) = await _workspaceToAccountRepository.ListAccountWorkspaces(account.Id, new Pagination(pagination));
         
@@ -294,7 +294,7 @@ public class WorkspaceService : IWorkspaceService
     {
         var account = await _accountRepository.GetOrganizationAccount(organizationId);
         if (account is null)
-            throw new PublicNotFoundException();
+            throw new PublicNotFoundException(_localizer[Localization.ErrorMessages.organization_doesnt_exist]);
         
         var (total, items) = await _workspaceToAccountRepository.ListAccountWorkspaces(account.Id, new Pagination(pagination));
 
@@ -316,9 +316,9 @@ public class WorkspaceService : IWorkspaceService
     {
         var account = await _accountRepository.GetUserAccount(userId);
         if (account is null)
-            throw new PublicNotFoundException();
+            throw new PublicNotFoundException(_localizer[Localization.ErrorMessages.account_doesnt_exist]);
         if (await _workspaceRepository.Read(workspaceId) is null)
-            throw new PublicNotFoundException();
+            throw new PublicNotFoundException(_localizer[Localization.ErrorMessages.workspace_doesnt_exist]);
         
         var map = await _workspaceToAccountRepository.Read((workspaceId, account.Id));
 

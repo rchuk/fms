@@ -34,4 +34,79 @@ authorized
     <data name="forbidden" xml:space="preserve">
         <value>Forbidden</value>
     </data>
+    <data name="account-doesnt-exist" xml:space="preserve">
+        <value>Account doesn't exist</value>
+    </data>
+    <data name="subscription-cant-create-organization" xml:space="preserve">
+        <value>You can't create organization with your subscription plan</value>
+    </data>
+    <data name="organization-already-exists-by-name" xml:space="preserve">
+        <value>Organization with specified name already exists</value>
+    </data>
+    <data name="organization-doesnt-exist" xml:space="preserve">
+        <value>Organization doesn't exist</value>
+    </data>
+    <data name="organization-forbidden" xml:space="preserve">
+        <value>You don't have required access level in organization</value>
+    </data>
+    <data name="user-doesnt-exist" xml:space="preserve">
+        <value>User doesn't exist</value>
+    </data>
+    <data name="user-not-in-organization" xml:space="preserve">
+        <value>User is not a member of the organization</value>
+    </data>
+    <data name="organization-cant-set-owner" xml:space="preserve">
+        <value>You can't assign owner role</value>
+    </data>
+    <data name="organization-cant-change-owner" xml:space="preserve">
+        <value>You can't change organization owner's role</value>
+    </data>
+    <data name="subscription-cant-downgrade" xml:space="preserve">
+        <value>You can't downgrade subscription level</value>
+    </data>
+    <data name="invalid-color" xml:space="preserve">
+        <value>Color must be in hex format FFFFFF</value>
+    </data>
+    <data name="workspace-doesnt-exist" xml:space="preserve">
+        <value>Workspace doesn't exist</value>
+    </data>
+    <data name="workspace-forbidden" xml:space="preserve">
+        <value>You don't have required access level in the workspace</value>
+    </data>
+    <data name="transaction-category-doesnt-exist" xml:space="preserve">
+        <value>Transaction category doesn't exist</value>
+    </data>
+    <data name="transaction-amount-zero" xml:space="preserve">
+        <value>Transaction amount can't be zero</value>
+    </data>
+    <data name="transaction-amount-doesnt-match-category" xml:space="preserve">
+        <value>Transaction amount doesn't match category</value>
+    </data>
+    <data name="transaction-doesnt-exist" xml:space="preserve">
+        <value>Transaction doesn't exist</value>
+    </data>
+    <data name="private-workspace-already-exists" xml:space="preserve">
+        <value>User already has private workspace</value>
+    </data>
+    <data name="subscription-cant-create-shared-workspace" xml:space="preserve">
+        <value>You can't create shared workspace with this subscription level</value>
+    </data>
+    <data name="subscription-cant-create-more-workspaces" xml:space="preserve">
+        <value>You can't create more shared workspaces with this subscription level</value>
+    </data>
+    <data name="workspace-private-cant-add-users" xml:space="preserve">
+        <value>You can't add users to private workspace</value>
+    </data>
+    <data name="workspace-user-already-exists" xml:space="preserve">
+        <value>User is already member of the workspace</value>
+    </data>
+    <data name="workspace-cant-add-more-users" xml:space="preserve">
+        <value>You can't add more users to wirkspace with this subscription level</value>
+    </data>
+    <data name="workspace-cant-set-owner" xml:space="preserve">
+        <value>You can't assign owner role</value>
+    </data>
+    <data name="workspace-cant-change-owner" xml:space="preserve">
+        <value>You can't change workspace owner</value>
+    </data>
 </root>

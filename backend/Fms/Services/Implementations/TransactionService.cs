@@ -1,10 +1,12 @@
 ﻿using Fms.Application.Attributes;
+using Fms.Data;
 using Fms.Dtos;
 using Fms.Entities;
 using Fms.Entities.Common;
 using Fms.Entities.Enums;
 using Fms.Exceptions;
 using Fms.Repositories;
+using Microsoft.Extensions.Localization;
 
 namespace Fms.Services.Implementations;
 
@@ -17,6 +19,7 @@ public class TransactionService : ITransactionService
     private readonly IWorkspaceToAccountRepository _workspaceToAccountRepository;
     private readonly ITransactionCategoryRepository _transactionCategoryRepository;
     private readonly IAuthService _authService;
+    private readonly IStringLocalizer<ErrorMessages> _localizer;
     
     public TransactionService(
         ITransactionRepository transactionRepository,
@@ -25,7 +28,8 @@ public class TransactionService : ITransactionService
         IOrganizationService organizationService,
         IWorkspaceToAccountRepository workspaceToAccountRepository,
         ITransactionCategoryRepository transactionCategoryRepository,
-        IAuthService authService
+        IAuthService authService,
+        IStringLocalizer<ErrorMessages> localizer
     )
     {
         _transactionRepository = transactionRepository;
@@ -35,6 +39,7 @@ public class TransactionService : ITransactionService
         _workspaceToAccountRepository = workspaceToAccountRepository;
         _transactionCategoryRepository = transactionCategoryRepository;
         _authService = authService;
+        _localizer = localizer;
     }
     
     [Transactional]
@@ -77,7 +82,7 @@ public class TransactionService : ITransactionService
 
         var category = await _transactionCategoryRepository.Read(requestDto.CategoryId);
         if (category is null)
-            throw new PublicNotFoundException();
+            throw new PublicNotFoundException(_localizer[Localization.ErrorMessages.transaction_category_doesnt_exist]);
 
         await VerifyTransactionCategorySuitable(category, transaction.WorkspaceId);
 
@@ -135,34 +140,34 @@ public class TransactionService : ITransactionService
     {
         var category = await _transactionCategoryRepository.Read(requestDto.CategoryId);
         if (category is null)
-            throw new PublicNotFoundException();
+            throw new PublicNotFoundException(_localizer[Localization.ErrorMessages.transaction_category_doesnt_exist]);
 
         await VerifyTransactionCategorySuitable(category, workspaceId);
         
         if (requestDto.Amount == 0)
-            throw new PublicClientException();
+            throw new PublicClientException(_localizer[Localization.ErrorMessages.transaction_amount_zero]);
         if (category.Kind.ToEnum() is TransactionCategoryKind.Income && requestDto.Amount < 0)
-            throw new PublicClientException();
+            throw new PublicClientException(_localizer[Localization.ErrorMessages.transaction_amount_doesnt_match_category]);
         if (category.Kind.ToEnum() is TransactionCategoryKind.Expense && requestDto.Amount > 0)
-            throw new PublicClientException();
+            throw new PublicClientException(_localizer[Localization.ErrorMessages.transaction_amount_doesnt_match_category]);
         if (requestDto.UserId is {} userId && await _userRepository.Read(userId) is null)
-            throw new PublicClientException();
+            throw new PublicClientException(_localizer[Localization.ErrorMessages.user_doesnt_exist]);
     }
     
     private async Task VerifyTransactionCategorySuitable(TransactionCategoryEntity category, int workspaceId)
     {
         if (category.WorkspaceId is { } categoryWorkspaceId && categoryWorkspaceId != workspaceId)
-            throw new PublicClientException();
+            throw new PublicClientException(_localizer[Localization.ErrorMessages.workspace_doesnt_exist]);
 
         if (category.OwnerAccount.Organization is { } organizationOwner)
         {
             if (await _organizationService.GetCurrentUserRole(organizationOwner.Id) is null)
-                throw new PublicNotFoundException();
+                throw new PublicNotFoundException(_localizer[Localization.ErrorMessages.transaction_category_doesnt_exist]);
         }
         else if (category.OwnerAccount.User is { } userOwner)
         {
             if (userOwner.Id != await _authService.GetCurrentUserId())
-                throw new PublicNotFoundException();
+                throw new PublicNotFoundException(_localizer[Localization.ErrorMessages.transaction_category_doesnt_exist]);
         }
     }
     
@@ -170,7 +175,7 @@ public class TransactionService : ITransactionService
     {
         var transaction = await _transactionRepository.Read(id);
         if (transaction is null)
-            throw new PublicNotFoundException();
+            throw new PublicNotFoundException(_localizer[Localization.ErrorMessages.transaction_doesnt_exist]);
 
         return transaction;
     }
@@ -179,7 +184,7 @@ public class TransactionService : ITransactionService
     {
         var workspaceOwner = await _workspaceToAccountRepository.GetOwner(workspaceId);
         if (workspaceOwner is null)
-            throw new PublicNotFoundException();
+            throw new PublicNotFoundException(_localizer[Localization.ErrorMessages.account_doesnt_exist]);
         var workspaceRole = await _workspaceService.GetCurrentUserRole(workspaceId);
         if (workspaceRole is WorkspaceRole.Owner or WorkspaceRole.Admin or WorkspaceRole.Collaborator)
             return;
@@ -188,13 +193,13 @@ public class TransactionService : ITransactionService
         {
             var organizationRole = await _organizationService.GetCurrentUserRole(organizationOwner.Id);
             if (organizationRole is null)
-                throw new PublicNotFoundException();
+                throw new PublicNotFoundException(_localizer[Localization.ErrorMessages.workspace_doesnt_exist]);
             if (organizationRole is not (OrganizationRole.Owner or OrganizationRole.Admin))
-                throw new PublicForbiddenException();
+                throw new PublicForbiddenException(_localizer[Localization.ErrorMessages.workspace_forbidden]);
         } else if (workspaceOwner.User is { } userOwner)
         {
             if (workspaceRole is null)
-                throw new PublicNotFoundException();
+                throw new PublicNotFoundException(_localizer[Localization.ErrorMessages.workspace_doesnt_exist]);
         }
     }
     
@@ -202,7 +207,7 @@ public class TransactionService : ITransactionService
     {
         var workspaceOwner = await _workspaceToAccountRepository.GetOwner(workspaceId);
         if (workspaceOwner is null)
-            throw new PublicNotFoundException();
+            throw new PublicNotFoundException(_localizer[Localization.ErrorMessages.workspace_doesnt_exist]);
         var workspaceRole = await _workspaceService.GetCurrentUserRole(workspaceId);
         if (workspaceRole is not null)
             return;
@@ -211,14 +216,14 @@ public class TransactionService : ITransactionService
         {
             var organizationRole = await _organizationService.GetCurrentUserRole(organizationOwner.Id);
             if (organizationRole is null)
-                throw new PublicNotFoundException();
+                throw new PublicNotFoundException(_localizer[Localization.ErrorMessages.workspace_doesnt_exist]);
             if (organizationRole is not (OrganizationRole.Owner or OrganizationRole.Admin))
-                throw new PublicForbiddenException();
+                throw new PublicForbiddenException(_localizer[Localization.ErrorMessages.workspace_forbidden]);
         }
         else if (workspaceOwner.User is { } userOwner)
         {
             if (workspaceRole is null)
-                throw new PublicNotFoundException();
+                throw new PublicNotFoundException(_localizer[Localization.ErrorMessages.workspace_doesnt_exist]);
         }
     }
     

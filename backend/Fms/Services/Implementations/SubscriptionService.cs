@@ -1,9 +1,11 @@
 ﻿using Fms.Application.Attributes;
+using Fms.Data;
 using Fms.Dtos;
 using Fms.Entities.Enums;
 using Fms.Exceptions;
 using Fms.Repositories;
 using Fms.Repositories.Implementations;
+using Microsoft.Extensions.Localization;
 
 namespace Fms.Services.Implementations;
 
@@ -12,16 +14,19 @@ public class SubscriptionService : ISubscriptionService
     private readonly SubscriptionKindRepository _subscriptionKindRepository;
     private readonly IUserRepository _userRepository;
     private readonly IAuthService _authService;
+    private readonly IStringLocalizer<ErrorMessages> _localizer;
     
     public SubscriptionService(
         SubscriptionKindRepository subscriptionKindRepository,
         IUserRepository userRepository,
-        IAuthService authService
+        IAuthService authService,
+        IStringLocalizer<ErrorMessages> localizer
     )
     {
         _subscriptionKindRepository = subscriptionKindRepository;
         _userRepository = userRepository;
         _authService = authService;
+        _localizer = localizer;
     }
     
     [Transactional]
@@ -31,7 +36,7 @@ public class SubscriptionService : ISubscriptionService
         var currentSubscriptionLevel = SubscriptionKindToLevel(user.SubscriptionKind?.ToEnum());
         var newSubscriptionLevel = SubscriptionKindToLevel(request.Kind);
         if (currentSubscriptionLevel >= newSubscriptionLevel)
-            throw new PublicClientException();
+            throw new PublicClientException(_localizer[Localization.ErrorMessages.subscription_cant_downgrade]);
 
         user.SubscriptionKind = await _subscriptionKindRepository.Read(request.Kind);
         if (!await _userRepository.Update(user))

@@ -32,4 +32,79 @@
     <data name="forbidden" xml:space="preserve">
         <value>Доступ заборонено</value>
     </data>
+    <data name="account-doesnt-exist" xml:space="preserve">
+        <value>Вказаного акаунту не існує</value>
+    </data>
+    <data name="subscription-cant-create-organization" xml:space="preserve">
+        <value>Ви не можете створити організацію з цим рівнем підписки</value>
+    </data>
+    <data name="organization-already-exists-by-name" xml:space="preserve">
+        <value>Організація з вказаною назвоб вже існує</value>
+    </data>
+    <data name="organization-doesnt-exist" xml:space="preserve">
+        <value>Вказаної організації не існує</value>
+    </data>
+    <data name="organization-forbidden" xml:space="preserve">
+        <value>У вас недостатній рівень доступу в організації</value>
+    </data>
+    <data name="user-doesnt-exist" xml:space="preserve">
+        <value>Вказаного користувача не існує</value>
+    </data>
+    <data name="user-not-in-organization" xml:space="preserve">
+        <value>Вказаний користувач не є членом організації</value>
+    </data>
+    <data name="organization-cant-set-owner" xml:space="preserve">
+        <value>Ви не можете призначити роль власника</value>
+    </data>
+    <data name="organization-cant-change-owner" xml:space="preserve">
+        <value>Ви не можете змінити роль власника організації</value>
+    </data>
+    <data name="subscription-cant-downgrade" xml:space="preserve">
+        <value>Ви не можете знизи рівень підписки</value>
+    </data>
+    <data name="invalid-color" xml:space="preserve">
+        <value>Колір має бути у hex форматі FFFFFF </value>
+    </data>
+    <data name="workspace-doesnt-exist" xml:space="preserve">
+        <value>Вказаного робочого простору не існує</value>
+    </data>
+    <data name="workspace-forbidden" xml:space="preserve">
+        <value>У вас недостатній рівень доступу у робочому просторі</value>
+    </data>
+    <data name="transaction-category-doesnt-exist" xml:space="preserve">
+        <value>Вказаної категорії транзакцій не існує</value>
+    </data>
+    <data name="transaction-amount-zero" xml:space="preserve">
+        <value>Сума транзакції не може бути нульовою</value>
+    </data>
+    <data name="transaction-amount-doesnt-match-category" xml:space="preserve">
+        <value>Сума витрати не збігається з категорією</value>
+    </data>
+    <data name="transaction-doesnt-exist" xml:space="preserve">
+        <value>Вказаної транзакції не існує</value>
+    </data>
+    <data name="private-workspace-already-exists" xml:space="preserve">
+        <value>У користувача вже є приватний робочий простір</value>
+    </data>
+    <data name="subscription-cant-create-shared-workspace" xml:space="preserve">
+        <value>Ви не можете створити спільний робочий простір з цим рівнем підписки</value>
+    </data>
+    <data name="subscription-cant-create-more-workspaces" xml:space="preserve">
+        <value>Ви не можете створити більше спільних робочих просторів з цим рівнем підписки</value>
+    </data>
+    <data name="workspace-private-cant-add-users" xml:space="preserve">
+        <value>Ви не можете додати користувача до приватного робочого простору</value>
+    </data>
+    <data name="workspace-user-already-exists" xml:space="preserve">
+        <value>Користувач уже є членом робочого простору</value>
+    </data>
+    <data name="workspace-cant-add-more-users" xml:space="preserve">
+        <value>Ви не можете додати більше користувачів до робочого простору з цим рівнем підписки</value>
+    </data>
+    <data name="workspace-cant-set-owner" xml:space="preserve">
+        <value>Ви не можете призначити роль власника робочого простору</value>
+    </data>
+    <data name="workspace-cant-change-owner" xml:space="preserve">
+        <value>Ви не можете змінити власника організації</value>
+    </data>
 </root>

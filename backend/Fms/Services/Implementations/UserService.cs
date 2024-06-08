@@ -2,7 +2,6 @@
 using Fms.Dtos;
 using Fms.Entities;
 using Fms.Repositories;
-using Fms.Repositories.Implementations;
 
 namespace Fms.Services.Implementations;
 

@@ -1,5 +1,4 @@
 ﻿using Fms.Dtos;
-using Fms.Entities.Common;
 using Fms.Entities.Enums;
 using Fms.Services;
 using Microsoft.AspNetCore.Authorization;

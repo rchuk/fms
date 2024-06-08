@@ -103,6 +103,7 @@ public class Startup
         services.AddScoped<IWorkspaceService, WorkspaceService>();
         services.AddScoped<ITransactionCategoryService, TransactionCategoryService>();
         services.AddScoped<ITransactionService, TransactionService>();
+        services.AddScoped<ISubscriptionService, SubscriptionService>();
     }
 
     private void AddRepositories(IServiceCollection services)
@@ -119,6 +120,7 @@ public class Startup
         services.AddScoped<ITransactionCategoryRepository, TransactionCategoryRepository>();
         services.AddScoped<TransactionCategoryKindRepository>();
         services.AddScoped<ITransactionRepository, TransactionRepository>();
+        services.AddScoped<SubscriptionKindRepository>();
     }
 
     private void AddDatabase(IServiceCollection services)

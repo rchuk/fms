@@ -2,6 +2,7 @@
 using Fms.Dtos;
 using Fms.Entities;
 using Fms.Repositories;
+using Fms.Repositories.Implementations;
 
 namespace Fms.Services.Implementations;
 
@@ -30,7 +31,7 @@ public class UserService : IUserService
         var user = await _userRepository.Create(entity);
         await _accountRepository.Create(new AccountEntity
         {
-            UserId = user.Id
+            UserId = user.Id,
         });
         await _workspaceService.Value.CreatePrivateUserWorkspace(user.Id);
 
@@ -44,6 +45,18 @@ public class UserService : IUserService
             Id = entity.Id,
             FirstName = entity.FirstName,
             LastName = entity.LastName
+        };
+    }
+
+    public static UserSelfResponseDto BuildSelfUserResponseDto(UserEntity entity)
+    {
+        return new UserSelfResponseDto
+        {
+            Id = entity.Id,
+            FirstName = entity.FirstName,
+            LastName = entity.LastName,
+            Email = entity.Email,
+            SubscriptionKind = entity.SubscriptionKind?.ToEnum()
         };
     }
 }

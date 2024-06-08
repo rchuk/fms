@@ -12,4 +12,5 @@ public class WorkspaceEntity
     public WorkspaceKindEntity Kind { get; set; } = null!;
 
     public virtual List<WorkspaceToAccountEntity> Accounts { get; set; } = null!;
+    public virtual List<TransactionEntity> Transactions { get; set; } = null!;
 }

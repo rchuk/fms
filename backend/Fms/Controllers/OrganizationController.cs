@@ -79,9 +79,9 @@ public class OrganizationController(
     [HttpGet(Name = "listUserOrganizations")]
     [ProducesResponseType(typeof(OrganizationListResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> ListCurrentUserOrganizations([FromQuery] int? offset, [FromQuery] int? limit)
+    public async Task<IActionResult> ListCurrentUserOrganizations([FromQuery] PaginationDto pagination)
     {
-        return Ok(await organizationService.ListCurrentUserOrganizations(new Pagination(offset, limit)));
+        return Ok(await organizationService.ListCurrentUserOrganizations(pagination));
     }
 
     /// <summary>
@@ -147,8 +147,8 @@ public class OrganizationController(
     [ProducesResponseType(typeof(OrganizationUserListResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> ListOrganizationUsers([FromRoute] int organizationId, [FromQuery] int? offset, [FromQuery] int? limit)
+    public async Task<IActionResult> ListOrganizationUsers([FromRoute] int organizationId, [FromQuery] PaginationDto pagination)
     {
-        return Ok(await organizationService.ListOrganizationUsers(organizationId, new Pagination(offset, limit)));
+        return Ok(await organizationService.ListOrganizationUsers(organizationId, pagination));
     }
 }

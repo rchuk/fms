@@ -205,12 +205,12 @@ paths:
       summary: Get list of current user's organizations
       operationId: listUserOrganizations
       parameters:
-        - name: offset
+        - name: Offset
           in: query
           schema:
             type: integer
             format: int32
-        - name: limit
+        - name: Limit
           in: query
           schema:
             type: integer
@@ -588,12 +588,12 @@ paths:
           schema:
             type: integer
             format: int32
-        - name: offset
+        - name: Offset
           in: query
           schema:
             type: integer
             format: int32
-        - name: limit
+        - name: Limit
           in: query
           schema:
             type: integer
@@ -879,12 +879,12 @@ paths:
       summary: Get list of current user's transaction categories
       operationId: listUserTransactionCategories
       parameters:
-        - name: offset
+        - name: Offset
           in: query
           schema:
             type: integer
             format: int32
-        - name: limit
+        - name: Limit
           in: query
           schema:
             type: integer
@@ -988,12 +988,12 @@ paths:
           schema:
             type: integer
             format: int32
-        - name: offset
+        - name: Offset
           in: query
           schema:
             type: integer
             format: int32
-        - name: limit
+        - name: Limit
           in: query
           schema:
             type: integer
@@ -1103,12 +1103,12 @@ paths:
           schema:
             type: integer
             format: int32
-        - name: offset
+        - name: Offset
           in: query
           schema:
             type: integer
             format: int32
-        - name: limit
+        - name: Limit
           in: query
           schema:
             type: integer
@@ -1326,12 +1326,12 @@ paths:
       summary: Get list of current user's workspaces
       operationId: listUserWorkspaces
       parameters:
-        - name: offset
+        - name: Offset
           in: query
           schema:
             type: integer
             format: int32
-        - name: limit
+        - name: Limit
           in: query
           schema:
             type: integer
@@ -1428,12 +1428,12 @@ paths:
           schema:
             type: integer
             format: int32
-        - name: offset
+        - name: Offset
           in: query
           schema:
             type: integer
             format: int32
-        - name: limit
+        - name: Limit
           in: query
           schema:
             type: integer
@@ -1817,12 +1817,12 @@ paths:
           schema:
             type: integer
             format: int32
-        - name: offset
+        - name: Offset
           in: query
           schema:
             type: integer
             format: int32
-        - name: limit
+        - name: Limit
           in: query
           schema:
             type: integer

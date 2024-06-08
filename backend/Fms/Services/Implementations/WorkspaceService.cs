@@ -243,12 +243,12 @@ public class WorkspaceService : IWorkspaceService
     }
 
     [Transactional]
-    public async Task<WorkspaceUserListResponseDto> ListWorkspaceUsers(int id, Pagination pagination)
+    public async Task<WorkspaceUserListResponseDto> ListWorkspaceUsers(int id, PaginationDto pagination)
     {
         if (await GetCurrentUserRole(id) is null)
             throw new PublicNotFoundException();
 
-        var (total, items) = await _workspaceToAccountRepository.ListWorkspaceAccounts(id, pagination);
+        var (total, items) = await _workspaceToAccountRepository.ListWorkspaceAccounts(id, new Pagination(pagination));
 
         return new WorkspaceUserListResponseDto
         {
@@ -260,13 +260,13 @@ public class WorkspaceService : IWorkspaceService
     }
 
     [Transactional]
-    public async Task<WorkspaceListResponseDto> ListCurrentUserWorkspaces(Pagination pagination)
+    public async Task<WorkspaceListResponseDto> ListCurrentUserWorkspaces(PaginationDto pagination)
     {
         var account = await _accountRepository.GetUserAccount(await _authService.GetCurrentUserId());
         if (account is null)
             throw new PublicNotFoundException();
         
-        var (total, items) = await _workspaceToAccountRepository.ListAccountWorkspaces(account.Id, pagination);
+        var (total, items) = await _workspaceToAccountRepository.ListAccountWorkspaces(account.Id, new Pagination(pagination));
         
         return new WorkspaceListResponseDto
         {
@@ -276,13 +276,13 @@ public class WorkspaceService : IWorkspaceService
     }
 
     [Transactional]
-    public async Task<WorkspaceListResponseDto> ListOrganizationWorkspaces(int organizationId, Pagination pagination)
+    public async Task<WorkspaceListResponseDto> ListOrganizationWorkspaces(int organizationId, PaginationDto pagination)
     {
         var account = await _accountRepository.GetOrganizationAccount(organizationId);
         if (account is null)
             throw new PublicNotFoundException();
         
-        var (total, items) = await _workspaceToAccountRepository.ListAccountWorkspaces(account.Id, pagination);
+        var (total, items) = await _workspaceToAccountRepository.ListAccountWorkspaces(account.Id, new Pagination(pagination));
 
         return new WorkspaceListResponseDto
         {

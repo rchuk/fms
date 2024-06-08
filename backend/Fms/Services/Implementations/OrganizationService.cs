@@ -160,12 +160,12 @@ public class OrganizationService : IOrganizationService
     }
     
     [Transactional]
-    public async Task<OrganizationUserListResponseDto> ListOrganizationUsers(int id, Pagination pagination)
+    public async Task<OrganizationUserListResponseDto> ListOrganizationUsers(int id, PaginationDto pagination)
     {
         if (await GetCurrentUserRole(id) is null)
             throw new PublicNotFoundException();
         
-        var (total, items) = await _organizationToUserRepository.ListOrganizationUsers(id, pagination);
+        var (total, items) = await _organizationToUserRepository.ListOrganizationUsers(id, new Pagination(pagination));
 
         return new OrganizationUserListResponseDto
         {
@@ -175,9 +175,9 @@ public class OrganizationService : IOrganizationService
     }
 
     [Transactional]
-    public async Task<OrganizationListResponseDto> ListCurrentUserOrganizations(Pagination pagination)
+    public async Task<OrganizationListResponseDto> ListCurrentUserOrganizations(PaginationDto pagination)
     {
-        var (total, items) = await _organizationToUserRepository.ListUserOrganizations(await _authService.GetCurrentUserId(), pagination);
+        var (total, items) = await _organizationToUserRepository.ListUserOrganizations(await _authService.GetCurrentUserId(), new Pagination(pagination));
 
         return new OrganizationListResponseDto
         {

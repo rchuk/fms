@@ -157,10 +157,10 @@ public partial class TransactionCategoryService : ITransactionCategoryService
     }
 
     [Transactional]
-    public async Task<TransactionCategoryListResponseDto> ListUserTransactionCategories(Pagination pagination)
+    public async Task<TransactionCategoryListResponseDto> ListUserTransactionCategories(PaginationDto pagination)
     {
         var userAccount = await _accountRepository.GetUserAccount(await _authService.GetCurrentUserId());
-        var (total, items) = await _transactionCategoryRepository.ListAccountCategories(userAccount!.Id, pagination);
+        var (total, items) = await _transactionCategoryRepository.ListAccountCategories(userAccount!.Id, new Pagination(pagination));
 
         return new TransactionCategoryListResponseDto
         { 
@@ -170,7 +170,7 @@ public partial class TransactionCategoryService : ITransactionCategoryService
     }
 
     [Transactional]
-    public async Task<TransactionCategoryListResponseDto> ListOrganizationTransactionCategories(int organizationId, Pagination pagination)
+    public async Task<TransactionCategoryListResponseDto> ListOrganizationTransactionCategories(int organizationId, PaginationDto pagination)
     {
         if (await _organizationService.GetCurrentUserRole(organizationId) is null)
             throw new PublicNotFoundException();
@@ -178,7 +178,7 @@ public partial class TransactionCategoryService : ITransactionCategoryService
         var organizationAccount = await _accountRepository.GetOrganizationAccount(organizationId);
         if (organizationAccount is null)
             throw new PublicNotFoundException();
-        var (total, items) = await _transactionCategoryRepository.ListAccountCategories(organizationAccount.Id, pagination);
+        var (total, items) = await _transactionCategoryRepository.ListAccountCategories(organizationAccount.Id, new Pagination(pagination));
         
         return new TransactionCategoryListResponseDto
         { 
@@ -188,12 +188,12 @@ public partial class TransactionCategoryService : ITransactionCategoryService
     }
 
     [Transactional]
-    public async Task<TransactionCategoryListResponseDto> ListWorkspaceTransactionCategories(int workspaceId, Pagination pagination)
+    public async Task<TransactionCategoryListResponseDto> ListWorkspaceTransactionCategories(int workspaceId, PaginationDto pagination)
     {
         if (await _workspaceService.GetCurrentUserRole(workspaceId) is null)
             throw new PublicNotFoundException();
         
-        var (total, items) = await _transactionCategoryRepository.ListWorkspaceCategories(workspaceId, pagination);
+        var (total, items) = await _transactionCategoryRepository.ListWorkspaceCategories(workspaceId, new Pagination(pagination));
         
         return new TransactionCategoryListResponseDto
         { 

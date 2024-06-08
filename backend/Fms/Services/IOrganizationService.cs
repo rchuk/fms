@@ -19,6 +19,6 @@ public interface IOrganizationService
     public Task UpdateUserRole(int organizationId, int userId, OrganizationRole role);
     public Task<OrganizationRole?> GetCurrentUserRole(int id);
     
-    public Task<OrganizationUserListResponseDto> ListOrganizationUsers(int id, Pagination pagination);
-    public Task<OrganizationListResponseDto> ListCurrentUserOrganizations(Pagination pagination);
+    public Task<OrganizationUserListResponseDto> ListOrganizationUsers(int id, PaginationDto pagination);
+    public Task<OrganizationListResponseDto> ListCurrentUserOrganizations(PaginationDto pagination);
 }

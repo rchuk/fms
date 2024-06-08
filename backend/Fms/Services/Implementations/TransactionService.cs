@@ -14,7 +14,7 @@ public class TransactionService : ITransactionService
     private readonly IWorkspaceService _workspaceService;
     private readonly IOrganizationService _organizationService;
     private readonly IWorkspaceToAccountRepository _workspaceToAccountRepository;
-    private readonly ITransactionCategoryService _transactionCategoryService;
+    private readonly ITransactionCategoryRepository _transactionCategoryRepository;
     private readonly IAuthService _authService;
     
     public TransactionService(
@@ -23,7 +23,7 @@ public class TransactionService : ITransactionService
         IWorkspaceService workspaceService,
         IOrganizationService organizationService,
         IWorkspaceToAccountRepository workspaceToAccountRepository,
-        ITransactionCategoryService transactionCategoryService,
+        ITransactionCategoryRepository transactionCategoryRepository,
         IAuthService authService
     )
     {
@@ -32,7 +32,7 @@ public class TransactionService : ITransactionService
         _workspaceService = workspaceService;
         _organizationService = organizationService;
         _workspaceToAccountRepository = workspaceToAccountRepository;
-        _transactionCategoryService = transactionCategoryService;
+        _transactionCategoryRepository = transactionCategoryRepository;
         _authService = authService;
     }
     
@@ -41,7 +41,7 @@ public class TransactionService : ITransactionService
     {
         await VerifyCanCreateTransaction(workspaceId);
         
-        await VerifyTransactionUpsertRequest(requestDto);
+        await VerifyTransactionUpsertRequest(workspaceId, requestDto);
 
         var creationTimestamp = DateTime.UtcNow;
         var transaction = await _transactionRepository.Create(new TransactionEntity
@@ -74,7 +74,11 @@ public class TransactionService : ITransactionService
         var transaction = await GetTransactionImpl(id);
         await VerifyCanModifyTransaction(transaction);
 
-        await VerifyTransactionUpsertRequest(requestDto);
+        var category = await _transactionCategoryRepository.Read(requestDto.CategoryId);
+        if (category is null)
+            throw new PublicNotFoundException();
+
+        await VerifyTransactionCategorySuitable(category, transaction.WorkspaceId);
 
         transaction.CategoryId = requestDto.CategoryId;
         transaction.Amount = requestDto.Amount;
@@ -112,23 +116,39 @@ public class TransactionService : ITransactionService
         };
     }
 
-    private async Task VerifyTransactionUpsertRequest(TransactionUpsertRequestDto requestDto)
+    private async Task VerifyTransactionUpsertRequest(int workspaceId, TransactionUpsertRequestDto requestDto)
     {
-        // TODO: That it returns 404
-        // Create internal method
-        var category = await _transactionCategoryService.GetTransactionCategory(requestDto.CategoryId);
+        var category = await _transactionCategoryRepository.Read(requestDto.CategoryId);
         if (category is null)
-            throw new PublicClientException();
-        // TODO: Verify that category belongs to this workspace! (Or account)
-        // do it manually through repo instead?
+            throw new PublicNotFoundException();
+
+        await VerifyTransactionCategorySuitable(category, workspaceId);
+        
         if (requestDto.Amount == 0)
             throw new PublicClientException();
-        if (category.Kind is TransactionCategoryKind.Income && requestDto.Amount < 0)
+        if (category.Kind.ToEnum() is TransactionCategoryKind.Income && requestDto.Amount < 0)
             throw new PublicClientException();
-        if (category.Kind is TransactionCategoryKind.Expense && requestDto.Amount > 0)
+        if (category.Kind.ToEnum() is TransactionCategoryKind.Expense && requestDto.Amount > 0)
             throw new PublicClientException();
         if (requestDto.UserId is {} userId && await _userRepository.Read(userId) is null)
             throw new PublicClientException();
+    }
+    
+    private async Task VerifyTransactionCategorySuitable(TransactionCategoryEntity category, int workspaceId)
+    {
+        if (category.WorkspaceId is { } categoryWorkspaceId && categoryWorkspaceId != workspaceId)
+            throw new PublicClientException();
+
+        if (category.OwnerAccount.Organization is { } organizationOwner)
+        {
+            if (await _organizationService.GetCurrentUserRole(organizationOwner.Id) is null)
+                throw new PublicNotFoundException();
+        }
+        else if (category.OwnerAccount.User is { } userOwner)
+        {
+            if (userOwner.Id != await _authService.GetCurrentUserId())
+                throw new PublicNotFoundException();
+        }
     }
     
     private async Task<TransactionEntity> GetTransactionImpl(int id)

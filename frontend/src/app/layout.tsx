@@ -6,6 +6,7 @@ import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {createTheme, ThemeProvider} from "@mui/material";
 import {LocalizationProvider} from "@mui/x-date-pickers";
 import {Roboto} from "next/font/google";
+import { AlertProvider } from "@/lib/services/AlertService";
 
 const roboto = Roboto({
   weight: "400",
@@ -49,11 +50,13 @@ export default function RootLayout({
         <LocalizationProvider
           dateAdapter={AdapterDayjs} adapterLocale="uk"
         >
-          <ServicesProvider services={services}>
-            <ThemeProvider theme={theme}>
-              {children}
-            </ThemeProvider>
-          </ServicesProvider>
+          <AlertProvider>
+            <ServicesProvider services={services}>
+              <ThemeProvider theme={theme}>
+                {children}
+              </ThemeProvider>
+            </ServicesProvider>
+          </AlertProvider>
         </LocalizationProvider>
       </body>
     </html>

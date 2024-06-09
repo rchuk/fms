@@ -1,3 +1,5 @@
+"use client"
+
 import {
   Configuration,
   AccountApi,
@@ -20,7 +22,7 @@ export type Services = {
   workspaceService: WorkspaceApi
 };
 
-export function createServices(config?: Configuration): Services {
+export function createServices(config?: Configuration | null): Services {
   const configuration = config ?? DefaultConfig;
 
   return {

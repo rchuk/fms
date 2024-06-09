@@ -55,7 +55,7 @@ export default function PaginatedList<ItemT>(props: PaginatedListProps<ItemT>) {
         count={pageCount}
         variant="outlined"
         color="primary"
-        onChange={(e, page) => setPageIndex(page)}
+        onChange={(e, page) => setPageIndex(page - 1)}
         sx={{
           alignSelf: "center"
         }}

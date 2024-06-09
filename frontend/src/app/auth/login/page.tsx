@@ -17,7 +17,7 @@ export default function LoginPage() {
 
   function login(email: string, password: string) {
     const fetch = async() => {
-      const result = await authService.register({ userRegisterRequest: { email, password } });
+      const result = await authService.login({ email, password });
 
       sessionData.setAccessToken(result.accessToken);
     };
@@ -28,7 +28,7 @@ export default function LoginPage() {
   }
 
   return (
-    <main>
+    <>
       <Typography variant="h3">
         Login
       </Typography>
@@ -36,6 +36,6 @@ export default function LoginPage() {
       <div>
         Need an account? <Link href="/auth/register">Register here</Link>
       </div>
-    </main>
+    </>
   );
 }

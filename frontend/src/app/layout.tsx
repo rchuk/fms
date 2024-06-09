@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, {useEffect, useState} from "react";
 import ServicesProvider, {createServices, Services} from "@/lib/services/ServiceProvider";
@@ -45,7 +45,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   const [services, setServices] = useState<Services>(createServices);
-  const [accessToken, setAccessToken] = useState<string | null>(getCachedAccessToken);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    setAccessToken(getCachedAccessToken);
+  }, []);
 
   useEffect(() => {
     let config = accessToken !== null

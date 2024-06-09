@@ -31,7 +31,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <main>
+    <>
       <Typography variant="h3">
         Register
       </Typography>
@@ -39,6 +39,6 @@ export default function RegisterPage() {
       <div>
         Already have an account? <Link href="/auth/login">Login here</Link>
       </div>
-    </main>
+    </>
   );
 }

@@ -3,12 +3,13 @@
 import { Button } from "@mui/material";
 import styles from "./page.module.css";
 import { useRouter } from "next/navigation";
+import WorkspaceList from "@/lib/components/workspace/WorkspaceList";
 
 export default function Home() {
   const router = useRouter();
   
   return (
-    <main className={styles.main}>
+    <>
       <div>
         Welcome to FMS
       </div>
@@ -18,6 +19,8 @@ export default function Home() {
       <Button onClick={() => router.push("/auth/register")}>
         Register
       </Button>
-    </main>
+
+      <WorkspaceList />
+    </>
   );
 }

@@ -15,7 +15,7 @@ export default function WorkspaceList(props: WorkspaceListProps) {
   const { workspaceService } = useContext(ServicesContext);
 
   function renderCard(data: WorkspaceResponse) {
-    return <WorkspaceListCard name={data.name} />
+    return <WorkspaceListCard id={data.id} name={data.name} />
   }
   
   async function fetch(offset: number, limit: number): Promise<[number, WorkspaceResponse[]]> {

@@ -1,6 +1,6 @@
 "use client";
 
-import {Typography} from "@mui/material";
+import {Link, Typography} from "@mui/material";
 import CredentialsComponent from "@/lib/components/auth/CredentialsComponent";
 
 export default function RegisterPage() {
@@ -14,6 +14,9 @@ export default function RegisterPage() {
         Register
       </Typography>
       <CredentialsComponent handleSubmit={register}/>
+      <div>
+        Already have an account? <Link href="/auth/login">Login here</Link>
+      </div>
     </main>
   );
 }

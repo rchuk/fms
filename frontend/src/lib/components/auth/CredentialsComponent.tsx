@@ -49,9 +49,6 @@ export default function CredentialsComponent(props: CredentialsComponentProps) {
       <Button type="submit">
         Submit
       </Button>
-      <div>
-        Need an account? <Link href="/auth/register">Register here</Link>
-      </div>
     </form>
   );
 }

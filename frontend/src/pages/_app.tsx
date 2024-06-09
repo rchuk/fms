@@ -1,6 +1,6 @@
 "use client"
 
-import React, {ReactElement, ReactNode} from "react";
+import React, {ReactElement, ReactNode, useState} from "react";
 import {AppProps} from "next/app";
 import {Roboto} from "next/font/google";
 import {NextPage} from "next";
@@ -10,6 +10,7 @@ import {LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import BasicLayout from "@/app/layout/BasicLayout";
 import "./globals.css";
+import ServicesProvider, {createServices, Services} from "@/app/services/ServiceProvider";
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode
@@ -51,6 +52,7 @@ const theme = createTheme({
 export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
 
+  const [services, setServices] = useState<Services>(createServices);
   const router = useRouter();
 
   return (
@@ -58,11 +60,13 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
       <LocalizationProvider
         dateAdapter={AdapterDayjs} adapterLocale="uk"
       >
-        <ThemeProvider theme={theme}>
-          <BasicLayout>
-            {getLayout(<Component {...pageProps} />)}
-          </BasicLayout>
-        </ThemeProvider>
+        <ServicesProvider services={services}>
+          <ThemeProvider theme={theme}>
+            <BasicLayout>
+              {getLayout(<Component {...pageProps} />)}
+            </BasicLayout>
+          </ThemeProvider>
+        </ServicesProvider>
       </LocalizationProvider>
     </main>
   );

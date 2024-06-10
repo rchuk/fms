@@ -48,7 +48,7 @@ export default function PaginatedList<ItemT>(props: PaginatedListProps<ItemT>) {
 
   return (
     <Box display="flex" flexDirection="column" height="100%">
-      <Box flex={1}>
+      <Box display="flex" flexDirection="column" flex={1} rowGap={2} padding={2}>
         {...items}
       </Box>
       <Pagination

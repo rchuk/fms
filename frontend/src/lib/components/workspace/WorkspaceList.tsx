@@ -7,8 +7,19 @@ import {useContext} from "react";
 import {ServicesContext} from "@/lib/services/ServiceProvider";
 import FloatingAddButton from "../common/FloatingAddButton";
 
-export type WorkspaceListProps = {
+export interface WorkspaceSourceUser {
+  kind: "user"
+}
 
+export interface WorkspaceSourceOrganization {
+  kind: "organization",
+  organizationId: number
+}
+
+type WorkspaceSource = WorkspaceSourceUser | WorkspaceSourceOrganization;
+
+type WorkspaceListProps = {
+  source: WorkspaceSource
 }
 
 export default function WorkspaceList(props: WorkspaceListProps) {
@@ -17,10 +28,18 @@ export default function WorkspaceList(props: WorkspaceListProps) {
   function renderCard(data: WorkspaceResponse) {
     return <WorkspaceListCard item={data} />
   }
+
+  async function fetchImpl(source: WorkspaceSource, offset: number, limit: number) {
+    switch (source.kind) {
+      case "user":
+        return await workspaceService.listUserWorkspaces({ offset, limit });
+      case "organization":
+        return await workspaceService.listOrganizationWorkspaces({ organizationId: source.organizationId, offset, limit });
+    }
+  }
   
   async function fetch(offset: number, limit: number): Promise<[number, WorkspaceResponse[]]> {
-    // TODO: Make it generic over list endpoint
-    const response = await workspaceService.listUserWorkspaces({ offset, limit });
+    const response = await fetchImpl(props.source, offset, limit);
 
     return [response.totalCount, response.items];
   }

@@ -19,6 +19,7 @@ export default function Home() {
       </Button>
 
       <Link href="/workspaces">Workspaces</Link>
+      <Link href="/organizations">Organizations</Link>
     </Box>
   );
 }

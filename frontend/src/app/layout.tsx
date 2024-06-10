@@ -1,6 +1,6 @@
 "use client";
 
-import React, {useEffect, useState} from "react";
+import React, {AnchorHTMLAttributes, forwardRef, useEffect, useState} from "react";
 import ServicesProvider, {createServices, Services} from "@/lib/services/ServiceProvider";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {createTheme, ThemeProvider} from "@mui/material";
@@ -8,6 +8,7 @@ import {LocalizationProvider} from "@mui/x-date-pickers";
 import {Roboto} from "next/font/google";
 import { AlertProvider } from "@/lib/services/AlertService";
 import {Configuration} from "../../generated";
+import NextLink, {LinkProps} from 'next/link';
 import SessionServiceProvider, {getCachedAccessToken} from "@/lib/services/SessionService";
 
 const roboto = Roboto({
@@ -25,6 +26,12 @@ declare module '@mui/material/styles' {
   }
 }
 
+type LinkBehaviourProps = LinkProps & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href'>;
+
+const LinkBehaviour = forwardRef<HTMLAnchorElement, LinkBehaviourProps>(function LinkBehaviour(props, ref) {
+  return <NextLink ref={ref} {...props} />;
+});
+
 const theme = createTheme({
   palette: {
     primary: {
@@ -35,6 +42,18 @@ const theme = createTheme({
     },
     almostWhite: {
       main: "#eeeeee"
+    }
+  },
+  components: {
+    MuiLink: {
+      defaultProps: {
+        component: LinkBehaviour
+      }
+    },
+    MuiButtonBase: {
+      defaultProps: {
+        LinkComponent: LinkBehaviour
+      }
     }
   }
 });

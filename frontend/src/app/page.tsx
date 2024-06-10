@@ -1,9 +1,7 @@
 "use client";
 
-import {Box, Button} from "@mui/material";
-import styles from "./page.module.css";
+import {Box, Button, Link} from "@mui/material";
 import { useRouter } from "next/navigation";
-import WorkspaceList from "@/lib/components/workspace/WorkspaceList";
 
 export default function Home() {
   const router = useRouter();
@@ -20,7 +18,7 @@ export default function Home() {
         Register
       </Button>
 
-      <WorkspaceList />
+      <Link href="/workspaces">Workspaces</Link>
     </Box>
   );
 }

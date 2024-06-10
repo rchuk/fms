@@ -32,7 +32,7 @@ export default function WorkspaceList(props: WorkspaceListProps) {
   const [openModal, closeModal] = useModalControls(setModalContent);
   const onSave = useModalClosingCallback(setModalContent, () => setIsDirty(true));
 
-  function create(callback?: () => void) {
+  function create() {
     openModal(<WorkspaceUpsert initialId={null} onError={closeModal} cancel={closeModal} onSave={onSave} />);
   }
 
@@ -58,7 +58,7 @@ export default function WorkspaceList(props: WorkspaceListProps) {
   return (
     <>
       <PaginatedList fetch={fetch} pageSize={10} renderItem={renderCard} isDirty={isDirty} setIsDirty={setIsDirty}/>
-      <FloatingAddButton onClick={() => create()}/>
+      <FloatingAddButton onClick={create}/>
       <ModalComponent content={modalContent} setContent={setModalContent}/>
     </>
   );

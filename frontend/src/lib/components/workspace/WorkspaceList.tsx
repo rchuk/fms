@@ -5,8 +5,7 @@ import {WorkspaceResponse} from "../../../../generated";
 import WorkspaceListCard from "@/lib/components/workspace/WorkspaceListCard";
 import {useContext} from "react";
 import {ServicesContext} from "@/lib/services/ServiceProvider";
-import {Fab} from "@mui/material";
-import AddIcon from '@mui/icons-material/Add';
+import FloatingAddButton from "../common/FloatingAddButton";
 
 export type WorkspaceListProps = {
 
@@ -29,16 +28,7 @@ export default function WorkspaceList(props: WorkspaceListProps) {
   return (
     <>
       <PaginatedList fetch={fetch} pageSize={10} renderItem={renderCard}/>
-      <Fab
-        color="primary"
-        sx={{
-          position: "fixed",
-          bottom: 25,
-          right: 25
-        }}
-      >
-        <AddIcon />
-      </Fab>
+      <FloatingAddButton />
     </>
   );
 }

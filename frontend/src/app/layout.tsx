@@ -46,21 +46,22 @@ export default function RootLayout({
 }) {
   const [services, setServices] = useState<Services>(createServices);
   const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [isReady, setIsReady] = useState<boolean>(false);
 
   useEffect(() => {
-    setAccessToken(getCachedAccessToken);
-  }, []);
+    const token = accessToken ?? getCachedAccessToken();
 
-  useEffect(() => {
-    let config = accessToken !== null
+    const config = token !== null
       ? new Configuration({
           headers: {
-            "Authorization": "Bearer " + accessToken
+            "Authorization": "Bearer " + token
           }
         })
       : null;
 
+    setAccessToken(token);
     setServices(createServices(config));
+    setIsReady(true);
   }, [accessToken]);
 
   return (
@@ -73,7 +74,7 @@ export default function RootLayout({
             <AlertProvider>
               <ServicesProvider services={services}>
                 <SessionServiceProvider accessToken={accessToken} setAccessToken={setAccessToken}>
-                  {children}
+                  {isReady ? children : []}
                 </SessionServiceProvider>
               </ServicesProvider>
             </AlertProvider>

@@ -17,7 +17,7 @@ type SessionServiceProviderProps = {
 const accessTokenKey: string = "access-token";
 
 export function getCachedAccessToken(): string | null {
-  return localStorage.getItem(accessTokenKey)
+  return localStorage.getItem(accessTokenKey);
 }
 
 export default function SessionServiceProvider(props: PropsWithChildren<SessionServiceProviderProps>) {

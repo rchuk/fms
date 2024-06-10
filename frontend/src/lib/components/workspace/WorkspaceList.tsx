@@ -6,8 +6,8 @@ import WorkspaceListCard from "@/lib/components/workspace/WorkspaceListCard";
 import {ReactElement, useContext, useState} from "react";
 import {ServicesContext} from "@/lib/services/ServiceProvider";
 import FloatingAddButton from "../common/FloatingAddButton";
-import {Dialog, DialogContent} from "@mui/material";
 import WorkspaceUpsert from "@/lib/components/workspace/WorkspaceUpsert";
+import ModalComponent, {useModalClosingCallback, useModalControls} from "../common/ModalComponent";
 
 export interface WorkspaceSourceUser {
   kind: "user"
@@ -29,24 +29,11 @@ export default function WorkspaceList(props: WorkspaceListProps) {
   const [isDirty, setIsDirty] = useState<boolean>(false);
   const { workspaceService } = useContext(ServicesContext);
 
-  function closeModal() {
-    setModalContent(null);
-  }
-
-  function openModal(content: ReactElement) {
-    setModalContent(content);
-  }
-
-  function onSave(callback?: () => void): () => void {
-    return () => {
-      callback?.();
-      setIsDirty(true);
-      closeModal();
-    };
-  }
+  const [openModal, closeModal] = useModalControls(setModalContent);
+  const onSave = useModalClosingCallback(setModalContent, () => setIsDirty(true));
 
   function create(callback?: () => void) {
-    openModal(<WorkspaceUpsert initialId={null} onError={closeModal} cancel={closeModal} onSave={onSave(callback)} />);
+    openModal(<WorkspaceUpsert initialId={null} onError={closeModal} cancel={closeModal} onSave={onSave} />);
   }
 
   function renderCard(data: WorkspaceResponse) {
@@ -72,11 +59,7 @@ export default function WorkspaceList(props: WorkspaceListProps) {
     <>
       <PaginatedList fetch={fetch} pageSize={10} renderItem={renderCard} isDirty={isDirty} setIsDirty={setIsDirty}/>
       <FloatingAddButton onClick={() => create()}/>
-      <Dialog open={modalContent !== null} onClose={closeModal}>
-        <DialogContent sx={{ padding: 4}}>
-          {modalContent}
-        </DialogContent>
-      </Dialog>
+      <ModalComponent content={modalContent} setContent={setModalContent}/>
     </>
   );
 }

@@ -21,17 +21,22 @@ public abstract class EnumEntity<TEnum>
     {
         return Enum.GetValues<TEnum>()
             .Select(e => new TSelf {
-                Name = e.ToString().ToUpper()
+                Name = ToSnakeCaseUpper(e.ToString())
             });
     }
 
     public EnumEntity(TEnum enumVariant)
     {
-        Name = enumVariant.ToString().ToUpper();
+        Name = ToSnakeCaseUpper(enumVariant.ToString());
     }
     
     public TEnum ToEnum()
     {
-        return Enum.Parse<TEnum>(Name, true);
+        return Enum.Parse<TEnum>(Name.Replace("_", string.Empty), true);
+    }
+
+    public static string ToSnakeCaseUpper(string value)
+    {
+        return System.Text.Json.JsonNamingPolicy.SnakeCaseUpper.ConvertName(value);
     }
 }

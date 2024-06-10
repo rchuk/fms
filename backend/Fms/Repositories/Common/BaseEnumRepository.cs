@@ -12,7 +12,9 @@ where TEnum: struct, Enum
     
     public virtual async Task<TEntity> Read(TEnum enumVariant)
     {
+        var target = EnumEntity<TEnum>.ToSnakeCaseUpper(enumVariant.ToString());
+        
         return await ctx.Set<TEntity>()
-            .FirstAsync(entity => entity.Name == enumVariant.ToString().ToUpper());
+            .FirstAsync(entity => entity.Name == target);
     }
 }

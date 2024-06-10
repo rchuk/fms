@@ -80,7 +80,7 @@ public class WorkspaceService : IWorkspaceService
         
         var account = await _accountRepository.GetUserAccount(await _authService.GetCurrentUserId());
         var (workspaceCount, _) = await _workspaceToAccountRepository.ListAccountWorkspaces(account!.Id, new Pagination(0, 0));
-        if (subscription is SubscriptionKind.Family or SubscriptionKind.Business && workspaceCount >= 1)
+        if (subscription is SubscriptionKind.Family or SubscriptionKind.Business && workspaceCount >= 2)
             throw new PublicClientException(_localizer[Localization.ErrorMessages.subscription_cant_create_more_workspaces]);
         
         var workspace = await _workspaceRepository.Create(new WorkspaceEntity

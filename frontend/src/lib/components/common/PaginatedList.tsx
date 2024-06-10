@@ -1,4 +1,4 @@
-import {ReactElement, useContext, useEffect, useState} from "react";
+import {ReactElement, useCallback, useContext, useEffect, useState} from "react";
 import {Box, Pagination} from "@mui/material";
 import {getRequestError} from "@/lib/utils/RequestUtils";
 import {AlertContext} from "@/lib/services/AlertService";
@@ -8,6 +8,9 @@ type PaginatedListProps<ItemT> = {
   fetch: (offset: number, limit: number) => Promise<[number, ItemT[]]>,
   pageSize: number,
   renderItem: (data: ItemT) => ReactElement,
+
+  isDirty?: boolean,
+  setIsDirty?: (value: boolean) => void,
 
   itemsData?: ItemT[],
   setItemsData?: (value: ItemT[]) => void,
@@ -27,11 +30,7 @@ export default function PaginatedList<ItemT>(props: PaginatedListProps<ItemT>) {
   const [itemsData, setItemsData] = [props.itemsData ?? internalItemsData, props.setItemsData ?? setInternalItemsData];
   const [items, setItems] = [props.items ?? internalItems, props.setItems ?? setInternalItems];
 
-  useEffect(() => {
-    setPageCount(Math.ceil(totalItemCount / props.pageSize));
-  }, [totalItemCount]);
-
-  useEffect(() => {
+  function updateData() {
     const fetch = async() => {
       const [newTotalItemCount, newItemsData] = await props.fetch(pageIndex * props.pageSize, props.pageSize);
 
@@ -40,11 +39,27 @@ export default function PaginatedList<ItemT>(props: PaginatedListProps<ItemT>) {
     };
 
     fetch().catch(e => getRequestError(e).then(m => showAlert(m, "error")));
+  }
+
+  useEffect(() => {
+    setPageCount(Math.ceil(totalItemCount / props.pageSize));
+  }, [totalItemCount]);
+
+  useEffect(() => {
+    updateData();
   }, [pageIndex]);
 
   useEffect(() => {
     setItems(itemsData.map(props.renderItem));
   }, [itemsData]);
+
+  useEffect(() => {
+    if (props.isDirty)
+    {
+      updateData();
+      props.setIsDirty!(false);
+    }
+  }, [props.isDirty]);
 
   return (
     <Box display="flex" flexDirection="column" flex={1}>

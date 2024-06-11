@@ -20,6 +20,7 @@ export default function Home() {
 
       <Link href="/workspaces">Workspaces</Link>
       <Link href="/organizations">Organizations</Link>
+      <Link href="/profile">Profile</Link>
     </Box>
   );
 }

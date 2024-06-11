@@ -4,6 +4,7 @@ import { Typography } from "@mui/material";
 import { SubscriptionKind } from "../../../../generated";
 
 export type UserProfileProps = {
+  id: number,
   firstName: string,
   lastName: string,
   email: string,
@@ -11,6 +12,7 @@ export type UserProfileProps = {
 }
 
 export default function UserProfile({
+  id = -1,
   firstName = "",
   lastName = "",
   email = "",

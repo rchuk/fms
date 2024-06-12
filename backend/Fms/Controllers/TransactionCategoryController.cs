@@ -61,7 +61,7 @@ public class TransactionCategoryController(
     /// Get transaction category
     /// </summary>
     [HttpGet("{id:int}", Name = "getTransactionCategory")]
-    [ProducesResponseType(typeof(WorkspaceResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(TransactionCategoryResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetTransactionCategory([FromRoute] int id)
     {

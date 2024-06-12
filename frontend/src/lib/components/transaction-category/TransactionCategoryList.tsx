@@ -26,8 +26,12 @@ export default function TransactionCategoryList(props: TransactionCategoryListPr
     return openModal(<TransactionCategoryUpsert initialId={null} source={props.source} onError={closeModal} cancel={closeModal} onSave={onSave} />);
   }
 
+  function update(id: number) {
+    return openModal(<TransactionCategoryUpsert initialId={id} source={props.source} onError={closeModal} cancel={closeModal} onSave={onSave} />);
+  }
+
   function renderCard(data: TransactionCategoryResponse) {
-    return <TransactionCategoryListCard item={data} />
+    return <TransactionCategoryListCard item={data} onClick={update}/>
   }
 
   async function fetch(offset: number, limit: number) {

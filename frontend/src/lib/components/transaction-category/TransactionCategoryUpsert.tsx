@@ -95,7 +95,7 @@ export default function TransactionCategoryUpsert(props: TransactionCategoryUpse
           <Select
             label="Тип"
             required
-            value={view.kind}
+            value={view.kind ?? ""}
             onChange={e => setKind(e.target.value)}
           >
             {Object.values(TransactionCategoryKind).map(value => (

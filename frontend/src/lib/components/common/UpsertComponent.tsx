@@ -36,12 +36,14 @@ export default function UpsertComponent<IdT, ViewT>(props: PropsWithChildren<Ups
     }
 
     const fetch = async() => {
-      await props.fetch(props.initialId!)
+      const view = await props.fetch(props.initialId!)
+
+      props.setView(view);
+      setIsReady(true);
     };
 
     setId(props.initialId);
     fetch()
-      .then(_ => setIsReady(true))
       .catch(e => {
         getRequestError(e).then(m => showAlert(m, "error"))
 

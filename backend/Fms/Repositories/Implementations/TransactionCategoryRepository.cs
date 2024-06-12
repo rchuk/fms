@@ -17,7 +17,7 @@ public class TransactionCategoryRepository : BaseCrudRepository<TransactionCateg
         switch (criteria)
         {
             case { WorkspaceId: {} workspaceId, AccountId: {} accountId }:
-                query = query.Where(category => category.OwnerAccountId == accountId || category.WorkspaceId == workspaceId);
+                query = query.Where(category => (category.WorkspaceId == workspaceId) || (category.OwnerAccountId == accountId && category.WorkspaceId == null));
                 break;
             case { WorkspaceId: {} workspaceId }:
                 query = query.Where(category => category.WorkspaceId == workspaceId);

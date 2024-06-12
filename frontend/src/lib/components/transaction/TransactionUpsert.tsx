@@ -69,6 +69,7 @@ export default function TransactionUpsert(props: TransactionUpsertProps) {
         <TransactionCategoryAutocomplete
           required
           workspaceId={props.workspaceId}
+          includeOwner={true}
           setSelectedId={v => setView({...view, categoryId: v ?? undefined})}
         />
       </Grid>

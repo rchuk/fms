@@ -1,26 +1,73 @@
 "use client";
 
-import {Box, Button, Link} from "@mui/material";
+import { Box, Button, Container, Link, Stack, Typography } from "@mui/material";
+import Grid from "@mui/material/Unstable_Grid2";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
   const router = useRouter();
   
   return (
-    <Box display="flex" flexDirection="column" height="100%" padding={2} boxSizing="border-box">
-      <div>
+    <Box 
+      overflow="hidden" 
+      height={"100vh"} 
+      display={"flex"}
+      flexDirection={"column"} 
+      justifyContent={"center"}
+    >
+      <Typography
+        variant={"h1"} 
+        align={"center"}
+      >
         Welcome to FMS
-      </div>
-      <Button onClick={() => router.push("/auth/login")}>
-        Login
-      </Button>
-      <Button onClick={() => router.push("/auth/register")}>
-        Register
-      </Button>
-
-      <Link href="/workspaces">Workspaces</Link>
-      <Link href="/organizations">Organizations</Link>
-      <Link href="/profile">Profile</Link>
+      </Typography>
+      <Typography
+        variant={"h4"}
+        align={"center"}
+      >
+        FMS is the next leader in finance management 
+      </Typography>
+      <Stack
+        mt={10}
+        sx={{          
+          justifyContent: "space-evenly",
+          alignItems: "center",
+          flexDirection: "row",
+          "@media (max-width: 600px)": {
+            height: "13rem",
+            flexDirection: "column"
+          }
+        }}
+      >
+        <Button 
+          size={"large"}
+          variant={"outlined"}
+          sx={{
+            fontSize: "2rem",
+            width: "30vw",
+            "@media (max-width: 600px)": {
+              width: "80vw"
+            }
+          }}
+          onClick={() => router.push("/auth/login")}
+        >
+          Login
+        </Button>
+        <Button 
+          size={"large"}
+          variant={"outlined"}
+          sx={{
+            fontSize: "2rem",
+            width: "30vw",
+            "@media (max-width: 600px)": {
+              width: "80vw"
+            }
+          }}
+          onClick={() => router.push("/auth/register")}
+        >
+          Register
+        </Button>
+      </Stack>
     </Box>
   );
 }

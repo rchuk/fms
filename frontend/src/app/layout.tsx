@@ -3,7 +3,7 @@
 import React, {AnchorHTMLAttributes, forwardRef, useEffect, useState} from "react";
 import ServicesProvider, {createServices, Services} from "@/lib/services/ServiceProvider";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
-import {createTheme, ThemeProvider} from "@mui/material";
+import {createTheme, CssBaseline, ThemeProvider} from "@mui/material";
 import {LocalizationProvider} from "@mui/x-date-pickers";
 import {Roboto} from "next/font/google";
 import { AlertProvider } from "@/lib/services/AlertService";
@@ -14,17 +14,7 @@ import SessionServiceProvider, {getCachedAccessToken} from "@/lib/services/Sessi
 const roboto = Roboto({
   weight: "400",
   subsets: ["latin", "cyrillic"]
-})
-
-declare module '@mui/material/styles' {
-  interface Palette {
-    almostWhite: Palette["primary"];
-  }
-
-  interface PaletteOptions {
-    almostWhite?: PaletteOptions["primary"];
-  }
-}
+});
 
 type LinkBehaviourProps = LinkProps & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href'>;
 
@@ -34,14 +24,12 @@ const LinkBehaviour = forwardRef<HTMLAnchorElement, LinkBehaviourProps>(function
 
 const theme = createTheme({
   palette: {
+    mode: "dark",
     primary: {
-      main: "#8a0709"
+      main: "#388e3c"
     },
     secondary: {
-      main: "#078a88"
-    },
-    almostWhite: {
-      main: "#eeeeee"
+      main: "#388a8e"
     }
   },
   components: {
@@ -84,9 +72,10 @@ export default function RootLayout({
   }, [accessToken]);
 
   return (
-    <html lang="uk" className={roboto.className} style={{ minHeight: "100vh", height: "100%" }}>
-      <body style={{ margin: 0, height: "100%" }}>
-        <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>
+      <CssBaseline enableColorScheme />
+      <html lang="uk" className={roboto.className} style={{ minHeight: "100vh", height: "100%" }}>
+        <body style={{ margin: 0, height: "100%" }}>
           <LocalizationProvider
             dateAdapter={AdapterDayjs} adapterLocale="uk"
           >
@@ -98,8 +87,8 @@ export default function RootLayout({
               </ServicesProvider>
             </AlertProvider>
           </LocalizationProvider>
-        </ThemeProvider>
-      </body>
-    </html>
+        </body>
+      </html>
+    </ThemeProvider>
   )
 }

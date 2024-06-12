@@ -1,6 +1,6 @@
 "use client";
 
-import React, {AnchorHTMLAttributes, forwardRef, useEffect, useState} from "react";
+import React, {AnchorHTMLAttributes, Suspense, forwardRef, useEffect, useState} from "react";
 import ServicesProvider, {createServices, Services} from "@/lib/services/ServiceProvider";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {createTheme, CssBaseline, responsiveFontSizes, ThemeProvider} from "@mui/material";
@@ -10,6 +10,7 @@ import { AlertProvider } from "@/lib/services/AlertService";
 import {Configuration} from "../../generated";
 import NextLink, {LinkProps} from 'next/link';
 import SessionServiceProvider, {getCachedAccessToken} from "@/lib/services/SessionService";
+import SecurityService from "@/lib/services/SecurityService";
 
 const roboto = Roboto({
   weight: "400",
@@ -84,7 +85,11 @@ export default function RootLayout({
             <AlertProvider>
               <ServicesProvider services={services}>
                 <SessionServiceProvider accessToken={accessToken} setAccessToken={setAccessToken}>
-                  {isReady ? children : []}
+                  <Suspense fallback={null}>
+                    <SecurityService>
+                      {isReady ? children : []}
+                    </SecurityService>
+                  </Suspense>
                 </SessionServiceProvider>
               </ServicesProvider>
             </AlertProvider>

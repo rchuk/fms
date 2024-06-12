@@ -86,9 +86,13 @@ export default function RootLayout({
               <ServicesProvider services={services}>
                 <SessionServiceProvider accessToken={accessToken} setAccessToken={setAccessToken}>
                   <Suspense fallback={null}>
-                    <SecurityService>
-                      {isReady ? children : []}
-                    </SecurityService>
+                    {
+                      isReady ? (
+                        <SecurityService>
+                          {children}
+                        </SecurityService>
+                      ) : []
+                    }
                   </Suspense>
                 </SessionServiceProvider>
               </ServicesProvider>

@@ -28,6 +28,7 @@ services:
       - ./frontend:/app
     environment:
       - ORIGIN=http://localhost:3000
+      - WATCHPACK_POLLING=true
 
   fms_backend:
     depends_on:

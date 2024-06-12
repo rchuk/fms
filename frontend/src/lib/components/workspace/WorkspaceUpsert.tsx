@@ -4,10 +4,12 @@ import {WorkspaceUpsertRequest} from "../../../../generated";
 import {useContext, useState} from "react";
 import {ServicesContext} from "@/lib/services/ServiceProvider";
 import {TextField} from "@mui/material";
+import {WorkspaceSource} from "@/lib/components/workspace/Common";
 
 
 type WorkspaceUpsertProps = {
   initialId: number | null,
+  source: WorkspaceSource,
 
   cancel?: () => void,
   onError?: () => void,
@@ -33,7 +35,15 @@ export default function WorkspaceUpsert(props: WorkspaceUpsertProps) {
   }
 
   async function create(view: WorkspaceUpsertRequest) {
-    return await workspaceService.createSharedUserWorkspace({ workspaceUpsertRequest: view });
+    switch (props.source.kind) {
+      case "user":
+        return await workspaceService.createSharedUserWorkspace({ workspaceUpsertRequest: view });
+      case "organization":
+        return await workspaceService.createOrganizationWorkspace({
+          organizationId: props.source.organizationId,
+          workspaceUpsertRequest: view
+        });
+    }
   }
 
   function validate(view: Partial<WorkspaceUpsertRequest>): WorkspaceUpsertRequest | null {

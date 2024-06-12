@@ -8,17 +8,7 @@ import {ServicesContext} from "@/lib/services/ServiceProvider";
 import FloatingAddButton from "../common/FloatingAddButton";
 import WorkspaceUpsert from "@/lib/components/workspace/WorkspaceUpsert";
 import ModalComponent, {useModalClosingCallback, useModalControls} from "../common/ModalComponent";
-
-export interface WorkspaceSourceUser {
-  kind: "user"
-}
-
-export interface WorkspaceSourceOrganization {
-  kind: "organization",
-  organizationId: number
-}
-
-type WorkspaceSource = WorkspaceSourceUser | WorkspaceSourceOrganization;
+import {WorkspaceSource} from "@/lib/components/workspace/Common";
 
 type WorkspaceListProps = {
   source: WorkspaceSource
@@ -33,24 +23,24 @@ export default function WorkspaceList(props: WorkspaceListProps) {
   const onSave = useModalClosingCallback(setModalContent, () => setIsDirty(true));
 
   function create() {
-    openModal(<WorkspaceUpsert initialId={null} onError={closeModal} cancel={closeModal} onSave={onSave} />);
+    openModal(<WorkspaceUpsert initialId={null} source={props.source} onError={closeModal} cancel={closeModal} onSave={onSave} />);
   }
 
   function renderCard(data: WorkspaceResponse) {
     return <WorkspaceListCard item={data} />
   }
 
-  async function fetchImpl(source: WorkspaceSource, offset: number, limit: number) {
-    switch (source.kind) {
+  async function fetch(offset: number, limit: number) {
+    switch (props.source.kind) {
       case "user":
         return await workspaceService.listUserWorkspaces({ offset, limit });
       case "organization":
-        return await workspaceService.listOrganizationWorkspaces({ organizationId: source.organizationId, offset, limit });
+        return await workspaceService.listOrganizationWorkspaces({
+          organizationId: props.source.organizationId,
+          offset,
+          limit
+        });
     }
-  }
-  
-  async function fetch(offset: number, limit: number) {
-    return await fetchImpl(props.source, offset, limit);
   }
 
   return (

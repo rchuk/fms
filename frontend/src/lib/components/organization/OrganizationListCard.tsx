@@ -10,7 +10,7 @@ type OrganizationListCardProps = {
 export default function OrganizationListCard(props: OrganizationListCardProps) {
   return (
     <Card key={props.item.id} variant="elevation" elevation={4}>
-      <CardActionArea sx={{ padding: 2, display: "flex", alignItems: "center" }}>
+      <CardActionArea sx={{ padding: 2, display: "flex", alignItems: "center" }} href={`/organizations/${props.item.id}`}>
         <Typography variant="h6">
           {props.item.name}
         </Typography>

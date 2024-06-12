@@ -4,6 +4,7 @@ using Fms.Data;
 using Fms.Dtos;
 using Fms.Entities;
 using Fms.Entities.Common;
+using Fms.Entities.Criteria;
 using Fms.Entities.Enums;
 using Fms.Exceptions;
 using Fms.Repositories;
@@ -162,10 +163,15 @@ public partial class TransactionCategoryService : ITransactionCategoryService
     }
 
     [Transactional]
-    public async Task<TransactionCategoryListResponseDto> ListUserTransactionCategories(PaginationDto pagination)
+    public async Task<TransactionCategoryListResponseDto> ListUserTransactionCategories(TransactionCategoryCriteriaDto criteriaDto, PaginationDto pagination)
     {
         var userAccount = await _accountRepository.GetUserAccount(await _authService.GetCurrentUserId());
-        var (total, items) = await _transactionCategoryRepository.ListAccountCategories(userAccount!.Id, new Pagination(pagination));
+        var criteria = new TransactionCategoryCriteria
+        {
+            AccountId = userAccount!.Id,
+            Query = criteriaDto.Query
+        };
+        var (total, items) = await _transactionCategoryRepository.List(criteria, new Pagination(pagination));
 
         return new TransactionCategoryListResponseDto
         { 
@@ -175,7 +181,7 @@ public partial class TransactionCategoryService : ITransactionCategoryService
     }
 
     [Transactional]
-    public async Task<TransactionCategoryListResponseDto> ListOrganizationTransactionCategories(int organizationId, PaginationDto pagination)
+    public async Task<TransactionCategoryListResponseDto> ListOrganizationTransactionCategories(TransactionCategoryCriteriaDto criteriaDto, int organizationId, PaginationDto pagination)
     {
         if (await _organizationService.GetCurrentUserRole(organizationId) is null)
             throw new PublicNotFoundException(_localizer[Localization.ErrorMessages.organization_doesnt_exist]);
@@ -183,7 +189,12 @@ public partial class TransactionCategoryService : ITransactionCategoryService
         var organizationAccount = await _accountRepository.GetOrganizationAccount(organizationId);
         if (organizationAccount is null)
             throw new PublicNotFoundException(_localizer[Localization.ErrorMessages.account_doesnt_exist]);
-        var (total, items) = await _transactionCategoryRepository.ListAccountCategories(organizationAccount.Id, new Pagination(pagination));
+        var criteria = new TransactionCategoryCriteria
+        {
+            AccountId = organizationAccount.Id,
+            Query = criteriaDto.Query
+        };
+        var (total, items) = await _transactionCategoryRepository.List(criteria, new Pagination(pagination));
         
         return new TransactionCategoryListResponseDto
         { 
@@ -193,12 +204,18 @@ public partial class TransactionCategoryService : ITransactionCategoryService
     }
 
     [Transactional]
-    public async Task<TransactionCategoryListResponseDto> ListWorkspaceTransactionCategories(int workspaceId, PaginationDto pagination)
+    public async Task<TransactionCategoryListResponseDto> ListWorkspaceTransactionCategories(TransactionCategoryCriteriaDto criteriaDto, int workspaceId, PaginationDto pagination)
     {
         if (await _workspaceService.GetCurrentUserRole(workspaceId) is null)
             throw new PublicNotFoundException(_localizer[Localization.ErrorMessages.workspace_doesnt_exist]);
-        
-        var (total, items) = await _transactionCategoryRepository.ListWorkspaceCategories(workspaceId, new Pagination(pagination));
+
+        var criteria = new TransactionCategoryCriteria
+        {
+            AccountId = criteriaDto.IncludeOwner.GetValueOrDefault(true) ? (await _workspaceToAccountRepository.GetOwner(workspaceId))!.Id : null,
+            WorkspaceId = workspaceId,
+            Query = criteriaDto.Query
+        };
+        var (total, items) = await _transactionCategoryRepository.List(criteria, new Pagination(pagination));
         
         return new TransactionCategoryListResponseDto
         { 

@@ -1,6 +1,7 @@
 ﻿using Fms.Application;
 using Fms.Entities;
 using Fms.Entities.Common;
+using Fms.Entities.Criteria;
 using Fms.Repositories.Common;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,22 +11,27 @@ public class TransactionCategoryRepository : BaseCrudRepository<TransactionCateg
 {
     public TransactionCategoryRepository(FmsDbContext ctx) : base(ctx) {}
 
-    public async Task<(int total, List<TransactionCategoryEntity> items)> ListAccountCategories(int accountId, Pagination pagination)
+    public async Task<(int total, List<TransactionCategoryEntity>)> List(TransactionCategoryCriteria criteria, Pagination pagination)
     {
-        var query = Ctx.TransactionCategories
-            .Where(category => category.OwnerAccountId == accountId);
+        var query = Ctx.TransactionCategories.AsQueryable();
+        switch (criteria)
+        {
+            case { WorkspaceId: {} workspaceId, AccountId: {} accountId }:
+                query = query.Where(category => category.OwnerAccountId == accountId || category.WorkspaceId == workspaceId);
+                break;
+            case { WorkspaceId: {} workspaceId }:
+                query = query.Where(category => category.WorkspaceId == workspaceId);
+                break;
+            case { AccountId: {} accountId }:
+                query = query.Where(category => category.OwnerAccountId == accountId);
+                break;
+        }
 
-        return (
-            query.Count(),
-            await query.Skip(pagination.Offset).Take(pagination.Limit).ToListAsync()
-        );
-    }
+        if (criteria.Query is { } searchQuery)
+            query = query.Where(category => category.Name.ToLower().Contains(searchQuery.ToLower()));
 
-    public async Task<(int total, List<TransactionCategoryEntity> items)> ListWorkspaceCategories(int workspaceId, Pagination pagination)
-    {
-        var query = Ctx.TransactionCategories
-            .Where(category => category.WorkspaceId == workspaceId);
-
+        query = query.OrderBy(category => category.Id);
+        
         return (
             query.Count(),
             await query.Skip(pagination.Offset).Take(pagination.Limit).ToListAsync()

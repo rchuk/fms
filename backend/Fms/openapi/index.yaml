@@ -1053,6 +1053,14 @@ paths:
           schema:
             type: integer
             format: int32
+        - name: IncludeOwner
+          in: query
+          schema:
+            type: boolean
+        - name: Query
+          in: query
+          schema:
+            type: string
       responses:
         '401':
           description: Unauthorized
@@ -1162,6 +1170,14 @@ paths:
           schema:
             type: integer
             format: int32
+        - name: IncludeOwner
+          in: query
+          schema:
+            type: boolean
+        - name: Query
+          in: query
+          schema:
+            type: string
       responses:
         '401':
           description: Unauthorized
@@ -1277,6 +1293,14 @@ paths:
           schema:
             type: integer
             format: int32
+        - name: IncludeOwner
+          in: query
+          schema:
+            type: boolean
+        - name: Query
+          in: query
+          schema:
+            type: string
       responses:
         '401':
           description: Unauthorized

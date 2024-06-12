@@ -1,5 +1,4 @@
 ﻿using Fms.Dtos;
-using Fms.Entities.Common;
 using Fms.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -104,9 +103,9 @@ public class TransactionCategoryController(
     [HttpGet(Name = "listUserTransactionCategories")]
     [ProducesResponseType(typeof(WorkspaceListResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> ListCurrentUserTransactionCategories([FromQuery] PaginationDto pagination)
+    public async Task<IActionResult> ListCurrentUserTransactionCategories([FromQuery] PaginationDto pagination, [FromQuery] TransactionCategoryCriteriaDto criteriaDto)
     {
-        return Ok(await transactionCategoryService.ListUserTransactionCategories(pagination));
+        return Ok(await transactionCategoryService.ListUserTransactionCategories(criteriaDto, pagination));
     }
     
     /// <summary>
@@ -117,9 +116,9 @@ public class TransactionCategoryController(
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ListOrganizationTransactionCategories([FromRoute] int organizationId,
-        [FromQuery] PaginationDto pagination)
+        [FromQuery] PaginationDto pagination, [FromQuery] TransactionCategoryCriteriaDto criteriaDto)
     {
-        return Ok(await transactionCategoryService.ListOrganizationTransactionCategories(organizationId, pagination));
+        return Ok(await transactionCategoryService.ListOrganizationTransactionCategories(criteriaDto, organizationId, pagination));
     }
     
     /// <summary>
@@ -131,8 +130,8 @@ public class TransactionCategoryController(
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ListWorkspaceTransactionCategories([FromRoute] int workspaceId,
-        [FromQuery] PaginationDto pagination)
+        [FromQuery] PaginationDto pagination, [FromQuery] TransactionCategoryCriteriaDto criteriaDto)
     {
-        return Ok(await transactionCategoryService.ListWorkspaceTransactionCategories(workspaceId, pagination));
+        return Ok(await transactionCategoryService.ListWorkspaceTransactionCategories(criteriaDto, workspaceId, pagination));
     }
 }

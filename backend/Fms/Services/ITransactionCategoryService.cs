@@ -1,5 +1,4 @@
 ﻿using Fms.Dtos;
-using Fms.Entities.Common;
 
 namespace Fms.Services;
 
@@ -12,7 +11,7 @@ public interface ITransactionCategoryService
     public Task UpdateTransactionCategory(int id, TransactionCategoryUpsertRequestDto request);
     public Task DeleteTransactionCategory(int id);
 
-    public Task<TransactionCategoryListResponseDto> ListUserTransactionCategories(PaginationDto pagination);
-    public Task<TransactionCategoryListResponseDto> ListOrganizationTransactionCategories(int organizationId, PaginationDto pagination);
-    public Task<TransactionCategoryListResponseDto> ListWorkspaceTransactionCategories(int workspaceId, PaginationDto pagination);
+    public Task<TransactionCategoryListResponseDto> ListUserTransactionCategories(TransactionCategoryCriteriaDto criteriaDto, PaginationDto pagination);
+    public Task<TransactionCategoryListResponseDto> ListOrganizationTransactionCategories(TransactionCategoryCriteriaDto criteriaDto, int organizationId, PaginationDto pagination);
+    public Task<TransactionCategoryListResponseDto> ListWorkspaceTransactionCategories(TransactionCategoryCriteriaDto criteriaDto, int workspaceId, PaginationDto pagination);
 }

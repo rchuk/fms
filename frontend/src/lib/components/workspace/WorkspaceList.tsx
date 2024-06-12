@@ -49,10 +49,8 @@ export default function WorkspaceList(props: WorkspaceListProps) {
     }
   }
   
-  async function fetch(offset: number, limit: number): Promise<[number, WorkspaceResponse[]]> {
-    const response = await fetchImpl(props.source, offset, limit);
-
-    return [response.totalCount, response.items];
+  async function fetch(offset: number, limit: number) {
+    return await fetchImpl(props.source, offset, limit);
   }
 
   return (

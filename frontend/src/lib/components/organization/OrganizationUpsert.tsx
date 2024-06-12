@@ -14,36 +14,45 @@ type OrganizationUpsertProps = {
   onSave?: () => void
 };
 
-function getDefaultOrganizationView(): OrganizationUpsertRequest {
-  return {
-    name: ""
-  };
+function getDefaultOrganizationView(): Partial<OrganizationUpsertRequest> {
+  return {};
 }
 
 export default function OrganizationUpsert(props: OrganizationUpsertProps) {
   const { organizationService } = useContext(ServicesContext);
-  const [view, setView] = useState<OrganizationUpsertRequest>(getDefaultOrganizationView);
+  const [view, setView] = useState<Partial<OrganizationUpsertRequest>>(getDefaultOrganizationView);
 
-  async function fetch() {
-    const { id, ...newView } = await organizationService.getOrganization({ id: props.initialId! });
-    setView(newView);
+  async function fetch(id: number) {
+    const { id: _, ...newView } = await organizationService.getOrganization({ id });
+
+    return newView;
   }
 
-  async function update(id: number) {
+  async function update(id: number, view: OrganizationUpsertRequest) {
     await organizationService.updateOrganization({ id, organizationUpsertRequest: view });
   }
 
-  async function create() {
+  async function create(view: OrganizationUpsertRequest) {
     return await organizationService.createOrganization({ organizationUpsertRequest: view });
+  }
+
+  function validate(view: Partial<OrganizationUpsertRequest>): OrganizationUpsertRequest | null {
+    const { name, ...other } = view;
+    if (name == null)
+      return null;
+
+    return { name, ...other };
   }
 
   return (
     <UpsertComponent
+      view={view}
+      setView={setView}
       initialId={props.initialId}
-      resetView={() => setView(getDefaultOrganizationView)}
       fetch={fetch}
       create={create}
       update={update}
+      validate={validate}
       cancel={props.cancel}
       onError={props.onError}
       onSave={props.onSave}

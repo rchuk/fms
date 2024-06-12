@@ -14,36 +14,45 @@ type WorkspaceUpsertProps = {
   onSave?: () => void
 };
 
-function getDefaultWorkspaceView(): WorkspaceUpsertRequest {
-  return {
-    name: ""
-  };
+function getDefaultWorkspaceView(): Partial<WorkspaceUpsertRequest> {
+  return {};
 }
 
 export default function WorkspaceUpsert(props: WorkspaceUpsertProps) {
   const { workspaceService } = useContext(ServicesContext);
-  const [view, setView] = useState<WorkspaceUpsertRequest>(getDefaultWorkspaceView);
+  const [view, setView] = useState<Partial<WorkspaceUpsertRequest>>(getDefaultWorkspaceView);
 
-  async function fetch() {
-    const { id, ...newView } = await workspaceService.getWorkspace({ id: props.initialId! });
-    setView(newView);
+  async function fetch(id: number) {
+    const { id: _, ...newView } = await workspaceService.getWorkspace({ id });
+
+    return newView;
   }
 
-  async function update(id: number) {
+  async function update(id: number, view: WorkspaceUpsertRequest) {
     await workspaceService.updateWorkspace({ id, workspaceUpsertRequest: view });
   }
 
-  async function create() {
+  async function create(view: WorkspaceUpsertRequest) {
     return await workspaceService.createSharedUserWorkspace({ workspaceUpsertRequest: view });
+  }
+
+  function validate(view: Partial<WorkspaceUpsertRequest>): WorkspaceUpsertRequest | null {
+    const { name, ...other } = view;
+    if (name == null)
+      return null;
+
+    return { name, ...other };
   }
 
   return (
     <UpsertComponent
+      view={view}
+      setView={setView}
       initialId={props.initialId}
-      resetView={() => setView(getDefaultWorkspaceView)}
       fetch={fetch}
       create={create}
       update={update}
+      validate={validate}
       cancel={props.cancel}
       onError={props.onError}
       onSave={props.onSave}

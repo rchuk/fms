@@ -8,12 +8,15 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import BackHandIcon from '@mui/icons-material/BackHand';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import {ReactElement} from "react";
+import {useRouter} from "next/navigation";
 
 type WorkspaceListCardProps = {
   item: WorkspaceResponse
 }
 
 export default function WorkspaceListCard(props: WorkspaceListCardProps) {
+  const router = useRouter();
+
   const icons: Record<WorkspaceRole, () => ReactElement> = {
     [WorkspaceRole.Owner]: () => <BackHandIcon />,
     [WorkspaceRole.Admin]: () => <AdminPanelSettingsIcon />,
@@ -21,9 +24,13 @@ export default function WorkspaceListCard(props: WorkspaceListCardProps) {
     [WorkspaceRole.Viewer]: () => <VisibilityIcon />,
   };
 
+  function onClick() {
+    router.push(`/workspaces/${props.item.id}`);
+  }
+
   return (
     <Card key={props.item.id} variant="elevation" elevation={4}>
-      <CardActionArea sx={{ padding: 2, display: "flex", alignItems: "center" }}>
+      <CardActionArea sx={{ padding: 2, display: "flex", alignItems: "center" }} onClick={onClick}>
         <Typography variant="h6">
           {props.item.name}
         </Typography>

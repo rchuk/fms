@@ -4,30 +4,32 @@ import ProgressSpinner from "@/lib/components/common/ProgressSpinner";
 import {AlertContext} from "@/lib/services/AlertService";
 import {getRequestError} from "@/lib/utils/RequestUtils";
 
-
-type UpsertComponentProps<IdT> = {
+type UpsertComponentProps<IdT, ViewT> = {
+  view: Partial<ViewT>,
+  setView: (value: Partial<ViewT>) => void,
+  
   initialId: IdT | null,
   createHeader: string,
   updateHeader: string,
 
-  resetView: () => void,
-  fetch: (id: IdT) => Promise<void>,
-  create: () => Promise<IdT>,
-  update: (id: IdT) => Promise<void>,
+  fetch: (id: IdT) => Promise<ViewT>,
+  create: (view: ViewT) => Promise<IdT>,
+  update: (id: IdT, view: ViewT) => Promise<void>,
+  validate: (view: Partial<ViewT>) => ViewT | null,
 
   onSave?: () => void,
   cancel?: () => void,
   onError?: (reason: any) => void,
 }
 
-export default function UpsertComponent<IdT>(props: PropsWithChildren<UpsertComponentProps<IdT>>) {
+export default function UpsertComponent<IdT, ViewT>(props: PropsWithChildren<UpsertComponentProps<IdT, ViewT>>) {
   const [id, setId] = useState<IdT | null>(null);
   const [isReady, setIsReady] = useState<boolean>(false);
   const showAlert = useContext(AlertContext);
 
   useEffect(() => {
-    if (props.initialId == null) {
-      props.resetView();
+    if (props.initialId === null) {
+      props.setView({});
       setIsReady(true);
 
       return;
@@ -48,8 +50,12 @@ export default function UpsertComponent<IdT>(props: PropsWithChildren<UpsertComp
   }, [props.initialId])
 
   function update() {
+    const view = props.validate(props.view);
+    if (view === null)
+      return;
+
     const update = async() => {
-      await props.update(id!);
+      await props.update(id!, view);
     };
 
     update()
@@ -59,8 +65,16 @@ export default function UpsertComponent<IdT>(props: PropsWithChildren<UpsertComp
   }
 
   function create() {
+    const view = props.validate(props.view);
+    if (view === null)
+      return;
+
     const create = async() => {
-      const id = await props.create();
+      const view = props.validate(props.view);
+      if (view === null)
+        return;
+
+      const id = await props.create(view);
       setId(id);
 
       return id;

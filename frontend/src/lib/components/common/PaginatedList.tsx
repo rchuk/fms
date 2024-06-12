@@ -2,10 +2,11 @@ import {ReactElement, useCallback, useContext, useEffect, useState} from "react"
 import {Box, Pagination} from "@mui/material";
 import {getRequestError} from "@/lib/utils/RequestUtils";
 import {AlertContext} from "@/lib/services/AlertService";
+import {ListResponse} from "@/lib/utils/EntityUtils";
 
 
 type PaginatedListProps<ItemT> = {
-  fetch: (offset: number, limit: number) => Promise<[number, ItemT[]]>,
+  fetch: (offset: number, limit: number) => Promise<ListResponse<ItemT>>,
   pageSize: number,
   renderItem: (data: ItemT) => ReactElement,
 
@@ -32,7 +33,7 @@ export default function PaginatedList<ItemT>(props: PaginatedListProps<ItemT>) {
 
   function updateData() {
     const fetch = async() => {
-      const [newTotalItemCount, newItemsData] = await props.fetch(pageIndex * props.pageSize, props.pageSize);
+      const { totalCount: newTotalItemCount, items: newItemsData } = await props.fetch(pageIndex * props.pageSize, props.pageSize);
 
       setTotalItemCount(newTotalItemCount);
       setItemsData(newItemsData);

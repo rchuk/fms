@@ -29,10 +29,8 @@ export default function OrganizationList(props: OrganizationListProps) {
     return <OrganizationListCard item={data} />
   }
 
-  async function fetch(offset: number, limit: number): Promise<[number, OrganizationResponse[]]> {
-    const response = await organizationService.listUserOrganizations({ offset, limit });
-
-    return [response.totalCount, response.items];
+  async function fetch(offset: number, limit: number) {
+    return await organizationService.listUserOrganizations({ offset, limit });
   }
 
   return (

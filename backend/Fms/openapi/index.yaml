@@ -1079,7 +1079,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WorkspaceListResponse'
+                $ref: '#/components/schemas/TransactionCategoryListResponse'
         '400':
           description: Bad Request
           content:
@@ -1196,7 +1196,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WorkspaceListResponse'
+                $ref: '#/components/schemas/TransactionCategoryListResponse'
         '400':
           description: Bad Request
           content:
@@ -1319,7 +1319,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WorkspaceListResponse'
+                $ref: '#/components/schemas/TransactionCategoryListResponse'
         '400':
           description: Bad Request
           content:
@@ -2220,6 +2220,21 @@ components:
         - EXPENSE
         - MIXED
       type: string
+    TransactionCategoryListResponse:
+      required:
+        - items
+        - totalCount
+      type: object
+      properties:
+        totalCount:
+          type: integer
+          format: int32
+          example: 165
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionCategoryResponse'
+      additionalProperties: false
     TransactionCategoryResponse:
       required:
         - id

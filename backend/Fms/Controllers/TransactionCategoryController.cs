@@ -101,7 +101,7 @@ public class TransactionCategoryController(
     /// Get list of current user's transaction categories
     /// </summary>
     [HttpGet(Name = "listUserTransactionCategories")]
-    [ProducesResponseType(typeof(WorkspaceListResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(TransactionCategoryListResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ListCurrentUserTransactionCategories([FromQuery] PaginationDto pagination, [FromQuery] TransactionCategoryCriteriaDto criteriaDto)
     {
@@ -112,7 +112,7 @@ public class TransactionCategoryController(
     /// Get list of organization's transaction categories
     /// </summary>
     [HttpGet("/api/organizations/{organizationId:int}/transactions/categories", Name = "listOrganizationTransactionCategories")]
-    [ProducesResponseType(typeof(WorkspaceListResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(TransactionCategoryListResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ListOrganizationTransactionCategories([FromRoute] int organizationId,
@@ -126,7 +126,7 @@ public class TransactionCategoryController(
     /// </summary>
     // TODO: Add criteria to filter global ones vs workspace only
     [HttpGet("/api/workspaces/{workspaceId:int}/transactions/categories", Name = "listWorkspaceTransactionCategories")]
-    [ProducesResponseType(typeof(WorkspaceListResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(TransactionCategoryListResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ListWorkspaceTransactionCategories([FromRoute] int workspaceId,

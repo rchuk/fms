@@ -1,13 +1,14 @@
 "use client";
 
-import {Link, Typography} from "@mui/material";
-import CredentialsComponent from "@/lib/components/auth/CredentialsComponent";
+import {Box} from "@mui/material";
 import {useContext} from "react";
 import {ServicesContext} from "@/lib/services/ServiceProvider";
 import {getRequestError} from "@/lib/utils/RequestUtils";
 import {AlertContext} from "@/lib/services/AlertService";
 import {SessionServiceContext} from "@/lib/services/SessionService";
 import {useRouter} from "next/navigation";
+import AuthCard from "@/lib/components/auth/AuthCard";
+import RegisterForm from "@/lib/components/auth/RegisterForm";
 
 export default function RegisterPage() {
   const { authService } = useContext(ServicesContext);
@@ -31,14 +32,22 @@ export default function RegisterPage() {
   }
 
   return (
-    <>
-      <Typography variant="h3">
-        Register
-      </Typography>
-      <CredentialsComponent handleSubmit={register}/>
-      <div>
-        Already have an account? <Link href="/auth/login">Login here</Link>
-      </div>
-    </>
+    <Box
+      overflow="hidden" 
+      height={"100vh"} 
+      display={"flex"}
+      flexDirection={"column"} 
+      justifyContent={"center"}
+      alignItems={"center"}
+    >
+      <AuthCard 
+        header={"Register"} 
+        otherOptionText={"Already have an account?"} 
+        otherOptionLinkText={"Login here"} 
+        otherOptionLink={"/auth/login"}
+      >
+        <RegisterForm handleSubmit={register} />
+      </AuthCard>
+    </Box>
   );
 }

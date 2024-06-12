@@ -27,9 +27,10 @@ export default function Home() {
       >
         FMS is the next leader in finance management 
       </Typography>
-      <Stack
+      <Box
         mt={10}
-        sx={{          
+        sx={{    
+          display: "flex",     
           justifyContent: "space-evenly",
           alignItems: "center",
           flexDirection: "row",
@@ -40,7 +41,6 @@ export default function Home() {
         }}
       >
         <Button 
-          size={"large"}
           variant={"outlined"}
           sx={{
             fontSize: "2rem",
@@ -54,7 +54,6 @@ export default function Home() {
           Login
         </Button>
         <Button 
-          size={"large"}
           variant={"outlined"}
           sx={{
             fontSize: "2rem",
@@ -67,7 +66,7 @@ export default function Home() {
         >
           Register
         </Button>
-      </Stack>
+      </Box>
     </Box>
   );
 }

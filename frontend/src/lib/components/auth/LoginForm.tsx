@@ -65,7 +65,6 @@ export default function LoginForm(props: CredentialsComponentProps) {
           />
         </FormControl>
         <Button 
-          size="large"
           sx={{
             mt: "1.5rem",
             fontSize: "1.2rem",

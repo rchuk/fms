@@ -3,7 +3,7 @@
 import React, {AnchorHTMLAttributes, forwardRef, useEffect, useState} from "react";
 import ServicesProvider, {createServices, Services} from "@/lib/services/ServiceProvider";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
-import {createTheme, CssBaseline, ThemeProvider} from "@mui/material";
+import {createTheme, CssBaseline, responsiveFontSizes, ThemeProvider} from "@mui/material";
 import {LocalizationProvider} from "@mui/x-date-pickers";
 import {Roboto} from "next/font/google";
 import { AlertProvider } from "@/lib/services/AlertService";
@@ -22,7 +22,7 @@ const LinkBehaviour = forwardRef<HTMLAnchorElement, LinkBehaviourProps>(function
   return <NextLink ref={ref} {...props} />;
 });
 
-const theme = createTheme({
+let theme = createTheme({
   palette: {
     mode: "dark",
     primary: {
@@ -45,6 +45,8 @@ const theme = createTheme({
     }
   }
 });
+
+theme = responsiveFontSizes(theme);
 
 export default function RootLayout({
   children,

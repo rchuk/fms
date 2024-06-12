@@ -1,13 +1,14 @@
 "use client";
 
-import {Link, Typography} from "@mui/material";
-import CredentialsComponent from "@/lib/components/auth/CredentialsComponent";
+import {Box} from "@mui/material";
 import {useContext} from "react";
 import {ServicesContext} from "@/lib/services/ServiceProvider";
 import {SessionServiceContext} from "@/lib/services/SessionService";
 import {AlertContext} from "@/lib/services/AlertService";
 import {getRequestError} from "@/lib/utils/RequestUtils";
 import {useRouter} from "next/navigation";
+import AuthCard from "@/lib/components/auth/AuthCard";
+import LoginForm from "@/lib/components/auth/LoginForm";
 
 export default function LoginPage() {
   const { authService } = useContext(ServicesContext);
@@ -28,14 +29,22 @@ export default function LoginPage() {
   }
 
   return (
-    <>
-      <Typography variant="h3">
-        Login
-      </Typography>
-      <CredentialsComponent handleSubmit={login}/>
-      <div>
-        Need an account? <Link href="/auth/register">Register here</Link>
-      </div>
-    </>
+    <Box
+      overflow="hidden" 
+      height={"100vh"} 
+      display={"flex"}
+      flexDirection={"column"} 
+      justifyContent={"center"}
+      alignItems={"center"}
+    >
+      <AuthCard 
+        header={"Login"} 
+        otherOptionText={"Need an account?"} 
+        otherOptionLinkText={"Register here"} 
+        otherOptionLink={"/auth/register"}
+      >
+        <LoginForm handleSubmit={login} />
+      </AuthCard>
+    </Box>
   );
 }

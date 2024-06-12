@@ -10,6 +10,7 @@ export default function DashboardPage() {
       </Typography>
       <Link href="/workspaces">Workspaces</Link>
       <Link href="/organizations">Organizations</Link>
+      <Link href="/transaction-categories">Transaction categories</Link>
       <Link href="/profile">Profile</Link>
     </Box>
   );

@@ -1554,6 +1554,7 @@ paths:
       tags:
         - Workspace
       summary: Create organization workspace
+      operationId: createOrganizationWorkspace
       parameters:
         - name: organizationId
           in: path

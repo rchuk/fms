@@ -34,7 +34,7 @@ public class WorkspaceController(
     /// <summary>
     /// Create organization workspace
     /// </summary>
-    [HttpPut("/api/organizations/{organizationId:int}/workspaces")]
+    [HttpPut("/api/organizations/{organizationId:int}/workspaces", Name = "createOrganizationWorkspace")]
     [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]

@@ -211,7 +211,7 @@ public partial class TransactionCategoryService : ITransactionCategoryService
 
         var criteria = new TransactionCategoryCriteria
         {
-            AccountId = criteriaDto.IncludeOwner.GetValueOrDefault(true) ? (await _workspaceToAccountRepository.GetOwner(workspaceId))!.Id : null,
+            AccountId = criteriaDto.IncludeOwner.GetValueOrDefault(false) ? (await _workspaceToAccountRepository.GetOwner(workspaceId))!.Id : null,
             WorkspaceId = workspaceId,
             Query = criteriaDto.Query
         };

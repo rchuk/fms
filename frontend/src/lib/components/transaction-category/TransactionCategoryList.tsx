@@ -43,7 +43,6 @@ export default function TransactionCategoryList(props: TransactionCategoryListPr
       case "workspace":
         return await transactionCategoryService.listWorkspaceTransactionCategories({
           workspaceId: props.source.workspaceId,
-          includeOwner: false,
           offset,
           limit
         });

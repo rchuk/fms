@@ -26,7 +26,7 @@ export default function RegisterPage() {
     fetch()
       .then(_ => {
         showAlert("Реєстрація пройшла успішно", "success");
-        router.push("/");
+        router.push("/dashboard");
       })
       .catch(e => getRequestError(e).then(m => showAlert(m, "error")));
   }

@@ -24,7 +24,7 @@ export default function LoginPage() {
     };
 
     fetch()
-      .then(_ => router.push("/"))
+      .then(_ => router.push("/dashboard"))
       .catch(e => getRequestError(e).then(m => showAlert(m, "error")));
   }
 

@@ -8,6 +8,7 @@ import {ServicesContext} from "@/lib/services/ServiceProvider";
 import FloatingAddButton from "../common/FloatingAddButton";
 import ModalComponent, {useModalClosingCallback, useModalControls} from "../common/ModalComponent";
 import {TransactionCategorySource} from "@/lib/components/transaction-category/Common";
+import TransactionCategoryUpsert from "./TransactionCategoryUpsert";
 
 type TransactionCategoryListProps = {
   source: TransactionCategorySource
@@ -22,7 +23,7 @@ export default function TransactionCategoryList(props: TransactionCategoryListPr
   const onSave = useModalClosingCallback(setModalContent, () => setIsDirty(true));
 
   function create() {
-    // TODO
+    return openModal(<TransactionCategoryUpsert initialId={null} source={props.source} onError={closeModal} cancel={closeModal} onSave={onSave} />);
   }
 
   function renderCard(data: TransactionCategoryResponse) {

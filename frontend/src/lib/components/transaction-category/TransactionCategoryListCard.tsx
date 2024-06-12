@@ -1,20 +1,14 @@
 "use client";
 
-import {TransactionCategoryKind, TransactionCategoryResponse} from "../../../../generated";
+import {TransactionCategoryResponse} from "../../../../generated";
 import {Box, Card, CardActionArea, Typography} from "@mui/material";
+import {TransactionCategoryKind_i18} from "@/lib/i18/TransactionCategoryKind_i18";
 
 type TransactionCategoryListCardProps = {
   item: TransactionCategoryResponse
 }
 
 export default function TransactionCategoryListCard(props: TransactionCategoryListCardProps) {
-  // TODO: Add i18 type
-  const kindText: Record<TransactionCategoryKind, string> = {
-    [TransactionCategoryKind.Income]: "Дохід",
-    [TransactionCategoryKind.Expense]: "Витрати",
-    [TransactionCategoryKind.Mixed]: "Змішаний"
-  };
-
   return (
     <Card key={props.item.id} variant="elevation" elevation={4}>
       <CardActionArea sx={{ padding: 2, display: "flex", alignItems: "center" }}>
@@ -22,7 +16,7 @@ export default function TransactionCategoryListCard(props: TransactionCategoryLi
           {props.item.name}
         </Typography>
         <Box display="flex" flex={1} justifyContent="flex-end">
-          <Typography variant="h6">{kindText[props.item.kind]}</Typography>
+          <Typography variant="h6">{TransactionCategoryKind_i18[props.item.kind]}</Typography>
         </Box>
       </CardActionArea>
     </Card>

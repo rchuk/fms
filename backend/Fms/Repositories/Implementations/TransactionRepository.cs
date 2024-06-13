@@ -44,7 +44,7 @@ public class TransactionRepository : BaseCrudRepository<TransactionEntity, int>,
         if (criteria.StartDate is { } startDate)
             query = query.Where(entity => entity.Timestamp >= startDate);
         if (criteria.EndDate is { } endDate)
-            query = query.Where(entity => entity.Timestamp >= endDate);
+            query = query.Where(entity => entity.Timestamp <= endDate);
         if (criteria.MinAmount is { } minAmount)
             query = query.Where(entity => Math.Abs(entity.Amount) >= minAmount);
         if (criteria.MaxAmount is { } maxAmount)

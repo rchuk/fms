@@ -37,8 +37,7 @@ public class UserController(
     [HttpGet(Name = "listUsers")]
     [ProducesResponseType(typeof(UserListResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> ListCurrentUserOrganizations([FromQuery] UserCriteriaDto criteria,
-        [FromQuery] PaginationDto pagination)
+    public async Task<IActionResult> ListUsers([FromQuery] UserCriteriaDto criteria, [FromQuery] PaginationDto pagination)
     {
         return Ok(await userService.ListUsers(criteria, pagination));
     }

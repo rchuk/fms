@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Fms.Dtos.Common;
 
 namespace Fms.Dtos;
 
@@ -14,3 +15,5 @@ public class UserResponseDto
     [Required]
     public required string LastName { get; set; }
 }
+
+public class UserListResponseDto : ListResponseDto<UserResponseDto>;

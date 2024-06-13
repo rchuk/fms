@@ -569,6 +569,12 @@ paths:
           schema:
             type: integer
             format: int32
+        - name: Query
+          in: query
+          schema:
+            type: string
+            example: Jane
+          example: Jane
         - name: Offset
           in: query
           schema:
@@ -1025,10 +1031,14 @@ paths:
           in: query
           schema:
             type: boolean
+            example: true
+          example: true
         - name: Query
           in: query
           schema:
             type: string
+            example: mple catego
+          example: mple catego
       responses:
         '401':
           description: Unauthorized
@@ -1142,10 +1152,14 @@ paths:
           in: query
           schema:
             type: boolean
+            example: true
+          example: true
         - name: Query
           in: query
           schema:
             type: string
+            example: mple catego
+          example: mple catego
       responses:
         '401':
           description: Unauthorized
@@ -1265,10 +1279,14 @@ paths:
           in: query
           schema:
             type: boolean
+            example: true
+          example: true
         - name: Query
           in: query
           schema:
             type: string
+            example: mple catego
+          example: mple catego
       responses:
         '401':
           description: Unauthorized
@@ -1465,6 +1483,53 @@ paths:
                 $ref: '#/components/schemas/PublicError'
         '200':
           description: Success
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+    get:
+      tags:
+        - User
+      summary: Get list of users
+      operationId: listUsers
+      parameters:
+        - name: Query
+          in: query
+          schema:
+            type: string
+            example: Jane
+          example: Jane
+        - name: Offset
+          in: query
+          schema:
+            type: integer
+            format: int32
+        - name: Limit
+          in: query
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserListResponse'
         '400':
           description: Bad Request
           content:
@@ -2012,6 +2077,12 @@ paths:
           schema:
             type: integer
             format: int32
+        - name: Query
+          in: query
+          schema:
+            type: string
+            example: Jane
+          example: Jane
         - name: Offset
           in: query
           schema:
@@ -2374,6 +2445,21 @@ components:
           format: int32
           nullable: true
           example: 
+      additionalProperties: false
+    UserListResponse:
+      required:
+        - items
+        - totalCount
+      type: object
+      properties:
+        totalCount:
+          type: integer
+          format: int32
+          example: 165
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserResponse'
       additionalProperties: false
     UserRegisterRequest:
       required:

@@ -1,4 +1,5 @@
 ﻿using Fms.Application;
+using Fms.Dtos;
 using Fms.Entities;
 using Fms.Entities.Common;
 using Fms.Repositories.Common;
@@ -10,12 +11,19 @@ public class OrganizationToUserRepository : BaseCrudRepository<OrganizationToUse
 {
     public OrganizationToUserRepository(FmsDbContext ctx) : base(ctx) {}
     
-    public async Task<(int total, IEnumerable<OrganizationToUserEntity> items)> ListOrganizationUsers(int organizationId, Pagination pagination)
+    public async Task<(int total, IEnumerable<OrganizationToUserEntity> items)> ListOrganizationUsers(int organizationId, UserCriteriaDto criteria, Pagination pagination)
     {
         var query = Ctx.OrganizationToUser
-            .Where(map => map.OrganizationId == organizationId)
-            .OrderBy(map => map.UserId)
-            .Include(map => map.User);
+            .Where(map => map.OrganizationId == organizationId);
+            
+        if (criteria.Query is { } searchQuery)
+        {
+            query = query.Where(map => map.User.FirstName.ToLower().Contains(searchQuery.ToLower()) 
+                                       || map.User.LastName.ToLower().Contains(searchQuery.ToLower()));
+        }
+         
+        query = query.Include(map => map.User)
+            .OrderBy(map => map.UserId);;
             
         return (
             query.Count(), 

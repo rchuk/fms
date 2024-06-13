@@ -170,8 +170,9 @@ public class WorkspaceController(
     [ProducesResponseType(typeof(WorkspaceUserListResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> ListWorkspaceUsers([FromRoute] int workspaceId, [FromQuery] PaginationDto pagination)
+    public async Task<IActionResult> ListWorkspaceUsers([FromRoute] int workspaceId, [FromQuery] UserCriteriaDto criteria,
+        [FromQuery] PaginationDto pagination)
     {
-        return Ok(await workspaceService.ListWorkspaceUsers(workspaceId, pagination));
+        return Ok(await workspaceService.ListWorkspaceUsers(workspaceId, criteria, pagination));
     }
 }

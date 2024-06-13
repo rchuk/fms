@@ -1,6 +1,7 @@
 ﻿using Fms.Application;
 using Fms.Entities;
 using Fms.Entities.Common;
+using Fms.Entities.Criteria;
 using Fms.Entities.Enums;
 using Fms.Repositories.Common;
 using Microsoft.EntityFrameworkCore;
@@ -41,11 +42,22 @@ public class WorkspaceToAccountRepository : BaseCrudRepository<WorkspaceToAccoun
             .FirstOrDefaultAsync();
     }
     
-    public async Task<(int total, IEnumerable<WorkspaceToAccountEntity> items)> ListWorkspaceAccounts(int workspaceId, Pagination pagination)
+    public async Task<(int total, IEnumerable<WorkspaceToAccountEntity> items)> ListWorkspaceAccounts(int workspaceId, AccountCriteria criteria, Pagination pagination)
     {
         var query = Ctx.WorkspaceToAccount
-            .Where(map => map.WorkspaceId == workspaceId)
-            .OrderBy(map => map.AccountId);
+            .Where(map => map.WorkspaceId == workspaceId);
+
+        if (criteria.Query is { } searchQuery)
+        {
+            var needle = searchQuery.ToLower();
+
+            query = query.Where(map =>
+                map.Account.Organization != null && map.Account.Organization.Name.ToLower().Contains(needle)
+                || map.Account.User != null && (map.Account.User.FirstName.ToLower().Contains(needle) || map.Account.User.LastName.ToLower().Contains(needle))
+            );
+        }
+        
+        query = query.OrderBy(map => map.AccountId);
 
         return (
             query.Count(),

@@ -3,6 +3,7 @@ using Fms.Data;
 using Fms.Dtos;
 using Fms.Entities;
 using Fms.Entities.Common;
+using Fms.Entities.Criteria;
 using Fms.Entities.Enums;
 using Fms.Exceptions;
 using Fms.Repositories;
@@ -190,7 +191,7 @@ public class WorkspaceService : IWorkspaceService
  
         if (owner.User is { } userOwner&& userOwner.SubscriptionKind?.ToEnum() is SubscriptionKind.Family)
         {
-            var (workspaceMembers, _) = await _workspaceToAccountRepository.ListWorkspaceAccounts(workspaceId, new Pagination(0, 0));
+            var (workspaceMembers, _) = await _workspaceToAccountRepository.ListWorkspaceAccounts(workspaceId, new AccountCriteria(), new Pagination(0, 0));
             if (workspaceMembers >= 4)
                 throw new PublicClientException(_localizer[Localization.ErrorMessages.workspace_cant_add_more_users]);
         }
@@ -257,12 +258,16 @@ public class WorkspaceService : IWorkspaceService
     }
 
     [Transactional]
-    public async Task<WorkspaceUserListResponseDto> ListWorkspaceUsers(int id, PaginationDto pagination)
+    public async Task<WorkspaceUserListResponseDto> ListWorkspaceUsers(int id, UserCriteriaDto criteria, PaginationDto pagination)
     {
         if (await GetCurrentUserRole(id) is null)
             throw new PublicNotFoundException(_localizer[Localization.ErrorMessages.workspace_doesnt_exist]);
 
-        var (total, items) = await _workspaceToAccountRepository.ListWorkspaceAccounts(id, new Pagination(pagination));
+        var accountCriteria = new AccountCriteria
+        {
+            Query = criteria.Query
+        };
+        var (total, items) = await _workspaceToAccountRepository.ListWorkspaceAccounts(id, accountCriteria, new Pagination(pagination));
 
         return new WorkspaceUserListResponseDto
         {

@@ -167,12 +167,12 @@ public class OrganizationService : IOrganizationService
     }
     
     [Transactional]
-    public async Task<OrganizationUserListResponseDto> ListOrganizationUsers(int id, PaginationDto pagination)
+    public async Task<OrganizationUserListResponseDto> ListOrganizationUsers(int id, UserCriteriaDto criteria, PaginationDto pagination)
     {
         if (await GetCurrentUserRole(id) is null)
             throw new PublicNotFoundException(_localizer[Localization.ErrorMessages.organization_doesnt_exist]);
         
-        var (total, items) = await _organizationToUserRepository.ListOrganizationUsers(id, new Pagination(pagination));
+        var (total, items) = await _organizationToUserRepository.ListOrganizationUsers(id, criteria, new Pagination(pagination));
 
         return new OrganizationUserListResponseDto
         {

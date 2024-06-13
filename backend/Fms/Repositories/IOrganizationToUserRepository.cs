@@ -1,4 +1,5 @@
-﻿using Fms.Entities;
+﻿using Fms.Dtos;
+using Fms.Entities;
 using Fms.Entities.Common;
 
 namespace Fms.Repositories;
@@ -10,7 +11,7 @@ public interface IOrganizationToUserRepository
     Task<bool> Update(OrganizationToUserEntity entity);
     Task<bool> Delete((int organizationId, int userId) id);
     
-    Task<(int total, IEnumerable<OrganizationToUserEntity> items)> ListOrganizationUsers(int organizationId, Pagination pagination);
+    Task<(int total, IEnumerable<OrganizationToUserEntity> items)> ListOrganizationUsers(int organizationId, UserCriteriaDto criteria, Pagination pagination);
     Task<(int total, IEnumerable<OrganizationToUserEntity> items)> ListUserOrganizations(int userId, Pagination pagination);
     
     Task<bool> AreRelatedUsers(int userIdFirst, int userIdSecond);

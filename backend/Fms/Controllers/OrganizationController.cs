@@ -146,8 +146,9 @@ public class OrganizationController(
     [ProducesResponseType(typeof(OrganizationUserListResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> ListOrganizationUsers([FromRoute] int organizationId, [FromQuery] PaginationDto pagination)
+    public async Task<IActionResult> ListOrganizationUsers([FromRoute] int organizationId, [FromQuery] UserCriteriaDto criteria,
+        [FromQuery] PaginationDto pagination)
     {
-        return Ok(await organizationService.ListOrganizationUsers(organizationId, pagination));
+        return Ok(await organizationService.ListOrganizationUsers(organizationId, criteria, pagination));
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Fms.Application.Attributes;
 using Fms.Dtos;
 using Fms.Entities;
+using Fms.Entities.Common;
 using Fms.Exceptions;
 using Fms.Repositories;
 
@@ -46,7 +47,7 @@ public class UserService : IUserService
     [Transactional]
     public async Task UpdateUser(UserUpdateDto request)
     {
-        var user = await _authService.Value.GetCurrentUser(); // TOOD: Create merger
+        var user = await _authService.Value.GetCurrentUser(); // TODO: Create merger
         if (request.FirstName is { } firstName)
             user.FirstName = firstName;
         if (request.LastName is { } lastName)
@@ -54,6 +55,18 @@ public class UserService : IUserService
 
         if (!await _userRepository.Update(user))
             throw new PublicClientException();
+    }
+
+    [Transactional]
+    public async Task<UserListResponseDto> ListUsers(UserCriteriaDto criteria, PaginationDto pagination)
+    {
+        var (total, items) = await _userRepository.List(criteria, new Pagination(pagination));
+
+        return new UserListResponseDto
+        {
+            TotalCount = total,
+            Items = items.Select(BuildUserResponseDto).ToList()
+        };
     }
 
     public static UserResponseDto BuildUserResponseDto(UserEntity entity)

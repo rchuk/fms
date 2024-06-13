@@ -2,23 +2,24 @@
 
 import {
   Configuration,
-  AccountApi,
   AuthApi,
   OrganizationApi,
   SubscriptionApi,
   TransactionApi,
   TransactionCategoryApi,
-  WorkspaceApi, DefaultConfig
+  UserApi,
+  WorkspaceApi,
+  DefaultConfig
 } from "../../../generated";
 import React, {createContext, PropsWithChildren} from "react";
 
 export type Services = {
-  accountService: AccountApi,
   authService: AuthApi,
   organizationService: OrganizationApi,
   subscriptionService: SubscriptionApi,
   transactionService: TransactionApi,
   transactionCategoryService: TransactionCategoryApi,
+  userService: UserApi,
   workspaceService: WorkspaceApi
 };
 
@@ -26,12 +27,12 @@ export function createServices(config?: Configuration | null): Services {
   const configuration = config ?? DefaultConfig;
 
   return {
-    accountService: new AccountApi(configuration),
     authService: new AuthApi(configuration),
     organizationService: new OrganizationApi(configuration),
     subscriptionService: new SubscriptionApi(configuration),
     transactionService: new TransactionApi(configuration),
     transactionCategoryService: new TransactionCategoryApi(configuration),
+    userService: new UserApi(configuration),
     workspaceService: new WorkspaceApi(configuration)
   };
 }

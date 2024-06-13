@@ -53,9 +53,7 @@ public class AuthService : IAuthService
         var user = await _userService.CreateUser(new UserEntity
         {
             Email = requestDto.Email,
-            PasswordHash = passwordHash,
-            FirstName = "Test",
-            LastName = "Test"
+            PasswordHash = passwordHash
         });
 
         return CreateAccessTokenResponseDto(CreateJwtToken(user.Id));

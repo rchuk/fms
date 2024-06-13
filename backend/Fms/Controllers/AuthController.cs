@@ -50,7 +50,7 @@ public class AuthController(
     [Authorize]
     [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> GetCurrentuserId()
+    public async Task<IActionResult> GetCurrentUserId()
     {
         return Ok(await authService.GetCurrentUserId());
     }
@@ -63,7 +63,7 @@ public class AuthController(
     [Authorize]
     [ProducesResponseType(typeof(UserSelfResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> GetCurrentuser()
+    public async Task<IActionResult> GetCurrentUser()
     {
         return Ok(UserService.BuildSelfUserResponseDto(await authService.GetCurrentUser()));
     }

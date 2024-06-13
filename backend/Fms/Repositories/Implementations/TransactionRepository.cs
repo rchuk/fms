@@ -3,6 +3,7 @@ using Fms.Application;
 using Fms.Dtos;
 using Fms.Entities;
 using Fms.Entities.Common;
+using Fms.Entities.Enums;
 using Fms.Repositories.Common;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,8 +26,15 @@ public class TransactionRepository : BaseCrudRepository<TransactionEntity, int>,
 
         if (criteria.CategoryKind is { } categoryKindEnum)
         {
-            var categoryKind = await _categoryKindRepository.Read(categoryKindEnum);
-            query = query.Where(entity => entity.Category.Kind.Id == categoryKind.Id);
+            if (categoryKindEnum == TransactionCategoryKind.Mixed)
+            {
+                var categoryKind = await _categoryKindRepository.Read(categoryKindEnum);
+                query = query.Where(entity => entity.Category.Kind.Id == categoryKind.Id);
+            }
+            else if (categoryKindEnum == TransactionCategoryKind.Income)
+                query = query.Where(entity => entity.Amount > 0);
+            else if (categoryKindEnum == TransactionCategoryKind.Expense)
+                query = query.Where(entity => entity.Amount < 0);
         }
         
         if (criteria.UserId is { } userId)

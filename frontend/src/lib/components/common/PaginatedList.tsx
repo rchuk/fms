@@ -1,5 +1,5 @@
 import {ReactElement, useCallback, useContext, useEffect, useState} from "react";
-import {Box, Pagination} from "@mui/material";
+import {Box, Divider, Pagination} from "@mui/material";
 import {getRequestError} from "@/lib/utils/RequestUtils";
 import {AlertContext} from "@/lib/services/AlertService";
 import {ListResponse} from "@/lib/utils/EntityUtils";
@@ -17,7 +17,9 @@ type PaginatedListProps<ItemT> = {
   setItemsData?: (value: ItemT[]) => void,
 
   items?: ReactElement[],
-  setItems?: (value: ReactElement[]) => void
+  setItems?: (value: ReactElement[]) => void,
+
+  head?: ReactElement
 }
 
 export default function PaginatedList<ItemT>(props: PaginatedListProps<ItemT>) {
@@ -51,7 +53,10 @@ export default function PaginatedList<ItemT>(props: PaginatedListProps<ItemT>) {
   }, [pageIndex]);
 
   useEffect(() => {
-    setItems(itemsData.map(props.renderItem));
+    setItems(itemsData
+      .slice(0, Math.max(itemsData.length, props.pageSize))
+      .map(props.renderItem)
+    );
   }, [itemsData]);
 
   useEffect(() => {
@@ -64,6 +69,17 @@ export default function PaginatedList<ItemT>(props: PaginatedListProps<ItemT>) {
 
   return (
     <Box display="flex" flexDirection="column" flex={1}>
+      {
+        props.head != null
+          ? (<>
+              <Box padding={2}>
+                {props.head}
+              </Box>
+              <Divider />
+            </>
+          )
+          : null
+      }
       <Box display="flex" flexDirection="column" flex={1} rowGap={2} padding={2}>
         {...items}
       </Box>

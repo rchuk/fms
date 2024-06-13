@@ -5,7 +5,7 @@ import {useContext, useEffect, useMemo, useState} from "react";
 import {getRequestError} from "@/lib/utils/RequestUtils";
 import {AlertContext} from "@/lib/services/AlertService";
 import {BaseEntity, EntityId, findEntity, ListResponse} from "@/lib/utils/EntityUtils";
-import {SEARCH_DEBOUNCE_MS} from "@/lib/utils/Constants";
+import {AUTOCOMPLETE_SEARCH_DEBOUNCE_MS} from "@/lib/utils/Constants";
 
 type AutocompleteComponentProps<ItemT extends BaseEntity<IdT>, IdT extends EntityId> = {
   initialId?: IdT,
@@ -49,7 +49,7 @@ export default function AutocompleteComponent<ItemT extends BaseEntity<IdT>, IdT
   }, [query]);
 
   const searchDelayed = useMemo(
-    () => debounce(() => setQuery(inputValue.trim()), SEARCH_DEBOUNCE_MS),
+    () => debounce(() => setQuery(inputValue.trim()), AUTOCOMPLETE_SEARCH_DEBOUNCE_MS),
     [inputValue]
   );
 

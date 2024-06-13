@@ -1,19 +1,25 @@
 "use client";
 
 import PaginatedList from "@/lib/components/common/PaginatedList";
-import {TransactionResponse} from "../../../../generated";
+import {ListTransactionsRequest, TransactionResponse} from "../../../../generated";
 import TransactionListCard from "@/lib/components/transaction/TransactionListCard";
 import {ReactElement, useContext, useState} from "react";
 import {ServicesContext} from "@/lib/services/ServiceProvider";
 import FloatingAddButton from "../common/FloatingAddButton";
 import ModalComponent, {useModalClosingCallback, useModalControls} from "@/lib/components/common/ModalComponent";
 import TransactionUpsert from "@/lib/components/transaction/TransactionUpsert";
+import TransactionFilter from "./TransactionFilter";
+import TransactionPlot from "./TransactionPlot";
 
 type TransactionListProps = {
   workspaceId: number
 }
 
 export default function TransactionList(props: TransactionListProps) {
+  const [criteria, setCriteria] = useState<ListTransactionsRequest>({
+    workspaceId: props.workspaceId
+  });
+  const [itemsData, setItemsData] = useState<TransactionResponse[]>([]);
   const [modalContent, setModalContent] = useState<ReactElement | null>(null);
   const [isDirty, setIsDirty] = useState<boolean>(false);
   const { transactionService } = useContext(ServicesContext);
@@ -30,13 +36,36 @@ export default function TransactionList(props: TransactionListProps) {
   }
 
   async function fetch(offset: number, limit: number) {
-    // TODO: Add criteria
-    return await transactionService.listTransactions({ workspaceId: props.workspaceId , offset, limit });
+    return await transactionService.listTransactions({
+      ...criteria,
+      offset,
+      limit
+    });
   }
+
+  const head = (
+    <>
+      <TransactionFilter criteria={criteria} setCriteria={setCriteria} onChange={() => setIsDirty(true)} />
+      {
+        criteria.startDate != null && criteria.categoryKind != null
+          ? <TransactionPlot itemsData={itemsData} />
+          : null
+      }
+    </>
+  );
 
   return (
     <>
-      <PaginatedList fetch={fetch} pageSize={10} renderItem={renderCard} isDirty={isDirty} setIsDirty={setIsDirty}/>
+      <PaginatedList
+        fetch={fetch}
+        pageSize={10}
+        renderItem={renderCard}
+        isDirty={isDirty}
+        setIsDirty={setIsDirty}
+        itemsData={itemsData}
+        setItemsData={setItemsData}
+        head={head}
+      />
       <FloatingAddButton onClick={create} />
       <ModalComponent content={modalContent} setContent={setModalContent} />
     </>

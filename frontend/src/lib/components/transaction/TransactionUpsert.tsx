@@ -95,7 +95,7 @@ export default function TransactionUpsert(props: TransactionUpsertProps) {
             textField: { fullWidth: true }
           }}
           value={view.timestamp != null ? dayjs(view.timestamp) : undefined}
-          onChange={value => setView({...view, timestamp: (value ?? dayjs())?.toDate()})}
+          onChange={value => setView({...view, timestamp: value?.toDate() ?? undefined})}
         />
       </Grid>
 

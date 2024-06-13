@@ -42,11 +42,13 @@ public class TransactionRepository : BaseCrudRepository<TransactionEntity, int>,
         if (criteria.MaxAmount is { } maxAmount)
             query = query.Where(entity => Math.Abs(entity.Amount) <= maxAmount);
 
-        query = Sort(query, criteria.SortField, criteria.SortDirection);
-
+        query = Sort(query, criteria.SortField, criteria.SortDirection); ;
+        
         return (
             query.Count(),
-            await query.Skip(pagination.Offset).Take(pagination.Limit).ToListAsync()
+            criteria.IncludeAll.GetValueOrDefault(false)
+                ? await query.ToListAsync()
+                : await query.Skip(pagination.Offset).Take(pagination.Limit).ToListAsync()
         );
     }
     

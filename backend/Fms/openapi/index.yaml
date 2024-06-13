@@ -802,6 +802,12 @@ paths:
             format: int32
             example: 
           example: 
+        - name: IncludeAll
+          in: query
+          schema:
+            type: boolean
+            example: 
+          example: 
         - name: CategoryKind
           in: query
           schema:

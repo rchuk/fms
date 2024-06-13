@@ -6,6 +6,7 @@ import {ServicesContext} from "@/lib/services/ServiceProvider";
 import {Divider, FormControl, InputLabel, MenuItem, Select, TextField} from "@mui/material";
 import {TransactionCategorySource} from "@/lib/components/transaction-category/Common";
 import {TransactionCategoryKind_i18} from "@/lib/i18/TransactionCategoryKind_i18";
+import {MuiColorInput} from "mui-color-input";
 
 type TransactionCategoryUpsertProps = {
   initialId: number | null,
@@ -63,8 +64,6 @@ export default function TransactionCategoryUpsert(props: TransactionCategoryUpse
     setView({...view, kind: kindStr === "" ? undefined : kindStr as TransactionCategoryKind});
   }
 
-  // TODO: Add color picker
-
   return (
     <UpsertComponent
       view={view}
@@ -107,7 +106,15 @@ export default function TransactionCategoryUpsert(props: TransactionCategoryUpse
       <Grid xs={12}>
         <Divider />
       </Grid>
-
+      <Grid xs={6}>
+        <FormControl fullWidth>
+          <MuiColorInput
+            format="hex"
+            value={view.uiColor != null ? `#${view.uiColor}` : ""}
+            onChange={e => setView({...view, uiColor: e.slice(1)})}
+          />
+        </FormControl>
+      </Grid>
     </UpsertComponent>
   );
 }

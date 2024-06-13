@@ -9,6 +9,8 @@ type TransactionPlotProps = {
 
 export default function TransactionPlot(props: TransactionPlotProps) {
   // TODO: Add different chart types
+  // Added stacked chart
+  // TODO: Add chart by user
 
   function mapItem(item: TransactionResponse): PieValueType {
     return {

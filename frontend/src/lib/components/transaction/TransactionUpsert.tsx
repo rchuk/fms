@@ -7,6 +7,7 @@ import {Divider, TextField} from "@mui/material";
 import {DateTimePicker} from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import TransactionCategoryAutocomplete from "@/lib/components/transaction-category/TransactionCategoryAutocomplete";
+import UserAutocomplete from "@/lib/components/user/UserAutocomplete";
 
 type TransactionUpsertProps = {
   initialId: number | null,
@@ -70,6 +71,7 @@ export default function TransactionUpsert(props: TransactionUpsertProps) {
           required
           workspaceId={props.workspaceId}
           includeOwner={true}
+          initialId={view.categoryId}
           setSelectedId={v => setView({...view, categoryId: v ?? undefined})}
         />
       </Grid>
@@ -98,7 +100,13 @@ export default function TransactionUpsert(props: TransactionUpsertProps) {
           onChange={value => setView({...view, timestamp: value?.toDate() ?? undefined})}
         />
       </Grid>
-
+      <Grid xs={6}>
+        <UserAutocomplete
+          initialId={view.userId}
+          source={{ kind: "workspace", workspaceId: props.workspaceId }}
+          setSelectedId={v => setView({...view, userId: v ?? undefined })}
+        />
+      </Grid>
       <Grid xs={12}>
         <TextField
           label="Опис"

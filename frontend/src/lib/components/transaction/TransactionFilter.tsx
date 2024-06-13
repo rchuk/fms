@@ -9,6 +9,7 @@ import TransactionCategoryAutocomplete from "@/lib/components/transaction-catego
 import SortDirectionSelect from "@/lib/components/common/SortDirectionSelect";
 import {TransactionCategoryKind_i18} from "@/lib/i18/TransactionCategoryKind_i18";
 import {TransactionSortField_i18} from "@/lib/i18/TransactionSortField_i18";
+import UserAutocomplete from "../user/UserAutocomplete";
 
 
 type TransactionFilterProps = {
@@ -96,7 +97,7 @@ export default function TransactionFilter(props: TransactionFilterProps) {
           }}
         />
       </Grid>
-      <Grid xs={4}>
+      <Grid xs={3}>
         <TransactionCategoryAutocomplete
           workspaceId={props.criteria.workspaceId}
           includeOwner={true}
@@ -106,7 +107,16 @@ export default function TransactionFilter(props: TransactionFilterProps) {
           }}
         />
       </Grid>
-      <Grid xs={4}>
+      <Grid xs={3}>
+        <UserAutocomplete
+          source={{ kind: "workspace", workspaceId: props.criteria.workspaceId }}
+          setSelectedId={(v) => {
+            props.setCriteria({...props.criteria, userId: v ?? undefined });
+            searchDelayed();
+          }}
+        />
+      </Grid>
+      <Grid xs={3}>
         <FormControl fullWidth>
           <InputLabel>Тип</InputLabel>
           <Select
@@ -124,7 +134,7 @@ export default function TransactionFilter(props: TransactionFilterProps) {
           </Select>
         </FormControl>
       </Grid>
-      <Grid xs={4} sx={{ display: "flex" }}>
+      <Grid xs={3} sx={{ display: "flex" }}>
         <FormControl fullWidth>
           <InputLabel>Сортування</InputLabel>
           <Select

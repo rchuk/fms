@@ -69,6 +69,18 @@ public class UserService : IUserService
         };
     }
 
+    [Transactional]
+    public async Task<UserSelfResponseDto> GetCurrentUser()
+    {
+        var user = await _authService.Value.GetCurrentUser();
+        var workspace = await _workspaceService.Value.GetCurrentUserPrivateWorkspace();
+
+        var response = BuildSelfUserResponseDto(user);
+        response.PrivateWorkspace = workspace;
+
+        return response;
+    }
+
     public static UserResponseDto BuildUserResponseDto(UserEntity entity)
     {
         return new UserResponseDto

@@ -3,7 +3,7 @@ import {debounce, FormControl, InputLabel, MenuItem, Select, TextField} from "@m
 import Grid from "@mui/material/Unstable_Grid2";
 import {DateTimePicker} from "@mui/x-date-pickers";
 import dayjs from "dayjs";
-import {useMemo} from "react";
+import {useCallback, useEffect, useMemo} from "react";
 import {FILTER_DEBOUNCE_MS} from "@/lib/utils/Constants";
 import TransactionCategoryAutocomplete from "@/lib/components/transaction-category/TransactionCategoryAutocomplete";
 import SortDirectionSelect from "@/lib/components/common/SortDirectionSelect";
@@ -15,11 +15,14 @@ import UserAutocomplete from "../user/UserAutocomplete";
 type TransactionFilterProps = {
   criteria: ListTransactionsRequest,
   setCriteria: (value: ListTransactionsRequest) => void,
-
-  onChange: (criteria: ListTransactionsRequest) => void
+  setSearchCriteria: (value: ListTransactionsRequest) => void
 }
 
 export default function TransactionFilter(props: TransactionFilterProps) {
+  useEffect(() => {
+    props.setSearchCriteria(props.criteria);
+  }, []);
+
   function parseNumber(value: string): number | undefined {
     if (value.trim().length === 0)
       return undefined;
@@ -35,12 +38,18 @@ export default function TransactionFilter(props: TransactionFilterProps) {
     props.setCriteria({...props.criteria, sortField: value === "" ? undefined : value as TransactionSortField});
   }
 
+  const searchImmediate = useCallback(
+    () => props.setSearchCriteria(props.criteria),
+    [props.criteria, props.setSearchCriteria]
+  );
   const searchDelayed = useMemo(
-    () => debounce(() => props.onChange(props.criteria), FILTER_DEBOUNCE_MS),
-    [props.criteria]
+    () => debounce(() => {
+        props.setSearchCriteria(props.criteria);
+      },
+      FILTER_DEBOUNCE_MS),
+    [props.criteria, props.setSearchCriteria]
   );
 
-  // TODO: Add missing user filter
   return (
     <Grid container columnSpacing={1} rowSpacing={2}>
       <Grid xs={3}>
@@ -78,7 +87,7 @@ export default function TransactionFilter(props: TransactionFilterProps) {
           value={props.criteria.startDate != null ? dayjs(props.criteria.startDate) : null}
           onChange={value => {
             props.setCriteria({...props.criteria, startDate: value?.toDate() ?? undefined});
-            searchDelayed();
+            searchImmediate();
           }}
         />
       </Grid>
@@ -93,7 +102,7 @@ export default function TransactionFilter(props: TransactionFilterProps) {
           value={props.criteria.endDate != null ? dayjs(props.criteria.endDate) : null}
           onChange={value=> {
             props.setCriteria({...props.criteria, endDate: value?.toDate() ?? undefined});
-            searchDelayed();
+            searchImmediate();
           }}
         />
       </Grid>
@@ -103,7 +112,7 @@ export default function TransactionFilter(props: TransactionFilterProps) {
           includeOwner={true}
           setSelectedId={(v) => {
             props.setCriteria({...props.criteria, categoryId: v ?? undefined });
-            searchDelayed();
+            searchImmediate();
           }}
         />
       </Grid>
@@ -112,7 +121,7 @@ export default function TransactionFilter(props: TransactionFilterProps) {
           source={{ kind: "workspace", workspaceId: props.criteria.workspaceId }}
           setSelectedId={(v) => {
             props.setCriteria({...props.criteria, userId: v ?? undefined });
-            searchDelayed();
+            searchImmediate();
           }}
         />
       </Grid>
@@ -124,7 +133,7 @@ export default function TransactionFilter(props: TransactionFilterProps) {
             value={props.criteria.categoryKind ?? ""}
             onChange={e => {
               setKind(e.target.value);
-              searchDelayed();
+              searchImmediate();
             }}
           >
             <MenuItem value="">Усі</MenuItem>
@@ -142,7 +151,7 @@ export default function TransactionFilter(props: TransactionFilterProps) {
             value={props.criteria.sortField ?? ""}
             onChange={e => {
               setSortField(e.target.value);
-              searchDelayed();
+              searchImmediate();
             }}
           >
             {Object.values(TransactionSortField).map(value => (

@@ -3,7 +3,7 @@
 import PaginatedList from "@/lib/components/common/PaginatedList";
 import {ListTransactionsRequest, TransactionResponse} from "../../../../generated";
 import TransactionListCard from "@/lib/components/transaction/TransactionListCard";
-import {ReactElement, useContext, useState} from "react";
+import {ReactElement, useContext, useEffect, useState} from "react";
 import {ServicesContext} from "@/lib/services/ServiceProvider";
 import FloatingAddButton from "../common/FloatingAddButton";
 import ModalComponent, {useModalClosingCallback, useModalControls} from "@/lib/components/common/ModalComponent";
@@ -19,6 +19,7 @@ export default function TransactionList(props: TransactionListProps) {
   const [criteria, setCriteria] = useState<ListTransactionsRequest>({
     workspaceId: props.workspaceId
   });
+  const [searchCriteria, setSearchCriteria] = useState<ListTransactionsRequest>(criteria);
   const [itemsData, setItemsData] = useState<TransactionResponse[]>([]);
   const [modalContent, setModalContent] = useState<ReactElement | null>(null);
   const [isDirty, setIsDirty] = useState<boolean>(false);
@@ -26,6 +27,10 @@ export default function TransactionList(props: TransactionListProps) {
 
   const [openModal, closeModal] = useModalControls(setModalContent);
   const onSave = useModalClosingCallback(setModalContent, () => setIsDirty(true));
+
+  useEffect(() => {
+    setIsDirty(true);
+  }, [searchCriteria]);
 
   function create() {
     openModal(<TransactionUpsert initialId={null} workspaceId={props.workspaceId} onError={closeModal} cancel={closeModal} onSave={onSave} />);
@@ -45,10 +50,10 @@ export default function TransactionList(props: TransactionListProps) {
 
   const head = (
     <>
-      <TransactionFilter criteria={criteria} setCriteria={setCriteria} onChange={() => setIsDirty(true)} />
+      <TransactionFilter criteria={criteria} setCriteria={setCriteria} setSearchCriteria={setSearchCriteria} />
       {
         criteria.startDate != null && criteria.categoryKind != null
-          ? <TransactionPlot itemsData={itemsData} />
+          ? <TransactionPlot criteria={searchCriteria} />
           : null
       }
     </>

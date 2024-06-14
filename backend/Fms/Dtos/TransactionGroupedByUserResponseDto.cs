@@ -12,3 +12,13 @@ public class TransactionGroupedByUserResponseDto
     [Required]
     public int Amount { get; set; }
 }
+
+public class TransactionGroupedByUserListResponseDto
+{
+    /// <example>0</example>
+    [Required]
+    public required int TotalAmount { get; set; }
+
+    [Required]
+    public required List<TransactionGroupedByUserResponseDto> Items { get; set; }
+}

@@ -1049,9 +1049,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/TransactionGroupedByCategoryResponse'
+                $ref: '#/components/schemas/TransactionGroupedByCategoryListResponse'
         '400':
           description: Bad Request
           content:
@@ -1150,9 +1148,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/TransactionGroupedByUserResponse'
+                $ref: '#/components/schemas/TransactionGroupedByUserListResponse'
         '400':
           description: Bad Request
           content:
@@ -2555,6 +2551,21 @@ components:
           nullable: true
           example: FF7E38
       additionalProperties: false
+    TransactionGroupedByCategoryListResponse:
+      required:
+        - items
+        - totalAmount
+      type: object
+      properties:
+        totalAmount:
+          type: integer
+          format: int32
+          example: -340
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionGroupedByCategoryResponse'
+      additionalProperties: false
     TransactionGroupedByCategoryResponse:
       required:
         - amount
@@ -2567,6 +2578,21 @@ components:
           type: integer
           format: int32
           example: 15320
+      additionalProperties: false
+    TransactionGroupedByUserListResponse:
+      required:
+        - items
+        - totalAmount
+      type: object
+      properties:
+        totalAmount:
+          type: integer
+          format: int32
+          example: 0
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionGroupedByUserResponse'
       additionalProperties: false
     TransactionGroupedByUserResponse:
       required:

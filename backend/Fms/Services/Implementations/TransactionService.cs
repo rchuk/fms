@@ -122,25 +122,33 @@ public class TransactionService : ITransactionService
     }
 
     [Transactional]
-    public async Task<List<TransactionGroupedByCategoryResponseDto>> ListWorkspaceTransactionsGroupByCategory(int workspaceId, TransactionCriteriaDto criteria)
+    public async Task<TransactionGroupedByCategoryListResponseDto> ListWorkspaceTransactionsGroupByCategory(int workspaceId, TransactionCriteriaDto criteria)
     {
         await VerifyCanReadTransaction(workspaceId);
         
-        var items = await _transactionRepository.ListWorkspaceTransactionsGroupedByCategory(workspaceId, criteria);
+        var result = await _transactionRepository.ListWorkspaceTransactionsGroupedByCategory(workspaceId, criteria);
 
-        return items.Select(BuildTransactionGroupedByCategoryResponseDto).ToList();
+        return new TransactionGroupedByCategoryListResponseDto
+        {
+            TotalAmount = result.TotalAmount,
+            Items = result.Items.Select(BuildTransactionGroupedByCategoryResponseDto).ToList()
+        };
     }
 
     [Transactional]
-    public async Task<List<TransactionGroupedByUserResponseDto>> ListWorkspaceTransactionsGroupByUser(int workspaceId, TransactionCriteriaDto criteria)
+    public async Task<TransactionGroupedByUserListResponseDto> ListWorkspaceTransactionsGroupByUser(int workspaceId, TransactionCriteriaDto criteria)
     {
         await VerifyCanReadTransaction(workspaceId);
         
-        var items = await _transactionRepository.ListWorkspaceTransactionsGroupedByUser(workspaceId, criteria);
+        var result = await _transactionRepository.ListWorkspaceTransactionsGroupedByUser(workspaceId, criteria);
 
-        return items.Select(BuildTransactionGroupedByUserResponseDto).ToList();
+        return new TransactionGroupedByUserListResponseDto
+        {
+            TotalAmount = result.TotalAmount,
+            Items = result.Items.Select(BuildTransactionGroupedByUserResponseDto).ToList()
+        };
     }
-
+    
     public static TransactionGroupedByCategoryResponseDto BuildTransactionGroupedByCategoryResponseDto(
         TransactionGroupedByCategory entity)
     {

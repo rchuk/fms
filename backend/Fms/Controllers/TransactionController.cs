@@ -91,7 +91,7 @@ public class TransactionController(
     /// Get list of workspace transactions grouped by category
     /// </summary>
     [HttpGet("/api/workspaces/{workspaceId:int}/transactions/group-by-category", Name = "listTransactionsGroupByCategory")]
-    [ProducesResponseType(typeof(List<TransactionGroupedByCategoryResponseDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(TransactionGroupedByCategoryListResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ListWorkspaceTransactionsGroupByCategory([FromRoute] int workspaceId,
@@ -104,7 +104,7 @@ public class TransactionController(
     /// Get list of workspace transactions grouped by user
     /// </summary>
     [HttpGet("/api/workspaces/{workspaceId:int}/transactions/group-by-user", Name = "listTransactionsGroupByUser")]
-    [ProducesResponseType(typeof(List<TransactionGroupedByUserResponseDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(TransactionGroupedByUserListResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ListWorkspaceTransactionsGroupByUser([FromRoute] int workspaceId,

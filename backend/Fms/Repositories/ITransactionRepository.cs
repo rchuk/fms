@@ -15,8 +15,8 @@ public interface ITransactionRepository
     Task<(int total, IEnumerable<TransactionEntity> items)> ListWorkspaceTransactions(int workspaceId,
         TransactionCriteriaDto criteria, Pagination pagination);
 
-    Task<IEnumerable<TransactionGroupedByCategory>> ListWorkspaceTransactionsGroupedByCategory(int workspaceId,
+    Task<TransactionGroupedByCategoryList> ListWorkspaceTransactionsGroupedByCategory(int workspaceId,
         TransactionCriteriaDto criteria);
-    Task<IEnumerable<TransactionGroupedByUser>> ListWorkspaceTransactionsGroupedByUser(int workspaceId,
+    Task<TransactionGroupedByUserList> ListWorkspaceTransactionsGroupedByUser(int workspaceId,
         TransactionCriteriaDto criteria);
 }

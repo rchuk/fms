@@ -31,34 +31,44 @@ public class TransactionRepository : BaseCrudRepository<TransactionEntity, int>,
         );
     }
 
-    public async Task<IEnumerable<TransactionGroupedByCategory>> ListWorkspaceTransactionsGroupedByCategory(int workspaceId,
+    public async Task<TransactionGroupedByCategoryList> ListWorkspaceTransactionsGroupedByCategory(int workspaceId,
         TransactionCriteriaDto criteria)
     {
         var query = await BuildQuery(workspaceId, criteria);
         
-        return await query
+        var items = query
             .GroupBy(transaction => transaction.Category)
             .Select(g => new TransactionGroupedByCategory
             {
                 Category = g.Key,
                 Amount = g.Sum(transaction => transaction.Amount)
-            })
-            .ToListAsync();
+            });
+
+        return new TransactionGroupedByCategoryList
+        {
+            TotalAmount = items.Sum(g => g.Amount),
+            Items = await items.ToListAsync()
+        };
     }
     
-    public async Task<IEnumerable<TransactionGroupedByUser>> ListWorkspaceTransactionsGroupedByUser(int workspaceId,
+    public async Task<TransactionGroupedByUserList> ListWorkspaceTransactionsGroupedByUser(int workspaceId,
         TransactionCriteriaDto criteria)
     {
         var query = await BuildQuery(workspaceId, criteria);
- 
-        return await query.Where(transaction => transaction.User != null)
+
+        var items = query.Where(transaction => transaction.User != null)
             .GroupBy(transaction => transaction.User)
             .Select(g => new TransactionGroupedByUser
             {
                 User = g.Key!,
                 Amount = g.Sum(transaction => transaction.Amount)
-            })
-            .ToListAsync();
+            });
+        
+        return new TransactionGroupedByUserList
+        {
+            TotalAmount = items.Sum(g => g.Amount),
+            Items = await items.ToListAsync()
+        };
     }
 
     private async Task<IQueryable<TransactionEntity>> BuildQuery(int workspaceId, TransactionCriteriaDto criteria)

@@ -10,6 +10,6 @@ public interface ITransactionService
     Task DeleteTransaction(int id);
 
     Task<TransactionListResponseDto> ListWorkspaceTransactions(int workspaceId, TransactionCriteriaDto criteria, PaginationDto pagination);
-    Task<List<TransactionGroupedByCategoryResponseDto>> ListWorkspaceTransactionsGroupByCategory(int workspaceId, TransactionCriteriaDto criteria);
-    Task<List<TransactionGroupedByUserResponseDto>> ListWorkspaceTransactionsGroupByUser(int workspaceId, TransactionCriteriaDto criteria);
+    Task<TransactionGroupedByCategoryListResponseDto> ListWorkspaceTransactionsGroupByCategory(int workspaceId, TransactionCriteriaDto criteria);
+    Task<TransactionGroupedByUserListResponseDto> ListWorkspaceTransactionsGroupByUser(int workspaceId, TransactionCriteriaDto criteria);
 }

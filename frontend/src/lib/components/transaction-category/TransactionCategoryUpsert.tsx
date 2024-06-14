@@ -36,6 +36,10 @@ export default function TransactionCategoryUpsert(props: TransactionCategoryUpse
     await transactionCategoryService.updateTransactionCategory({ id, transactionCategoryUpsertRequest: view });
   }
 
+  async function handleDelete(id: number) {
+    await transactionCategoryService.deleteTransactionCategory({ id });
+  }
+
   async function create(view: TransactionCategoryUpsertRequest) {
     switch (props.source.kind) {
       case "user":
@@ -77,6 +81,7 @@ export default function TransactionCategoryUpsert(props: TransactionCategoryUpse
       fetch={fetch}
       create={create}
       update={update}
+      delete={!props.isLocked ? handleDelete : undefined}
       validate={validate}
       cancel={props.cancel}
       onError={props.onError}

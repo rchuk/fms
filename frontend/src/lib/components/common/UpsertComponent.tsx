@@ -3,6 +3,7 @@ import UpsertContainer from "@/lib/components/common/UpsertContainer";
 import ProgressSpinner from "@/lib/components/common/ProgressSpinner";
 import {AlertContext} from "@/lib/services/AlertService";
 import {getRequestError} from "@/lib/utils/RequestUtils";
+import {ConfirmationDialogContext} from "@/lib/services/ConfirmationDialogService";
 
 type UpsertComponentProps<IdT, ViewT> = {
   view: Partial<ViewT>,
@@ -15,6 +16,7 @@ type UpsertComponentProps<IdT, ViewT> = {
   fetch: (id: IdT) => Promise<ViewT>,
   create: (view: ViewT) => Promise<IdT>,
   update: (id: IdT, view: ViewT) => Promise<void>,
+  delete?: (id: IdT) => Promise<void>,
   validate: (view: Partial<ViewT>) => ViewT | null,
 
   onSave?: () => void,
@@ -26,6 +28,7 @@ export default function UpsertComponent<IdT, ViewT>(props: PropsWithChildren<Ups
   const [id, setId] = useState<IdT | null>(null);
   const [isReady, setIsReady] = useState<boolean>(false);
   const showAlert = useContext(AlertContext);
+  const showConfirmation = useContext(ConfirmationDialogContext);
 
   useEffect(() => {
     if (props.initialId === null) {
@@ -88,6 +91,22 @@ export default function UpsertComponent<IdT, ViewT>(props: PropsWithChildren<Ups
       .catch(e => getRequestError(e).then(m => showAlert(m, "error")));
   }
 
+  function handleDelete() {
+    if (id === null)
+      return;
+
+    const callback = () => {
+      props.delete?.(id)
+        .then(_ => showAlert("Інформацію видалено", "success"))
+        .then(_ => props.onSave?.())
+        .catch(e => getRequestError(e).then(m => showAlert(m, "error")))
+    };
+
+    showConfirmation({
+      confirm: callback
+    });
+  }
+
   function submit() {
     if (id == null)
       create()
@@ -103,7 +122,12 @@ export default function UpsertComponent<IdT, ViewT>(props: PropsWithChildren<Ups
     return <ProgressSpinner />;
 
   return (
-    <UpsertContainer submit={submit} cancel={cancel} header={id != null ? props.updateHeader : props.createHeader}>
+    <UpsertContainer
+      submit={submit}
+      cancel={cancel}
+      header={id != null ? props.updateHeader : props.createHeader}
+      delete={props.delete != null ? handleDelete : undefined}
+    >
       {props.children}
     </UpsertContainer>
   );

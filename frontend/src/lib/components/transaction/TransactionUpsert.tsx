@@ -55,6 +55,10 @@ export default function TransactionUpsert(props: TransactionUpsertProps) {
   async function create(view: TransactionUpsertRequest) {
     return await transactionService.createTransaction({ workspaceId: props.workspaceId, transactionUpsertRequest: view });
   }
+
+  async function handleDelete(id: number) {
+    await transactionService.deleteTransaction({ id });
+  }
   
   function validate(view: Partial<TransactionUpsertRequest>): TransactionUpsertRequest | null {
     const { categoryId, amount, ...other } = view;
@@ -72,6 +76,7 @@ export default function TransactionUpsert(props: TransactionUpsertProps) {
       fetch={fetch}
       create={create}
       update={update}
+      delete={!props.isLocked ? handleDelete : undefined}
       validate={validate}
       cancel={props.cancel}
       onError={props.onError}

@@ -11,6 +11,7 @@ import {Configuration} from "../../generated";
 import NextLink, {LinkProps} from 'next/link';
 import SessionServiceProvider, {getCachedAccessToken} from "@/lib/services/SessionService";
 import SecurityService from "@/lib/services/SecurityService";
+import ConfirmationDialogProvider from "@/lib/services/ConfirmationDialogService";
 
 const roboto = Roboto({
   weight: "400",
@@ -83,19 +84,21 @@ export default function RootLayout({
             dateAdapter={AdapterDayjs} adapterLocale="uk"
           >
             <AlertProvider>
-              <ServicesProvider services={services}>
-                <SessionServiceProvider accessToken={accessToken} setAccessToken={setAccessToken}>
-                  <Suspense fallback={null}>
-                    {
-                      isReady ? (
-                        <SecurityService>
-                          {children}
-                        </SecurityService>
-                      ) : []
-                    }
-                  </Suspense>
-                </SessionServiceProvider>
-              </ServicesProvider>
+              <ConfirmationDialogProvider>
+                <ServicesProvider services={services}>
+                  <SessionServiceProvider accessToken={accessToken} setAccessToken={setAccessToken}>
+                    <Suspense fallback={null}>
+                      {
+                        isReady ? (
+                          <SecurityService>
+                            {children}
+                          </SecurityService>
+                        ) : []
+                      }
+                    </Suspense>
+                  </SessionServiceProvider>
+                </ServicesProvider>
+              </ConfirmationDialogProvider>
             </AlertProvider>
           </LocalizationProvider>
         </body>

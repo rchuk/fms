@@ -6,7 +6,8 @@ import Grid from "@mui/material/Unstable_Grid2";
 type UpsertContainerProps = {
   submit: () => void,
   cancel: () => void,
-  header: string
+  delete?: () => void,
+  header: string,
 };
 
 export default function UpsertContainer(props: PropsWithChildren<UpsertContainerProps>): React.ReactNode {
@@ -24,7 +25,9 @@ export default function UpsertContainer(props: PropsWithChildren<UpsertContainer
         </Grid>
         {props.children}
         <Grid xs={12}>
-          <Box display="flex" justifyContent="flex-end" columnGap={1}>
+          <Box display="flex" columnGap={1}>
+            { props.delete && <Button variant="outlined" color="error" onClick={props.delete}>Видалити</Button> }
+            <Box flex={1}></Box>
             <Button type="submit" variant="outlined">Зберегти</Button>
             <Button variant="outlined" onClick={props.cancel}>Скасувати</Button>
           </Box>

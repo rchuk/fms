@@ -28,7 +28,7 @@ export default function EntityPage<EntityT extends BaseEntity<IdT>, IdT extends 
 
   useEffect(() => {
     fetch();
-  }, []);
+  }, [props.id]);
 
   return (
     <Box display="flex" flexDirection="column" height="100%" padding={2} boxSizing="border-box">

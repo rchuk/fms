@@ -10,6 +10,7 @@ import ModalComponent, {useModalClosingCallback, useModalControls} from "@/lib/c
 import TransactionUpsert from "@/lib/components/transaction/TransactionUpsert";
 import TransactionFilter from "./TransactionFilter";
 import TransactionPlotPie from "./plot/TransactionPlotPie";
+import TransactionPlotStack from "@/lib/components/transaction/plot/TransactionPlotStack";
 
 type TransactionListProps = {
   workspaceId: number,
@@ -36,6 +37,7 @@ export default function TransactionList(props: TransactionListProps) {
   const onSave = useModalClosingCallback(setModalContent, setDirty);
 
   const showPiePlot = criteria.startDate != null && criteria.categoryKind != null;
+  const showStackPlot = criteria.startDate != null && criteria.categoryKind == null;
 
   function create() {
     openModal(<TransactionUpsert initialId={null} workspaceId={props.workspaceId} onError={closeModal} cancel={closeModal} onSave={onSave} />);
@@ -63,6 +65,11 @@ export default function TransactionList(props: TransactionListProps) {
       {
         showPiePlot
           ? <TransactionPlotPie kind={{ kind: "category" }} criteria={criteria} isDirty={isPlotDirty} setIsDirty={setIsPlotDirty} />
+          : null
+      }
+      {
+        showStackPlot
+          ? <TransactionPlotStack kind={{ kind: "category" }} criteria={criteria} isDirty={isPlotDirty} setIsDirty={setIsPlotDirty} />
           : null
       }
     </>

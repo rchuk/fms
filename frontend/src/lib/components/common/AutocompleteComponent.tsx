@@ -10,8 +10,11 @@ import {AUTOCOMPLETE_SEARCH_DEBOUNCE_MS} from "@/lib/utils/Constants";
 type AutocompleteComponentProps<ItemT extends BaseEntity<IdT>, IdT extends EntityId> = {
   initialId?: IdT,
   required?: boolean,
-  setSelectedId: (value: IdT | null) => void,
 
+  selectedItem?: ItemT | null,
+  setSelectedItem?: (value: ItemT | null) => void,
+
+  setSelectedId: (value: IdT | null) => void,
   fetch: (query: string, count: number) => Promise<ListResponse<ItemT>>,
 
   label: string,
@@ -27,8 +30,10 @@ export default function AutocompleteComponent<ItemT extends BaseEntity<IdT>, IdT
   const [internalItems, internalSetItems] = useState<ItemT[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
   const [query, setQuery] = useState<string>("");
-  const [selectedItem, setSelectedItem] = useState<ItemT | null>(null);
+  const [selectedItemInternal, setSelectedItemInternal] = useState<ItemT | null>(null);
   const showAlert = useContext(AlertContext);
+
+  const [selectedItem, setSelectedItem] = [props.selectedItem ?? selectedItemInternal, props.setSelectedItem ?? setSelectedItemInternal];
 
   const items = props.items ?? internalItems;
   const setItems = props.setItems ?? internalSetItems;

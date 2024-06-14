@@ -37,12 +37,16 @@ export default function TransactionPlot(props: TransactionPlotProps) {
   }
 
   function mapItem(item: TransactionGroupedByCategoryResponse): PieValueType {
-    return {
+    let value: PieValueType = {
       id: item.category.id,
       value: Math.abs(item.amount),
       label: item.category.name,
-      color: item.category.uiColor != null ? `#${item.category.uiColor}` : undefined
     };
+
+    if (item.category.uiColor != null)
+      value.color = `#${item.category.uiColor}`;
+
+    return value;
   }
 
   return (

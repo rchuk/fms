@@ -12,7 +12,9 @@ import TransactionFilter from "./TransactionFilter";
 import TransactionPlotPie from "./plot/TransactionPlotPie";
 
 type TransactionListProps = {
-  workspaceId: number
+  workspaceId: number,
+
+  enableCreation?: boolean
 }
 
 export default function TransactionList(props: TransactionListProps) {
@@ -78,7 +80,7 @@ export default function TransactionList(props: TransactionListProps) {
         setItemsData={setItemsData}
         head={head}
       />
-      <FloatingAddButton onClick={create} />
+      { props.enableCreation && <FloatingAddButton onClick={create} /> }
       <ModalComponent content={modalContent} setContent={setModalContent} />
     </>
   );

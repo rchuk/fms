@@ -1,6 +1,7 @@
 import {PieChart} from "@mui/x-charts";
 import {TransactionResponse} from "../../../../generated";
 import {PieValueType} from "@mui/x-charts";
+import {cheerfulFiestaPalette} from '@mui/x-charts/colorPalettes';
 
 
 type TransactionPlotProps = {
@@ -25,6 +26,7 @@ export default function TransactionPlot(props: TransactionPlotProps) {
     <PieChart
       series={[ { data: props.itemsData.map(mapItem) } ]}
       height={500}
+      colors={cheerfulFiestaPalette}
     />
   );
 }

@@ -41,7 +41,7 @@ export default function TransactionPlot<RenderDataT>(props: PropsWithChildren<Tr
   }
 
   return (
-    <Box display="flex" flexDirection="column">
+    <Box display="flex" flexDirection="column" marginTop={4}>
       {props.children}
       <Typography variant="h6">
         Всього: {total}

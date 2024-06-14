@@ -64,6 +64,10 @@ export default function TransactionCategoryUpsert(props: TransactionCategoryUpse
     setView({...view, kind: kindStr === "" ? undefined : kindStr as TransactionCategoryKind});
   }
 
+  function setUiColor(str: string) {
+    setView({...view, uiColor: str === "" ? undefined : str.slice(1)});
+  }
+
   return (
     <UpsertComponent
       view={view}
@@ -111,7 +115,7 @@ export default function TransactionCategoryUpsert(props: TransactionCategoryUpse
           <MuiColorInput
             format="hex"
             value={view.uiColor != null ? `#${view.uiColor}` : ""}
-            onChange={e => setView({...view, uiColor: e.slice(1)})}
+            onChange={v => setUiColor(v)}
           />
         </FormControl>
       </Grid>

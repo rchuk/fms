@@ -17,6 +17,8 @@ public class TransactionCriteriaDto
     /// <example>null</example>
     public int? MaxAmount { get; set; }
     /// <example>null</example>
+    public bool? IncludeHistory { get; set; }
+    /// <example>null</example>
     public TransactionCategoryKind? CategoryKind { get; set; }
     
     public TransactionSortFieldDto? SortField { get; set; }

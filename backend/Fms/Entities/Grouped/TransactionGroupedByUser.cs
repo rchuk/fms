@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Fms.Entities.Grouped;
 
@@ -9,6 +10,9 @@ public class TransactionGroupedByUser
     
     [Required]
     public int Amount { get; set; }
+    
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public IEnumerable<TransactionEntity>? History { get; set; }
 }
 
 public class TransactionGroupedByUserList

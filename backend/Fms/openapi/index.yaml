@@ -770,6 +770,12 @@ paths:
             format: int32
             example: 
           example: 
+        - name: IncludeHistory
+          in: query
+          schema:
+            type: boolean
+            example: 
+          example: 
         - name: CategoryKind
           in: query
           schema:
@@ -1018,6 +1024,12 @@ paths:
             format: int32
             example: 
           example: 
+        - name: IncludeHistory
+          in: query
+          schema:
+            type: boolean
+            example: 
+          example: 
         - name: CategoryKind
           in: query
           schema:
@@ -1115,6 +1127,12 @@ paths:
           schema:
             type: integer
             format: int32
+            example: 
+          example: 
+        - name: IncludeHistory
+          in: query
+          schema:
+            type: boolean
             example: 
           example: 
         - name: CategoryKind
@@ -2574,6 +2592,11 @@ components:
       properties:
         category:
           $ref: '#/components/schemas/TransactionCategoryResponse'
+        history:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionShortResponse'
+          nullable: true
         amount:
           type: integer
           format: int32
@@ -2602,6 +2625,11 @@ components:
       properties:
         user:
           $ref: '#/components/schemas/UserResponse'
+        history:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionShortResponse'
+          nullable: true
         amount:
           type: integer
           format: int32
@@ -2658,6 +2686,25 @@ components:
           $ref: '#/components/schemas/UserResponse'
         user:
           $ref: '#/components/schemas/UserResponse'
+      additionalProperties: false
+    TransactionShortResponse:
+      required:
+        - amount
+        - id
+        - timestamp
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 2138
+        amount:
+          type: integer
+          format: int32
+          example: 120
+        timestamp:
+          type: string
+          format: date-time
       additionalProperties: false
     TransactionSortField:
       enum:

@@ -35,19 +35,24 @@ public class TransactionRepository : BaseCrudRepository<TransactionEntity, int>,
         TransactionCriteriaDto criteria)
     {
         var query = await BuildQuery(workspaceId, criteria);
+        var includeHistory = criteria.IncludeHistory ?? false;
         
-        var items = query
+        var items = await query
             .GroupBy(transaction => transaction.Category)
             .Select(g => new TransactionGroupedByCategory
             {
                 Category = g.Key,
-                Amount = g.Sum(transaction => transaction.Amount)
-            });
-
+                Amount = g.Sum(transaction => transaction.Amount),
+                History = includeHistory
+                    ? g.OrderBy(transaction => transaction.Timestamp).AsEnumerable()
+                    : null
+            })
+            .ToListAsync();
+        
         return new TransactionGroupedByCategoryList
         {
             TotalAmount = items.Sum(g => g.Amount),
-            Items = await items.ToListAsync()
+            Items = items
         };
     }
     
@@ -55,19 +60,24 @@ public class TransactionRepository : BaseCrudRepository<TransactionEntity, int>,
         TransactionCriteriaDto criteria)
     {
         var query = await BuildQuery(workspaceId, criteria);
+        var includeHistory = criteria.IncludeHistory ?? false;
 
-        var items = query.Where(transaction => transaction.User != null)
+        var items = await query.Where(transaction => transaction.User != null)
             .GroupBy(transaction => transaction.User)
             .Select(g => new TransactionGroupedByUser
             {
                 User = g.Key!,
-                Amount = g.Sum(transaction => transaction.Amount)
-            });
+                Amount = g.Sum(transaction => transaction.Amount),
+                History = includeHistory
+                    ? g.OrderBy(transaction => transaction.Timestamp).AsEnumerable()
+                    : null
+            })
+            .ToListAsync();
         
         return new TransactionGroupedByUserList
         {
             TotalAmount = items.Sum(g => g.Amount),
-            Items = await items.ToListAsync()
+            Items = items
         };
     }
 

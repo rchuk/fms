@@ -1,5 +1,5 @@
 import {FormEvent, useState} from "react";
-import {Box, Button, FormControl, Link, TextField} from "@mui/material";
+import {Box, Button, FormControl, Typography, TextField} from "@mui/material";
 
 type CredentialsComponentProps = {
   handleSubmit: (email: string, password: string) => void
@@ -56,7 +56,7 @@ export default function RegisterForm(props: CredentialsComponentProps) {
         <FormControl
           fullWidth
           sx={{
-            mt: "1rem"
+            mt: 2
           }}
         >
           <TextField
@@ -71,7 +71,7 @@ export default function RegisterForm(props: CredentialsComponentProps) {
         <FormControl
           fullWidth
           sx={{
-            mt: "1rem"
+            mt: 2
           }}
         >
           <TextField
@@ -85,13 +85,15 @@ export default function RegisterForm(props: CredentialsComponentProps) {
         </FormControl>
         <Button 
           sx={{
-            mt: "1.5rem",
-            fontSize: "1.2rem",
+            mt: 3,
             width: "100%"
           }}
           type="submit"
         >
-          Submit
+
+          <Typography variant="h5">
+            Submit
+          </Typography>
         </Button>
       </Box>
     </form>

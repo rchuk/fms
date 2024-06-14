@@ -1,7 +1,6 @@
 "use client";
 
-import { Box, Button, Container, Link, Stack, Typography } from "@mui/material";
-import Grid from "@mui/material/Unstable_Grid2";
+import { Box, Button, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
@@ -43,7 +42,7 @@ export default function Home() {
         <Button 
           variant={"outlined"}
           sx={{
-            fontSize: "2rem",
+            py: 2,
             width: "30vw",
             "@media (max-width: 600px)": {
               width: "80vw"
@@ -51,12 +50,14 @@ export default function Home() {
           }}
           onClick={() => router.push("/auth/login")}
         >
-          Login
+          <Typography variant="h3">
+            Login
+          </Typography>
         </Button>
         <Button 
           variant={"outlined"}
           sx={{
-            fontSize: "2rem",
+            py: 2,
             width: "30vw",
             "@media (max-width: 600px)": {
               width: "80vw"
@@ -64,7 +65,9 @@ export default function Home() {
           }}
           onClick={() => router.push("/auth/register")}
         >
-          Register
+          <Typography variant="h3">
+            Register
+          </Typography>
         </Button>
       </Box>
     </Box>

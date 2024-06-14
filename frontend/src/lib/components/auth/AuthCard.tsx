@@ -36,9 +36,9 @@ export default function AuthCard({
         {header}
       </Typography>
       <Box
-        mt={"2rem"}
-        pl={"3rem"}
-        pr={"3rem"}
+        mt={6}
+        pl={6}
+        pr={6}
         width={"100%"}
         display={"flex"}
         flexDirection={"column"}
@@ -47,7 +47,7 @@ export default function AuthCard({
         {children}
       </Box>
       <Typography 
-        mt={"1.2rem"}
+        mt={2}
         variant="body1"
       >
         {otherOptionText} <Link href={otherOptionLink}>{otherOptionLinkText}</Link>

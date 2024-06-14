@@ -17,7 +17,7 @@ export default function TransactionPlot(props: TransactionPlotProps) {
       id: item.id,
       value: Math.abs(item.amount),
       label: item.category.name,
-      color: `#${item.category.uiColor}`
+      color: item.category.uiColor != null ? `#${item.category.uiColor}` : undefined
     };
   }
 

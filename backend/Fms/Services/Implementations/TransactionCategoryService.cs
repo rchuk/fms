@@ -60,7 +60,7 @@ public partial class TransactionCategoryService : ITransactionCategoryService
             OwnerAccountId = account!.Id,
             Name = request.Name,
             Kind = await _transactionCategoryKindRepository.Read(request.Kind),
-            UiColor = request.UiColor ?? GetDefaultColor()
+            UiColor = request.UiColor
         });
 
         return entity.Id;
@@ -84,7 +84,7 @@ public partial class TransactionCategoryService : ITransactionCategoryService
             OwnerAccountId = account!.Id,
             Name = request.Name,
             Kind = await _transactionCategoryKindRepository.Read(request.Kind),
-            UiColor = request.UiColor ?? GetDefaultColor()
+            UiColor = request.UiColor
         });
 
         return entity.Id;
@@ -109,7 +109,7 @@ public partial class TransactionCategoryService : ITransactionCategoryService
             WorkspaceId = workspaceId,
             Name = request.Name,
             Kind = await _transactionCategoryKindRepository.Read(request.Kind),
-            UiColor = request.UiColor ?? GetDefaultColor()
+            UiColor = request.UiColor
         });
 
         return entity.Id;
@@ -281,11 +281,6 @@ public partial class TransactionCategoryService : ITransactionCategoryService
             UiColor = entity.UiColor,
             Workspace = entity.Workspace != null ? WorkspaceService.BuildWorkspaceShortResponseDto(entity.Workspace) : null
         };
-    }
-
-    private static string GetDefaultColor()
-    {
-        return "008080"; // Teal. TODO: Configure
     }
 
     private static bool IsValidColor(string color)

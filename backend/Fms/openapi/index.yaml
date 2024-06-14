@@ -2319,7 +2319,6 @@ components:
         - kind
         - name
         - ownerAccount
-        - uiColor
       type: object
       properties:
         id:
@@ -2335,8 +2334,8 @@ components:
         kind:
           $ref: '#/components/schemas/TransactionCategoryKind'
         uiColor:
-          minLength: 1
           type: string
+          nullable: true
           example: FF0022
         workspace:
           $ref: '#/components/schemas/WorkspaceShortResponse'

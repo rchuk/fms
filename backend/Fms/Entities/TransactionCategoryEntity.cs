@@ -19,6 +19,6 @@ public class TransactionCategoryEntity
     public string Name { get; set; } = null!;
     [Required]
     public TransactionCategoryKindEntity Kind { get; set; } = null!;
-    [Required, Length(6, 6)]
-    public string UiColor { get; set; } = null!;
+    [Length(6, 6)]
+    public string? UiColor { get; set; }
 }

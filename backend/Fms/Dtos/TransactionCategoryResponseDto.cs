@@ -17,8 +17,7 @@ public class TransactionCategoryResponseDto
     [Required]
     public required TransactionCategoryKind Kind { get; set; }
     /// <example>FF0022</example>
-    [Required]
-    public required string UiColor { get; set; }
+    public string? UiColor { get; set; }
     
     public WorkspaceShortResponseDto? Workspace { get; set; }
 }

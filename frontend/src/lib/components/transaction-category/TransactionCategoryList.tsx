@@ -25,11 +25,11 @@ export default function TransactionCategoryList(props: TransactionCategoryListPr
   const onSave = useModalClosingCallback(setModalContent, () => setIsDirty(true));
 
   function create() {
-    return openModal(<TransactionCategoryUpsert initialId={null} source={props.source} onError={closeModal} cancel={closeModal} onSave={onSave} />);
+    return openModal(<TransactionCategoryUpsert initialId={null} source={props.source} onError={closeModal} cancel={closeModal} onSave={onSave} isLocked={false} />);
   }
 
   function update(id: number) {
-    return openModal(<TransactionCategoryUpsert initialId={id} source={props.source} onError={closeModal} cancel={closeModal} onSave={onSave} />);
+    return openModal(<TransactionCategoryUpsert initialId={id} source={props.source} onError={closeModal} cancel={closeModal} onSave={onSave} isLocked={!props.enableCreation} />);
   }
 
   function renderCard(data: TransactionCategoryResponse) {

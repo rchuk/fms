@@ -11,6 +11,7 @@ import {MuiColorInput} from "mui-color-input";
 type TransactionCategoryUpsertProps = {
   initialId: number | null,
   source: TransactionCategorySource,
+  isLocked: boolean,
 
   cancel?: () => void,
   onError?: () => void,
@@ -81,11 +82,12 @@ export default function TransactionCategoryUpsert(props: TransactionCategoryUpse
       onError={props.onError}
       onSave={props.onSave}
       createHeader="Створення категорії транзакції"
-      updateHeader="Редагування категорії транзакції"
+      updateHeader={props.isLocked ? "Перегляд категорії транзакції" : "Редагування категорії транзакції"}
     >
       <Grid xs={6}>
         <TextField
           label="Назва"
+          disabled={props.isLocked}
           required
           fullWidth
           value={view.name}
@@ -97,6 +99,7 @@ export default function TransactionCategoryUpsert(props: TransactionCategoryUpse
           <InputLabel>Тип</InputLabel>
           <Select
             label="Тип"
+            disabled={props.isLocked}
             required
             value={view.kind ?? ""}
             onChange={e => setKind(e.target.value)}
@@ -113,6 +116,7 @@ export default function TransactionCategoryUpsert(props: TransactionCategoryUpse
       <Grid xs={6}>
         <FormControl fullWidth>
           <MuiColorInput
+            disabled={props.isLocked}
             format="hex"
             value={view.uiColor != null ? `#${view.uiColor}` : ""}
             onChange={v => setUiColor(v)}

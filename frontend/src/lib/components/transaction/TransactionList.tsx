@@ -9,7 +9,7 @@ import FloatingAddButton from "../common/FloatingAddButton";
 import ModalComponent, {useModalClosingCallback, useModalControls} from "@/lib/components/common/ModalComponent";
 import TransactionUpsert from "@/lib/components/transaction/TransactionUpsert";
 import TransactionFilter from "./TransactionFilter";
-import TransactionPlot from "./TransactionPlot";
+import TransactionPlotPie from "./plot/TransactionPlotPie";
 
 type TransactionListProps = {
   workspaceId: number
@@ -54,7 +54,7 @@ export default function TransactionList(props: TransactionListProps) {
       <TransactionFilter criteria={criteria} setCriteria={setCriteria} onChange={setDirty} />
       {
         criteria.startDate != null && criteria.categoryKind != null
-          ? <TransactionPlot criteria={criteria} isDirty={isPlotDirty} setIsDirty={setIsPlotDirty} />
+          ? <TransactionPlotPie kind={{ kind: "category" }} criteria={criteria} isDirty={isPlotDirty} setIsDirty={setIsPlotDirty} />
           : null
       }
     </>

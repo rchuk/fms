@@ -6,7 +6,9 @@ import {TransactionCategoryResponse} from "../../../../generated";
 
 type TransactionCategoryAutocompleteProps = {
   initialId?: number,
+
   required?: boolean,
+  disabled?: boolean,
 
   selectedCategory?: TransactionCategoryResponse | null,
   setSelectedCategory?: (value: TransactionCategoryResponse | null) => void,
@@ -30,6 +32,7 @@ export default function TransactionCategoryAutocomplete(props: TransactionCatego
 
   return (
     <AutocompleteComponent
+      disabled={props.disabled}
       initialId={props.initialId}
       required={props.required}
       selectedItem={props.selectedCategory}

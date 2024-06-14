@@ -7,8 +7,10 @@ import {UserSource} from "@/lib/components/user/Common";
 
 type UserAutocompleteProps = {
   initialId?: number,
-  required?: boolean,
   source: UserSource,
+
+  required?: boolean,
+  disabled?: boolean,
 
   setSelectedId: (value: number | null) => void
 };
@@ -41,6 +43,7 @@ export default function UserAutocomplete(props: UserAutocompleteProps) {
 
   return (
     <AutocompleteComponent
+      disabled={props.disabled}
       initialId={props.initialId}
       required={props.required}
       setSelectedId={props.setSelectedId}

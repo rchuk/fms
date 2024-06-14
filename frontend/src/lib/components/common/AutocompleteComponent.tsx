@@ -9,7 +9,9 @@ import {AUTOCOMPLETE_SEARCH_DEBOUNCE_MS} from "@/lib/utils/Constants";
 
 type AutocompleteComponentProps<ItemT extends BaseEntity<IdT>, IdT extends EntityId> = {
   initialId?: IdT,
+
   required?: boolean,
+  disabled?: boolean,
 
   selectedItem?: ItemT | null,
   setSelectedItem?: (value: ItemT | null) => void,
@@ -61,6 +63,7 @@ export default function AutocompleteComponent<ItemT extends BaseEntity<IdT>, IdT
   return (
     <Autocomplete
       disablePortal
+      disabled={props.disabled}
       fullWidth
       options={items}
       getOptionLabel={props.getItemLabel}

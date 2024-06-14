@@ -19,18 +19,19 @@ export default function TransactionList(props: TransactionListProps) {
   const [criteria, setCriteria] = useState<ListTransactionsRequest>({
     workspaceId: props.workspaceId
   });
-  const [searchCriteria, setSearchCriteria] = useState<ListTransactionsRequest>(criteria);
   const [itemsData, setItemsData] = useState<TransactionResponse[]>([]);
   const [modalContent, setModalContent] = useState<ReactElement | null>(null);
-  const [isDirty, setIsDirty] = useState<boolean>(false);
+  const [isPlotDirty, setIsPlotDirty] = useState<boolean>(false);
+  const [isListDirty, setIsListDirty] = useState<boolean>(false);
   const { transactionService } = useContext(ServicesContext);
 
-  const [openModal, closeModal] = useModalControls(setModalContent);
-  const onSave = useModalClosingCallback(setModalContent, () => setIsDirty(true));
+  function setDirty() {
+    setIsListDirty(true);
+    setIsPlotDirty(true);
+  }
 
-  useEffect(() => {
-    setIsDirty(true);
-  }, [searchCriteria]);
+  const [openModal, closeModal] = useModalControls(setModalContent);
+  const onSave = useModalClosingCallback(setModalContent, setDirty);
 
   function create() {
     openModal(<TransactionUpsert initialId={null} workspaceId={props.workspaceId} onError={closeModal} cancel={closeModal} onSave={onSave} />);
@@ -50,10 +51,10 @@ export default function TransactionList(props: TransactionListProps) {
 
   const head = (
     <>
-      <TransactionFilter criteria={criteria} setCriteria={setCriteria} setSearchCriteria={setSearchCriteria} />
+      <TransactionFilter criteria={criteria} setCriteria={setCriteria} onChange={setDirty} />
       {
         criteria.startDate != null && criteria.categoryKind != null
-          ? <TransactionPlot criteria={searchCriteria} />
+          ? <TransactionPlot criteria={criteria} isDirty={isPlotDirty} setIsDirty={setIsPlotDirty} />
           : null
       }
     </>
@@ -65,8 +66,8 @@ export default function TransactionList(props: TransactionListProps) {
         fetch={fetch}
         pageSize={10}
         renderItem={renderCard}
-        isDirty={isDirty}
-        setIsDirty={setIsDirty}
+        isDirty={isListDirty}
+        setIsDirty={setIsListDirty}
         itemsData={itemsData}
         setItemsData={setItemsData}
         head={head}

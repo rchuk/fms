@@ -10,9 +10,7 @@ interface SortCriteria {
 
 type SortDirectionSelectProps<CriteriaT extends SortCriteria> = {
   criteria: CriteriaT,
-  setCriteria: (value: CriteriaT) => void,
-
-  searchDelayed: () => void
+  setCriteria: (value: CriteriaT) => void
 }
 
 export default function SortDirectionSelect<CriteriaT extends SortCriteria>(props: SortDirectionSelectProps<CriteriaT>) {
@@ -24,7 +22,6 @@ export default function SortDirectionSelect<CriteriaT extends SortCriteria>(prop
       : SortDirection.Ascending;
 
     props.setCriteria({...props.criteria, sortDirection: newSortDirection});
-    props.searchDelayed();
   }
 
   return (

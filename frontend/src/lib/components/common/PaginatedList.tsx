@@ -60,10 +60,9 @@ export default function PaginatedList<ItemT>(props: PaginatedListProps<ItemT>) {
   }, [itemsData]);
 
   useEffect(() => {
-    if (props.isDirty)
-    {
+    if (props.isDirty) {
       updateData();
-      props.setIsDirty!(false);
+      props.setIsDirty(false);
     }
   }, [props.isDirty]);
 

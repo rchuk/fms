@@ -3,7 +3,7 @@ import {debounce, FormControl, InputLabel, MenuItem, Select, TextField} from "@m
 import Grid from "@mui/material/Unstable_Grid2";
 import {DateTimePicker} from "@mui/x-date-pickers";
 import dayjs from "dayjs";
-import {useCallback, useEffect, useMemo} from "react";
+import {useCallback} from "react";
 import {FILTER_DEBOUNCE_MS} from "@/lib/utils/Constants";
 import TransactionCategoryAutocomplete from "@/lib/components/transaction-category/TransactionCategoryAutocomplete";
 import SortDirectionSelect from "@/lib/components/common/SortDirectionSelect";
@@ -15,14 +15,11 @@ import UserAutocomplete from "../user/UserAutocomplete";
 type TransactionFilterProps = {
   criteria: ListTransactionsRequest,
   setCriteria: (value: ListTransactionsRequest) => void,
-  setSearchCriteria: (value: ListTransactionsRequest) => void
+
+  onChange: (value: ListTransactionsRequest) => void
 }
 
 export default function TransactionFilter(props: TransactionFilterProps) {
-  useEffect(() => {
-    props.setSearchCriteria(props.criteria);
-  }, []);
-
   function parseNumber(value: string): number | undefined {
     if (value.trim().length === 0)
       return undefined;
@@ -39,15 +36,15 @@ export default function TransactionFilter(props: TransactionFilterProps) {
   }
 
   const searchImmediate = useCallback(
-    () => props.setSearchCriteria(props.criteria),
-    [props.criteria, props.setSearchCriteria]
+    () => {
+      props.onChange(props.criteria);
+    },
+    [props.criteria]
   );
-  const searchDelayed = useMemo(
-    () => debounce(() => {
-        props.setSearchCriteria(props.criteria);
-      },
-      FILTER_DEBOUNCE_MS),
-    [props.criteria, props.setSearchCriteria]
+
+  const searchDelayed = useCallback(
+    debounce(searchImmediate, FILTER_DEBOUNCE_MS),
+    []
   );
 
   return (
@@ -57,7 +54,7 @@ export default function TransactionFilter(props: TransactionFilterProps) {
           label="Мінімальна вартість"
           type="number"
           fullWidth
-          value={props.criteria.minAmount}
+          value={props.criteria.minAmount ?? ""}
           onChange={e => {
             props.setCriteria({...props.criteria, minAmount: parseNumber(e.target.value)});
             searchDelayed();
@@ -69,9 +66,9 @@ export default function TransactionFilter(props: TransactionFilterProps) {
           label="Максимальна вартість"
           type="number"
           fullWidth
-          value={props.criteria.maxAmount}
+          value={props.criteria.maxAmount ?? ""}
           onChange={e => {
-            props.setCriteria({...props.criteria, maxAmount: parseNumber(e.target.value)})
+            props.setCriteria({...props.criteria, maxAmount: parseNumber(e.target.value)});
             searchDelayed();
           }}
         />
@@ -159,7 +156,13 @@ export default function TransactionFilter(props: TransactionFilterProps) {
             ))}
           </Select>
         </FormControl>
-        <SortDirectionSelect criteria={props.criteria} setCriteria={props.setCriteria} searchDelayed={searchDelayed} />
+        <SortDirectionSelect
+          criteria={props.criteria}
+          setCriteria={(criteria) => {
+            props.setCriteria(criteria);
+            searchImmediate();
+          }}
+        />
       </Grid>
     </Grid>
   );

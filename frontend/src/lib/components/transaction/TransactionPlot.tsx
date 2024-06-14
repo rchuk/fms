@@ -12,7 +12,10 @@ import {AlertContext} from "@/lib/services/AlertService";
 
 
 type TransactionPlotProps = {
-  criteria: ListTransactionsRequest
+  criteria: ListTransactionsRequest,
+
+  isDirty: boolean,
+  setIsDirty: (value: boolean) => void
 }
 
 export default function TransactionPlot(props: TransactionPlotProps) {
@@ -24,8 +27,11 @@ export default function TransactionPlot(props: TransactionPlotProps) {
   // TODO: Add chart by user
 
   useEffect(() => {
-    fetch();
-  }, [props.criteria]);
+    if (props.isDirty) {
+      fetch();
+      props.setIsDirty(false);
+    }
+  }, [props.isDirty]);
 
   function fetch() {
     const fetch = async() => {

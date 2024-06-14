@@ -11,7 +11,9 @@ import {TransactionCategorySource} from "@/lib/components/transaction-category/C
 import TransactionCategoryUpsert from "./TransactionCategoryUpsert";
 
 type TransactionCategoryListProps = {
-  source: TransactionCategorySource
+  source: TransactionCategorySource,
+
+  enableCreation?: boolean
 }
 
 export default function TransactionCategoryList(props: TransactionCategoryListProps) {
@@ -56,7 +58,7 @@ export default function TransactionCategoryList(props: TransactionCategoryListPr
   return (
     <>
       <PaginatedList fetch={fetch} pageSize={10} renderItem={renderCard} isDirty={isDirty} setIsDirty={setIsDirty}/>
-      <FloatingAddButton onClick={create}/>
+      { props.enableCreation && <FloatingAddButton onClick={create}/> }
       <ModalComponent content={modalContent} setContent={setModalContent}/>
     </>
   );

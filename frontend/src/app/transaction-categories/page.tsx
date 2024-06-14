@@ -4,7 +4,7 @@ import TransactionCategoryList from "@/lib/components/transaction-category/Trans
 export default function UserTransactionCategoriesPage() {
   return (
     <Box display="flex" flexDirection="column" height="100%" padding={2} boxSizing="border-box">
-      <TransactionCategoryList source={{ kind: "user" }} />
+      <TransactionCategoryList source={{ kind: "user" }} enableCreation={true} />
     </Box>
   );
 }

@@ -16,5 +16,7 @@ public class WorkspaceToAccountEntity
     public AccountEntity Account { get; set; } = null!;
     
     [Required]
+    public int RoleId { get; set; }
+    [Required]
     public WorkspaceRoleEntity Role { get; set; } = null!;
 }

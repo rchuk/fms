@@ -1,6 +1,7 @@
 ﻿using Fms.Dtos;
 using Fms.Entities;
 using Fms.Entities.Common;
+using Fms.Entities.Grouped;
 
 namespace Fms.Repositories;
 
@@ -13,4 +14,9 @@ public interface ITransactionRepository
 
     Task<(int total, IEnumerable<TransactionEntity> items)> ListWorkspaceTransactions(int workspaceId,
         TransactionCriteriaDto criteria, Pagination pagination);
+
+    Task<IEnumerable<TransactionGroupedByCategory>> ListWorkspaceTransactionsGroupedByCategory(int workspaceId,
+        TransactionCriteriaDto criteria);
+    Task<IEnumerable<TransactionGroupedByUser>> ListWorkspaceTransactionsGroupedByUser(int workspaceId,
+        TransactionCriteriaDto criteria);
 }

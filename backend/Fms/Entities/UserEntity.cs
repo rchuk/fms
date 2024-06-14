@@ -17,6 +17,7 @@ public class UserEntity
     [Required, MaxLength(255)]
     public string LastName { get; set; } = null!;
 
+    [Required]
     public AccountEntity Account { get; set; } = null!;
     
     public int? SubscriptionKindId { get; set; }

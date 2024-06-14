@@ -44,7 +44,7 @@ namespace Fms.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Accounts", t =>
+                    b.ToTable("Accounts", null, t =>
                         {
                             t.HasCheckConstraint("one_of", "(\"UserId\" IS NULL) <> (\"OrganizationId\" IS NULL)");
                         });
@@ -68,7 +68,7 @@ namespace Fms.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Organizations");
+                    b.ToTable("Organizations", (string)null);
                 });
 
             modelBuilder.Entity("Fms.Entities.OrganizationRoleEntity", b =>
@@ -86,7 +86,7 @@ namespace Fms.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("OrganizationRoles");
+                    b.ToTable("OrganizationRoles", (string)null);
                 });
 
             modelBuilder.Entity("Fms.Entities.OrganizationToUserEntity", b =>
@@ -106,7 +106,7 @@ namespace Fms.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("OrganizationToUser");
+                    b.ToTable("OrganizationToUser", (string)null);
                 });
 
             modelBuilder.Entity("Fms.Entities.SubscriptionKindEntity", b =>
@@ -124,7 +124,7 @@ namespace Fms.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SubscriptionKinds");
+                    b.ToTable("SubscriptionKinds", (string)null);
                 });
 
             modelBuilder.Entity("Fms.Entities.TransactionCategoryEntity", b =>
@@ -160,7 +160,7 @@ namespace Fms.Migrations
 
                     b.HasIndex("WorkspaceId");
 
-                    b.ToTable("TransactionCategories");
+                    b.ToTable("TransactionCategories", (string)null);
                 });
 
             modelBuilder.Entity("Fms.Entities.TransactionCategoryKindEntity", b =>
@@ -178,7 +178,7 @@ namespace Fms.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TransactionCategoryKinds");
+                    b.ToTable("TransactionCategoryKinds", (string)null);
                 });
 
             modelBuilder.Entity("Fms.Entities.TransactionEntity", b =>
@@ -224,7 +224,7 @@ namespace Fms.Migrations
 
                     b.HasIndex("WorkspaceId");
 
-                    b.ToTable("Transactions");
+                    b.ToTable("Transactions", (string)null);
                 });
 
             modelBuilder.Entity("Fms.Entities.UserEntity", b =>
@@ -265,7 +265,7 @@ namespace Fms.Migrations
 
                     b.HasIndex("SubscriptionKindId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Fms.Entities.WorkspaceEntity", b =>
@@ -288,7 +288,7 @@ namespace Fms.Migrations
 
                     b.HasIndex("KindId");
 
-                    b.ToTable("Workspaces");
+                    b.ToTable("Workspaces", (string)null);
                 });
 
             modelBuilder.Entity("Fms.Entities.WorkspaceKindEntity", b =>
@@ -306,7 +306,7 @@ namespace Fms.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WorkspaceKinds");
+                    b.ToTable("WorkspaceKinds", (string)null);
                 });
 
             modelBuilder.Entity("Fms.Entities.WorkspaceRoleEntity", b =>
@@ -324,7 +324,7 @@ namespace Fms.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WorkspaceRoles");
+                    b.ToTable("WorkspaceRoles", (string)null);
                 });
 
             modelBuilder.Entity("Fms.Entities.WorkspaceToAccountEntity", b =>
@@ -344,7 +344,7 @@ namespace Fms.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("WorkspaceToAccount");
+                    b.ToTable("WorkspaceToAccount", (string)null);
                 });
 
             modelBuilder.Entity("Fms.Entities.AccountEntity", b =>

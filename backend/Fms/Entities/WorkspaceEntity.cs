@@ -9,6 +9,8 @@ public class WorkspaceEntity
     [Required, MaxLength(255)]
     public string Name { get; set; } = null!;
     [Required]
+    public int KindId { get; set; }
+    [Required]
     public WorkspaceKindEntity Kind { get; set; } = null!;
 
     public virtual List<WorkspaceToAccountEntity> Accounts { get; set; } = null!;

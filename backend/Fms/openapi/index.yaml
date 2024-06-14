@@ -770,16 +770,11 @@ paths:
             format: int32
             example: 
           example: 
-        - name: IncludeAll
-          in: query
-          schema:
-            type: boolean
-            example: 
-          example: 
         - name: CategoryKind
           in: query
           schema:
             $ref: '#/components/schemas/TransactionCategoryKind'
+          example: 'null'
         - name: SortField
           in: query
           schema:
@@ -958,6 +953,208 @@ paths:
           description: Success
         '403':
           description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+  '/api/workspaces/{workspaceId}/transactions/group-by-category':
+    get:
+      tags:
+        - Transaction
+      summary: Get list of workspace transactions grouped by category
+      operationId: listTransactionsGroupByCategory
+      parameters:
+        - name: workspaceId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: CategoryId
+          in: query
+          schema:
+            type: integer
+            format: int32
+            example: 35
+          example: 35
+        - name: StartDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+            example: '2024-06-07T07:00:00.000Z'
+          example: '2024-06-07T07:00:00.000Z'
+        - name: EndDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+            example: 
+          example: 'null'
+        - name: UserId
+          in: query
+          schema:
+            type: integer
+            format: int32
+            example: 
+          example: 
+        - name: MinAmount
+          in: query
+          schema:
+            type: integer
+            format: int32
+            example: 300
+          example: 300
+        - name: MaxAmount
+          in: query
+          schema:
+            type: integer
+            format: int32
+            example: 
+          example: 
+        - name: CategoryKind
+          in: query
+          schema:
+            $ref: '#/components/schemas/TransactionCategoryKind'
+          example: 'null'
+        - name: SortField
+          in: query
+          schema:
+            $ref: '#/components/schemas/TransactionSortField'
+        - name: SortDirection
+          in: query
+          schema:
+            $ref: '#/components/schemas/SortDirection'
+      responses:
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransactionGroupedByCategoryResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicClientError'
+  '/api/workspaces/{workspaceId}/transactions/group-by-user':
+    get:
+      tags:
+        - Transaction
+      summary: Get list of workspace transactions grouped by user
+      operationId: listTransactionsGroupByUser
+      parameters:
+        - name: workspaceId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: CategoryId
+          in: query
+          schema:
+            type: integer
+            format: int32
+            example: 35
+          example: 35
+        - name: StartDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+            example: '2024-06-07T07:00:00.000Z'
+          example: '2024-06-07T07:00:00.000Z'
+        - name: EndDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+            example: 
+          example: 'null'
+        - name: UserId
+          in: query
+          schema:
+            type: integer
+            format: int32
+            example: 
+          example: 
+        - name: MinAmount
+          in: query
+          schema:
+            type: integer
+            format: int32
+            example: 300
+          example: 300
+        - name: MaxAmount
+          in: query
+          schema:
+            type: integer
+            format: int32
+            example: 
+          example: 
+        - name: CategoryKind
+          in: query
+          schema:
+            $ref: '#/components/schemas/TransactionCategoryKind'
+          example: 'null'
+        - name: SortField
+          in: query
+          schema:
+            $ref: '#/components/schemas/TransactionSortField'
+        - name: SortDirection
+          in: query
+          schema:
+            $ref: '#/components/schemas/SortDirection'
+      responses:
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicError'
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransactionGroupedByUserResponse'
+        '400':
+          description: Bad Request
           content:
             application/json:
               schema:
@@ -2357,6 +2554,32 @@ components:
           type: string
           nullable: true
           example: FF7E38
+      additionalProperties: false
+    TransactionGroupedByCategoryResponse:
+      required:
+        - amount
+        - category
+      type: object
+      properties:
+        category:
+          $ref: '#/components/schemas/TransactionCategoryResponse'
+        amount:
+          type: integer
+          format: int32
+          example: 15320
+      additionalProperties: false
+    TransactionGroupedByUserResponse:
+      required:
+        - amount
+        - user
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/UserResponse'
+        amount:
+          type: integer
+          format: int32
+          example: -4320
       additionalProperties: false
     TransactionListResponse:
       required:

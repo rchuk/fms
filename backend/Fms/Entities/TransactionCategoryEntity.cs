@@ -18,7 +18,9 @@ public class TransactionCategoryEntity
     [Required, MaxLength(255)]
     public string Name { get; set; } = null!;
     [Required]
-    public TransactionCategoryKindEntity Kind { get; set; } = null!;
+    public int KindId { get; set; }
+    [Required]
+    public virtual TransactionCategoryKindEntity Kind { get; set; }
     [Length(6, 6)]
     public string? UiColor { get; set; }
 }

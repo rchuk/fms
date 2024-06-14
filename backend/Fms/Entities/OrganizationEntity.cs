@@ -10,7 +10,8 @@ public class OrganizationEntity
     public int Id { get; set; }
     [Required, MaxLength(255)]
     public string Name { get; set; } = null!;
-
+    
+    [Required]
     public AccountEntity Account { get; set; } = null!;
     public virtual List<OrganizationToUserEntity> Users { get; set; } = null!;
 }

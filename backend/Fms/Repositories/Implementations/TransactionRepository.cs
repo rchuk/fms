@@ -4,6 +4,7 @@ using Fms.Dtos;
 using Fms.Entities;
 using Fms.Entities.Common;
 using Fms.Entities.Enums;
+using Fms.Entities.Grouped;
 using Fms.Repositories.Common;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +21,47 @@ public class TransactionRepository : BaseCrudRepository<TransactionEntity, int>,
     
     public async Task<(int total, IEnumerable<TransactionEntity> items)> ListWorkspaceTransactions(int workspaceId,
         TransactionCriteriaDto criteria, Pagination pagination)
+    {
+        var query = await BuildQuery(workspaceId, criteria);
+        query = Sort(query, criteria.SortField, criteria.SortDirection);
+        
+        return (
+            query.Count(),
+            await query.Skip(pagination.Offset).Take(pagination.Limit).ToListAsync()
+        );
+    }
+
+    public async Task<IEnumerable<TransactionGroupedByCategory>> ListWorkspaceTransactionsGroupedByCategory(int workspaceId,
+        TransactionCriteriaDto criteria)
+    {
+        var query = await BuildQuery(workspaceId, criteria);
+        
+        return await query
+            .GroupBy(transaction => transaction.Category)
+            .Select(g => new TransactionGroupedByCategory
+            {
+                Category = g.Key,
+                Amount = g.Sum(transaction => transaction.Amount)
+            })
+            .ToListAsync();
+    }
+    
+    public async Task<IEnumerable<TransactionGroupedByUser>> ListWorkspaceTransactionsGroupedByUser(int workspaceId,
+        TransactionCriteriaDto criteria)
+    {
+        var query = await BuildQuery(workspaceId, criteria);
+ 
+        return await query.Where(transaction => transaction.User != null)
+            .GroupBy(transaction => transaction.User)
+            .Select(g => new TransactionGroupedByUser
+            {
+                User = g.Key!,
+                Amount = g.Sum(transaction => transaction.Amount)
+            })
+            .ToListAsync();
+    }
+
+    private async Task<IQueryable<TransactionEntity>> BuildQuery(int workspaceId, TransactionCriteriaDto criteria)
     {
         var query = Ctx.Transactions
             .Where(entity => entity.WorkspaceId == workspaceId);
@@ -50,14 +92,7 @@ public class TransactionRepository : BaseCrudRepository<TransactionEntity, int>,
         if (criteria.MaxAmount is { } maxAmount)
             query = query.Where(entity => Math.Abs(entity.Amount) <= maxAmount);
 
-        query = Sort(query, criteria.SortField, criteria.SortDirection); ;
-        
-        return (
-            query.Count(),
-            criteria.IncludeAll.GetValueOrDefault(false)
-                ? await query.ToListAsync()
-                : await query.Skip(pagination.Offset).Take(pagination.Limit).ToListAsync()
-        );
+        return query;
     }
     
     // TODO: Refactor

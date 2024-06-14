@@ -4,6 +4,7 @@ using Fms.Dtos;
 using Fms.Entities;
 using Fms.Entities.Common;
 using Fms.Entities.Enums;
+using Fms.Entities.Grouped;
 using Fms.Exceptions;
 using Fms.Repositories;
 using Microsoft.Extensions.Localization;
@@ -117,6 +118,46 @@ public class TransactionService : ITransactionService
         {
             TotalCount = count,
             Items = items.Select(BuildTransactionResponseDto).ToList()
+        };
+    }
+
+    [Transactional]
+    public async Task<List<TransactionGroupedByCategoryResponseDto>> ListWorkspaceTransactionsGroupByCategory(int workspaceId, TransactionCriteriaDto criteria)
+    {
+        await VerifyCanReadTransaction(workspaceId);
+        
+        var items = await _transactionRepository.ListWorkspaceTransactionsGroupedByCategory(workspaceId, criteria);
+
+        return items.Select(BuildTransactionGroupedByCategoryResponseDto).ToList();
+    }
+
+    [Transactional]
+    public async Task<List<TransactionGroupedByUserResponseDto>> ListWorkspaceTransactionsGroupByUser(int workspaceId, TransactionCriteriaDto criteria)
+    {
+        await VerifyCanReadTransaction(workspaceId);
+        
+        var items = await _transactionRepository.ListWorkspaceTransactionsGroupedByUser(workspaceId, criteria);
+
+        return items.Select(BuildTransactionGroupedByUserResponseDto).ToList();
+    }
+
+    public static TransactionGroupedByCategoryResponseDto BuildTransactionGroupedByCategoryResponseDto(
+        TransactionGroupedByCategory entity)
+    {
+        return new TransactionGroupedByCategoryResponseDto
+        {
+            Category = TransactionCategoryService.BuildTransactionCategoryResponseDto(entity.Category),
+            Amount = entity.Amount
+        };
+    }
+
+    public static TransactionGroupedByUserResponseDto BuildTransactionGroupedByUserResponseDto(
+        TransactionGroupedByUser entity)
+    {
+        return new TransactionGroupedByUserResponseDto
+        {
+            User = UserService.BuildUserResponseDto(entity.User),
+            Amount = entity.Amount
         };
     }
     

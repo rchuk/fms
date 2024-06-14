@@ -8,6 +8,9 @@ type TransactionCategoryAutocompleteProps = {
   initialId?: number,
   required?: boolean,
 
+  selectedCategory?: TransactionCategoryResponse | null,
+  setSelectedCategory?: (value: TransactionCategoryResponse | null) => void,
+
   workspaceId: number,
   includeOwner?: boolean,
   setSelectedId: (value: number | null) => void
@@ -29,6 +32,8 @@ export default function TransactionCategoryAutocomplete(props: TransactionCatego
     <AutocompleteComponent
       initialId={props.initialId}
       required={props.required}
+      selectedItem={props.selectedCategory}
+      setSelectedItem={props.setSelectedCategory}
       setSelectedId={props.setSelectedId}
       fetch={fetch}
       label={"Категорія траназакцій"}

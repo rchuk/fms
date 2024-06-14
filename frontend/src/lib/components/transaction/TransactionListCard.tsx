@@ -5,13 +5,15 @@ import {Box, Card, CardActionArea, Typography} from "@mui/material";
 import ColorCircle from "@/lib/components/common/ColorCircle";
 
 type TransactionListCardProps = {
-  item: TransactionResponse
+  item: TransactionResponse,
+
+  onClick: (id: number) => void
 }
 
 export default function TransactionListCard(props: TransactionListCardProps) {
   return (
     <Card key={props.item.id} variant="elevation" elevation={4}>
-      <CardActionArea sx={{ padding: 2, display: "flex", alignItems: "center" }}>
+      <CardActionArea sx={{ padding: 2, display: "flex", alignItems: "center" }} onClick={() => props.onClick(props.item.id)}>
         <ColorCircle color={props.item.category.uiColor} />
         <Typography variant="h6" marginLeft={2}>
           {props.item.category.name}

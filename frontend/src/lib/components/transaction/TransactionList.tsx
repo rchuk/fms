@@ -3,7 +3,7 @@
 import PaginatedList from "@/lib/components/common/PaginatedList";
 import {ListTransactionsRequest, TransactionResponse} from "../../../../generated";
 import TransactionListCard from "@/lib/components/transaction/TransactionListCard";
-import {ReactElement, useContext, useEffect, useState} from "react";
+import {ReactElement, useContext, useState} from "react";
 import {ServicesContext} from "@/lib/services/ServiceProvider";
 import FloatingAddButton from "../common/FloatingAddButton";
 import ModalComponent, {useModalClosingCallback, useModalControls} from "@/lib/components/common/ModalComponent";
@@ -33,12 +33,18 @@ export default function TransactionList(props: TransactionListProps) {
   const [openModal, closeModal] = useModalControls(setModalContent);
   const onSave = useModalClosingCallback(setModalContent, setDirty);
 
+  const showPiePlot = criteria.startDate != null && criteria.categoryKind != null;
+
   function create() {
     openModal(<TransactionUpsert initialId={null} workspaceId={props.workspaceId} onError={closeModal} cancel={closeModal} onSave={onSave} />);
   }
+  
+  function update(id: number) {
+    openModal(<TransactionUpsert initialId={id} workspaceId={props.workspaceId} onError={closeModal} cancel={closeModal} onSave={onSave} />);
+  }
 
   function renderCard(data: TransactionResponse) {
-    return <TransactionListCard item={data} />
+    return <TransactionListCard item={data} onClick={update} />
   }
 
   async function fetch(offset: number, limit: number) {
@@ -53,7 +59,7 @@ export default function TransactionList(props: TransactionListProps) {
     <>
       <TransactionFilter criteria={criteria} setCriteria={setCriteria} onChange={setDirty} />
       {
-        criteria.startDate != null && criteria.categoryKind != null
+        showPiePlot
           ? <TransactionPlotPie kind={{ kind: "category" }} criteria={criteria} isDirty={isPlotDirty} setIsDirty={setIsPlotDirty} />
           : null
       }

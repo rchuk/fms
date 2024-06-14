@@ -131,7 +131,7 @@ public class TransactionService : ITransactionService
         return new TransactionGroupedByCategoryListResponseDto
         {
             TotalAmount = result.TotalAmount,
-            Items = result.Items.Select(BuildTransactionGroupedByCategoryResponseDto).ToList()
+            Items = result.Items.Select(BuildTransactionGroupedByCategoryResponseDto).ToList(),
         };
     }
 
@@ -155,7 +155,8 @@ public class TransactionService : ITransactionService
         return new TransactionGroupedByCategoryResponseDto
         {
             Category = TransactionCategoryService.BuildTransactionCategoryResponseDto(entity.Category),
-            Amount = entity.Amount
+            Amount = entity.Amount,
+            History = entity.History?.Select(BuildTransactionShortResponseDto).ToList()
         };
     }
 
@@ -165,7 +166,18 @@ public class TransactionService : ITransactionService
         return new TransactionGroupedByUserResponseDto
         {
             User = UserService.BuildUserResponseDto(entity.User),
-            Amount = entity.Amount
+            Amount = entity.Amount,
+            History = entity.History?.Select(BuildTransactionShortResponseDto).ToList()
+        };
+    }
+
+    public static TransactionShortResponseDto BuildTransactionShortResponseDto(TransactionEntity transaction)
+    {
+        return new TransactionShortResponseDto
+        {
+            Id = transaction.Id,
+            Amount = transaction.Amount,
+            Timestamp = transaction.Timestamp
         };
     }
     

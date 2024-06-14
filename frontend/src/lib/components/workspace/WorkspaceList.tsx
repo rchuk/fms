@@ -11,7 +11,9 @@ import ModalComponent, {useModalClosingCallback, useModalControls} from "../comm
 import {WorkspaceSource} from "@/lib/components/workspace/Common";
 
 type WorkspaceListProps = {
-  source: WorkspaceSource
+  source: WorkspaceSource,
+
+  enableCreation?: boolean
 }
 
 export default function WorkspaceList(props: WorkspaceListProps) {
@@ -46,7 +48,7 @@ export default function WorkspaceList(props: WorkspaceListProps) {
   return (
     <>
       <PaginatedList fetch={fetch} pageSize={10} renderItem={renderCard} isDirty={isDirty} setIsDirty={setIsDirty}/>
-      <FloatingAddButton onClick={create}/>
+      { props.enableCreation && <FloatingAddButton onClick={create}/> }
       <ModalComponent content={modalContent} setContent={setModalContent}/>
     </>
   );

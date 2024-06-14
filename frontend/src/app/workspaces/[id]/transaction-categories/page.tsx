@@ -1,10 +1,26 @@
-import {Box} from "@mui/material";
+"use client";
+
+import {WorkspaceResponse} from "../../../../../generated";
+import {useContext, useState} from "react";
+import {ServicesContext} from "@/lib/services/ServiceProvider";
+import EntityPage from "@/lib/components/common/EntityPage";
 import TransactionCategoryList from "@/lib/components/transaction-category/TransactionCategoryList";
 
 export default function WorkspaceTransactionCategoriesPage({ params }: { params: { id: number } }) {
+  const [workspace, setWorkspace] = useState<WorkspaceResponse | null>(null);
+  const { workspaceService } = useContext(ServicesContext);
+
+  async function fetch() {
+    return await workspaceService.getWorkspace({ id: params.id });
+  }
+
+  // If we are not "VIEWER" and have access to the workspace, then we have admin role within the organization
+  const canCreateCategory = workspace != null && workspace?.role !== "VIEWER";
+
   return (
-    <Box display="flex" flexDirection="column" height="100%" padding={2} boxSizing="border-box">
-      <TransactionCategoryList source={{ kind: "workspace", workspaceId: params.id }} />
-    </Box>
+    <EntityPage id={params.id} entity={workspace} setEntity={setWorkspace} fetch={fetch}>
+      <TransactionCategoryList source={{ kind: "workspace", workspaceId: params.id }} enableCreation={canCreateCategory} />
+    </EntityPage>
   );
 }
+

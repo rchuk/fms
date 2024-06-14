@@ -8,6 +8,8 @@ public class TransactionGroupedByUserResponseDto
     [Required]
     public required UserResponseDto User { get; set; }
     
+    public List<TransactionShortResponseDto>? History { get; set; }
+    
     /// <example>-4320</example>
     [Required]
     public int Amount { get; set; }

@@ -1,5 +1,5 @@
 import {Box} from "@mui/material";
-import WorkspaceList, {WorkspaceSourceUser} from "@/lib/components/workspace/WorkspaceList";
+import WorkspaceList from "@/lib/components/workspace/WorkspaceList";
 
 export default function UserWorkspacesPage() {
   return (

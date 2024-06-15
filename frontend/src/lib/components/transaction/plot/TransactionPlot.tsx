@@ -47,7 +47,7 @@ export default function TransactionPlot<RenderDataT>(props: PropsWithChildren<Tr
   return (
     <Box display="flex" flexDirection="column" marginTop={4}>
       {props.children}
-      <Box display="flex" justifyContent="space-between">
+      <Box display="flex" justifyContent="space-between" alignItems="end">
         <Typography variant="h6">
           Всього: {total}
         </Typography>
@@ -57,7 +57,8 @@ export default function TransactionPlot<RenderDataT>(props: PropsWithChildren<Tr
             label="Групування"
             value={props.kind}
             onChange={e => props.setKind(e.target.value as TransactionPlotKind)}
-          >(
+            sx={{ width: 200 }}
+          >
             <MenuItem value={"category"}>Категорія</MenuItem>
             <MenuItem value={"user"}>Користувач</MenuItem>
           </Select>

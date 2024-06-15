@@ -43,7 +43,11 @@ export default function OrganizationLayout({ children, params }: {
       setOrganization(newOrganization);
     };
 
-    fetch().catch(e => getRequestError(e).then(m => showAlert(m, "error")));
+    fetch()
+      .catch(e => {
+        getRequestError(e).then(m => showAlert(m, "error"));
+        router.back();
+      });
   }
 
   const router = useRouter();

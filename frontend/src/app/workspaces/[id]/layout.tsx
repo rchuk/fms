@@ -43,7 +43,10 @@ export default function WorkspaceLayout({ children, params }: {
       setWorkspace(newOrganization);
     };
 
-    fetch().catch(e => getRequestError(e).then(m => showAlert(m, "error")));
+    fetch().catch(e => {
+      getRequestError(e).then(m => showAlert(m, "error"));
+      router.back();
+    });
   }
 
   function navigate(tab: NavigationTabKind) {

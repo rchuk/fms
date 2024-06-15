@@ -23,7 +23,7 @@ export default function TransactionListCard(props: TransactionListCardProps) {
         </Typography>
         <Box display="flex" flex={1}>
           <Box flex={1}></Box>
-          <Typography variant="h6" color={amountColor.main}>{props.item.amount}</Typography>
+          <Typography fontSize={26} color={amountColor.main}>{props.item.amount}</Typography>
         </Box>
       </CardActionArea>
     </Card>

@@ -1,7 +1,7 @@
 import UpsertComponent from "@/lib/components/common/UpsertComponent";
 import Grid from "@mui/material/Unstable_Grid2";
 import {TransactionCategoryKind, TransactionCategoryResponse, TransactionUpsertRequest} from "../../../../generated";
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {ServicesContext} from "@/lib/services/ServiceProvider";
 import {Checkbox, Divider, FormControlLabel, TextField} from "@mui/material";
 import {DateTimePicker} from "@mui/x-date-pickers";
@@ -29,6 +29,10 @@ export default function TransactionUpsert(props: TransactionUpsertProps) {
   const [selectedCategory, setSelectedCategory] = useState<TransactionCategoryResponse | null>(null);
   const [isMixedSpending, setIsMixedSpending] = useState<boolean>(false);
 
+  useEffect(() => {
+    setAmount(view.amount != null ? Math.abs(view.amount) : undefined);
+  }, [selectedCategory]);
+
   async function fetch(id: number) {
     const { id: _, ...newView } = await transactionService.getTransaction({ id });
     const { category, ...other } = newView;
@@ -36,7 +40,12 @@ export default function TransactionUpsert(props: TransactionUpsertProps) {
     return { categoryId: category.id, ...other };
   }
 
-  function setAmount(newAmount: number) {
+  function setAmount(newAmount: number | undefined) {
+    if (newAmount === undefined) {
+      setView({...view, amount: undefined});
+      return;
+    }
+
     let sign = 1;
     if (selectedCategory?.kind === TransactionCategoryKind.Income)
       sign = 1;
@@ -105,7 +114,9 @@ export default function TransactionUpsert(props: TransactionUpsertProps) {
           fullWidth
           inputProps={{ min: 1 }}
           value={view.amount != null ? Math.abs(view.amount) : ""}
-          onChange={e => setAmount(Number(e.target.value))}
+          onChange={e => {
+            setAmount(e.target.value !== "" ? Number(e.target.value) : undefined);
+          }}
         />
       </Grid>
       {

@@ -29,9 +29,7 @@ export function mapLineChartData(response: TransactionGroupedByCategoryListRespo
       series
     };
   });
-  console.log("GROUPED " + JSON.stringify(grouped));
   const [minDate, maxDate] = findMinMaxDate(grouped.map(group => group.series));
-  console.log("MINMAX " + minDate + maxDate);
   const continuous = grouped.map(group => {
     return {
       label: group.label,
@@ -67,7 +65,7 @@ function getGroupLabel(group: TransactionGroupedByCategoryResponse | Transaction
   if (isGroupedByCategory(group)) {
     return group.category.name;
   } else if (isGroupedByUser(group)) {
-    return `${group.user.firstName} ${group.user.lastName};`
+    return `${group.user.firstName} ${group.user.lastName}`;
   } else {
     return "";
   }

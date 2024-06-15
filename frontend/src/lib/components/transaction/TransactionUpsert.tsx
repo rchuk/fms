@@ -31,7 +31,7 @@ export default function TransactionUpsert(props: TransactionUpsertProps) {
 
   useEffect(() => {
     setAmount(view.amount != null ? Math.abs(view.amount) : undefined);
-  }, [selectedCategory]);
+  }, [selectedCategory, isMixedSpending]);
 
   async function fetch(id: number) {
     const { id: _, ...newView } = await transactionService.getTransaction({ id });

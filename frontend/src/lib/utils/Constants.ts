@@ -1,3 +1,5 @@
 
+export const DRAWER_WIDTH = 300;
+
 export const AUTOCOMPLETE_SEARCH_DEBOUNCE_MS = 500;
 export const FILTER_DEBOUNCE_MS = 250;

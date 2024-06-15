@@ -64,12 +64,12 @@ export default function SubscriptionCard({
       >
         { header }
       </Typography>
-      <Typography 
-        variant="h6"
+      <Typography
         sx={{
           mt: 4,
           textAlign: "center"
         }}
+        fontSize={20}
       >
         {children}
       </Typography>

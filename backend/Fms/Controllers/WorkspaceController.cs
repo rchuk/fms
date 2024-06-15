@@ -36,8 +36,8 @@ public class WorkspaceController(
     /// </summary>
     [HttpPut("/api/organizations/{organizationId:int}/workspaces", Name = "createOrganizationWorkspace")]
     [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> CreateOrganizationWorkspace([FromRoute] int organizationId, [FromBody] WorkspaceUpsertRequestDto requestDto)
     {
         return Ok(await workspaceService.CreateSharedOrganizationWorkspace(organizationId, requestDto));
@@ -48,7 +48,7 @@ public class WorkspaceController(
     /// </summary>
     [HttpGet("{id:int}", Name = "getWorkspace")]
     [ProducesResponseType(typeof(WorkspaceResponseDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetWorkspace([FromRoute] int id)
     {
         return Ok(await workspaceService.GetWorkspace(id));
@@ -60,8 +60,8 @@ public class WorkspaceController(
     [HttpPost("{id:int}", Name = "updateWorkspace")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateWorkspace([FromRoute] int id,
         [FromBody] WorkspaceUpsertRequestDto requestDto)
     {
@@ -76,7 +76,7 @@ public class WorkspaceController(
     [HttpDelete("{id:int}", Name = "deleteWorkspace")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteWorkspace([FromRoute] int id)
     {
         await workspaceService.DeleteWorkspace(id);
@@ -101,7 +101,7 @@ public class WorkspaceController(
     [HttpGet("/api/organizations/{organizationId:int}/workspaces", Name = "listOrganizationWorkspaces")]
     [ProducesResponseType(typeof(WorkspaceListResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ListOrganizationWorkspaces([FromRoute] int organizationId, [FromQuery] PaginationDto pagination)
     {
         return Ok(await workspaceService.ListOrganizationWorkspaces(organizationId, pagination));
@@ -112,8 +112,8 @@ public class WorkspaceController(
     /// </summary>
     [HttpPut("{workspaceId:int}/users/{userId:int}", Name = "workspaceAddUser")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> AddUser([FromRoute] int workspaceId, [FromRoute] int userId)
     {
         await workspaceService.AddUser(workspaceId, userId);
@@ -126,8 +126,8 @@ public class WorkspaceController(
     /// </summary>
     [HttpDelete("{workspaceId:int}/users/{userId:int}", Name = "workspaceRemoveUser")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> RemoveUser([FromRoute] int workspaceId, [FromRoute] int userId)
     {
         await workspaceService.RemoveUser(workspaceId, userId);
@@ -141,7 +141,7 @@ public class WorkspaceController(
     [HttpGet("{workspaceId:int}/users/{userId:int}", Name = "workspaceGetUserRole")]
     [ProducesResponseType(typeof(WorkspaceRole), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetUserRole([FromRoute] int workspaceId, [FromRoute] int userId)
     {
         return Ok(await workspaceService.GetUserRole(workspaceId, userId));
@@ -153,8 +153,8 @@ public class WorkspaceController(
     [HttpPost("{workspaceId:int}/users/{userId:int}", Name = "workspaceUpdateUserRole")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateUserRole([FromRoute] int workspaceId, [FromRoute] int userId,
         [FromBody] WorkspaceRole role)
     {
@@ -169,7 +169,7 @@ public class WorkspaceController(
     [HttpGet("{workspaceId:int}/users", Name = "listWorkspaceUsers")]
     [ProducesResponseType(typeof(WorkspaceUserListResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ListWorkspaceUsers([FromRoute] int workspaceId, [FromQuery] UserCriteriaDto criteria,
         [FromQuery] PaginationDto pagination)
     {

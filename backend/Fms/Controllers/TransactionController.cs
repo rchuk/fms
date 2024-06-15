@@ -23,9 +23,9 @@ public class TransactionController(
     /// </summary>
     [HttpPut("/api/workspaces/{workspaceId:int}/transactions", Name = "createTransaction")]
     [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> CreateTransaction([FromRoute] int workspaceId,
         [FromBody] TransactionUpsertRequestDto requestDto)
     {
@@ -38,7 +38,7 @@ public class TransactionController(
     [HttpGet("{id:int}", Name = "getTransaction")]
     [ProducesResponseType(typeof(TransactionResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetTransaction([FromRoute] int id)
     {
         return Ok(await transactionService.GetTransaction(id));
@@ -50,8 +50,8 @@ public class TransactionController(
     [HttpPost("{id:int}", Name = "updateTransaction")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateTransaction([FromRoute] int id,
         [FromBody] TransactionUpsertRequestDto requestDto)
     {
@@ -65,8 +65,8 @@ public class TransactionController(
     /// </summary>
     [HttpDelete("{id:int}", Name = "deleteTransaction")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteTransaction([FromRoute] int id)
     {
         await transactionService.DeleteTransaction(id);
@@ -80,7 +80,7 @@ public class TransactionController(
     [HttpGet("/api/workspaces/{workspaceId:int}/transactions", Name = "listTransactions")]
     [ProducesResponseType(typeof(TransactionListResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ListWorkspaceTransactions([FromRoute] int workspaceId,
         [FromQuery] TransactionCriteriaDto criteria, [FromQuery] PaginationDto pagination)
     {
@@ -93,7 +93,7 @@ public class TransactionController(
     [HttpGet("/api/workspaces/{workspaceId:int}/transactions/group-by-category", Name = "listTransactionsGroupByCategory")]
     [ProducesResponseType(typeof(TransactionGroupedByCategoryListResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ListWorkspaceTransactionsGroupByCategory([FromRoute] int workspaceId,
         [FromQuery] TransactionCriteriaDto criteria)
     {
@@ -106,7 +106,7 @@ public class TransactionController(
     [HttpGet("/api/workspaces/{workspaceId:int}/transactions/group-by-user", Name = "listTransactionsGroupByUser")]
     [ProducesResponseType(typeof(TransactionGroupedByUserListResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ListWorkspaceTransactionsGroupByUser([FromRoute] int workspaceId,
         [FromQuery] TransactionCriteriaDto criteria)
     {

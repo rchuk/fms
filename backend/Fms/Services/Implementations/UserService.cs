@@ -80,6 +80,16 @@ public class UserService : IUserService
 
         return response;
     }
+    
+    [Transactional]
+    public async Task<UserResponseDto> GetUser(int id)
+    {
+        var user = await _userRepository.Read(id);
+        if (user is null)
+            throw new PublicNotFoundException();
+
+        return BuildUserResponseDto(user);
+    }
 
     public static UserResponseDto BuildUserResponseDto(UserEntity entity)
     {

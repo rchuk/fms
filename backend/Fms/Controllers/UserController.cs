@@ -19,6 +19,17 @@ public class UserController(
 ) : ControllerBase
 {
     /// <summary>
+    /// Get user profile
+    /// </summary>
+    [HttpPost("{id:int}", Name = "getUser")]
+    [ProducesResponseType(typeof(UserResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetUser([FromRoute] int id)
+    {
+        return Ok(await userService.GetUser(id));
+    }
+    
+    /// <summary>
     /// Update user profile
     /// </summary>
     [HttpPost(Name = "updateMe")]

@@ -35,8 +35,8 @@ public class TransactionCategoryController(
     [HttpPut("/api/organizations/{organizationId:int}/transactions/categories", Name = "createOrganizationTransactionCategory")]
     [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> CreateOrganizationTransactionCategory([FromRoute] int organizationId,
         [FromBody] TransactionCategoryUpsertRequestDto requestDto)
     {
@@ -50,8 +50,8 @@ public class TransactionCategoryController(
     [HttpPut("/api/workspaces/{workspaceId:int}/transactions/categories", Name = "createWorkspaceTransactionCategory")]
     [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> CreateWorkspaceTransactionCategory([FromRoute] int workspaceId, [FromBody] TransactionCategoryUpsertRequestDto requestDto)
     {
         return Ok(await transactionCategoryService.CreateWorkspaceTransactionCategory(workspaceId, requestDto));
@@ -62,7 +62,7 @@ public class TransactionCategoryController(
     /// </summary>
     [HttpGet("{id:int}", Name = "getTransactionCategory")]
     [ProducesResponseType(typeof(TransactionCategoryResponseDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetTransactionCategory([FromRoute] int id)
     {
         return Ok(await transactionCategoryService.GetTransactionCategory(id));
@@ -73,9 +73,9 @@ public class TransactionCategoryController(
     /// </summary>
     [HttpPost("{id:int}", Name = "updateTransactionCategory")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateTransactionCategory([FromRoute] int id, [FromBody] TransactionCategoryUpsertRequestDto requestDto)
     {
         await transactionCategoryService.UpdateTransactionCategory(id, requestDto);
@@ -88,8 +88,8 @@ public class TransactionCategoryController(
     /// </summary>
     [HttpDelete("{id:int}", Name = "deleteTransactionCategory")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteTransactionCategory([FromRoute] int id)
     {
         await transactionCategoryService.DeleteTransactionCategory(id);
@@ -114,7 +114,7 @@ public class TransactionCategoryController(
     [HttpGet("/api/organizations/{organizationId:int}/transactions/categories", Name = "listOrganizationTransactionCategories")]
     [ProducesResponseType(typeof(TransactionCategoryListResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ListOrganizationTransactionCategories([FromRoute] int organizationId,
         [FromQuery] PaginationDto pagination, [FromQuery] TransactionCategoryCriteriaDto criteriaDto)
     {
@@ -128,7 +128,7 @@ public class TransactionCategoryController(
     [HttpGet("/api/workspaces/{workspaceId:int}/transactions/categories", Name = "listWorkspaceTransactionCategories")]
     [ProducesResponseType(typeof(TransactionCategoryListResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ListWorkspaceTransactionCategories([FromRoute] int workspaceId,
         [FromQuery] PaginationDto pagination, [FromQuery] TransactionCategoryCriteriaDto criteriaDto)
     {

@@ -63,8 +63,8 @@ public class OrganizationController(
     /// </summary>
     [HttpDelete("{id:int}", Name = "deleteOrganization")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteOrganization([FromRoute] int id)
     {
         await organizationService.DeleteOrganization(id);
@@ -88,8 +88,8 @@ public class OrganizationController(
     /// </summary>
     [HttpPut("{organizationId:int}/users/{userId:int}", Name = "organizationAddUser")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> AddUser([FromRoute] int organizationId, [FromRoute] int userId)
     {
         await organizationService.AddUser(organizationId, userId);
@@ -102,8 +102,8 @@ public class OrganizationController(
     /// </summary>
     [HttpDelete("{organizationId:int}/users/{userId:int}", Name = "organizationRemoveUser")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> RemoveUser([FromRoute] int organizationId, [FromRoute] int userId)
     {
         await organizationService.RemoveUser(organizationId, userId);
@@ -117,7 +117,7 @@ public class OrganizationController(
     [HttpGet("{organizationId:int}/users/{userId:int}", Name = "organizationGetUserRole")]
     [ProducesResponseType(typeof(OrganizationRole), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetUserRole([FromRoute] int organizationId, [FromRoute] int userId)
     {
         return Ok(await organizationService.GetUserRole(organizationId, userId));
@@ -129,8 +129,8 @@ public class OrganizationController(
     [HttpPost("{organizationId:int}/users/{userId:int}", Name = "organizationUpdateUserRole")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateUserRole([FromRoute] int organizationId, [FromRoute] int userId, [FromBody] OrganizationRole role)
     {
         await organizationService.UpdateUserRole(organizationId, userId, role);
@@ -145,7 +145,7 @@ public class OrganizationController(
     [HttpGet("{organizationId:int}/users", Name = "listOrganizationUsers")]
     [ProducesResponseType(typeof(OrganizationUserListResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(PublicClientErrorDto), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ListOrganizationUsers([FromRoute] int organizationId, [FromQuery] UserCriteriaDto criteria,
         [FromQuery] PaginationDto pagination)
     {

@@ -15,17 +15,18 @@ export default function OrganizationPage({ params }: { params: { id: number } })
     return await organizationService.getOrganization({ id: params.id });
   }
 
-  if (organization === null)
-    return <ProgressSpinner />;
-
-  const canCreateWorkspace = organization.role === "OWNER" || organization.role === "ADMIN";
+  const canCreateWorkspace = organization != null && (organization.role === "OWNER" || organization.role === "ADMIN");
 
   return (
     <EntityPage id={params.id} entity={organization} setEntity={setOrganization} fetch={fetch}>
-      <WorkspaceList
-        source={{ kind: "organization", organizationId: params.id }}
-        enableCreation={canCreateWorkspace}
-      />
+      {
+        organization != null
+          ? <WorkspaceList
+            source={{ kind: "organization", organizationId: params.id }}
+            enableCreation={canCreateWorkspace}
+          />
+          : <ProgressSpinner />
+      }
     </EntityPage>
   );
 }

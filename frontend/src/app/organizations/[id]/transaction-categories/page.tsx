@@ -15,14 +15,15 @@ export default function OrganizationTransactionCategoriesPage({ params }: { para
     return await organizationService.getOrganization({ id: params.id });
   }
 
-  if (organization === null)
-    return <ProgressSpinner />;
-
-  const canCreateCategory = organization.role === "OWNER" || organization.role === "ADMIN";
+  const canCreateCategory = organization != null && (organization.role === "OWNER" || organization.role === "ADMIN");
 
   return (
     <EntityPage id={params.id} entity={organization} setEntity={setOrganization} fetch={fetch}>
-      <TransactionCategoryList source={{ kind: "organization", organizationId: params.id }} enableCreation={canCreateCategory}/>
+      {
+        organization != null
+          ? <TransactionCategoryList source={{ kind: "organization", organizationId: params.id }} enableCreation={canCreateCategory}/>
+          : <ProgressSpinner />
+      }
     </EntityPage>
   );
 }

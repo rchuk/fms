@@ -15,15 +15,16 @@ export default function WorkspaceTransactionCategoriesPage({ params }: { params:
     return await workspaceService.getWorkspace({ id: params.id });
   }
 
-  if (workspace === null)
-    return <ProgressSpinner />;
-
   // If we are not "VIEWER" and have access to the workspace, then we have admin role within the organization
-  const canCreateCategory = workspace.role !== "VIEWER";
+  const canCreateCategory = workspace != null && workspace.role !== "VIEWER";
 
   return (
     <EntityPage id={params.id} entity={workspace} setEntity={setWorkspace} fetch={fetch}>
-      <TransactionCategoryList source={{ kind: "workspace", workspaceId: params.id }} enableCreation={canCreateCategory} />
+      {
+        workspace != null
+          ? <TransactionCategoryList source={{ kind: "workspace", workspaceId: params.id }} enableCreation={canCreateCategory} />
+          : <ProgressSpinner />
+      }
     </EntityPage>
   );
 }

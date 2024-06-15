@@ -22,7 +22,8 @@ public class UserRepository: BaseCrudRepository<UserEntity, int>, IUserRepositor
         if (criteria.Query is { } searchQuery)
         {
             query = query.Where(user => user.FirstName.ToLower().Contains(searchQuery.ToLower()) 
-                                        || user.LastName.ToLower().Contains(searchQuery.ToLower()));
+                                        || user.LastName.ToLower().Contains(searchQuery.ToLower())
+                                        || user.Email.ToLower().Contains(searchQuery.ToLower()));
         }
 
         query = query.OrderBy(user => user.Id);

@@ -22,7 +22,7 @@ export default function OrganizationList(props: OrganizationListProps) {
   const onSave = useModalClosingCallback(setModalContent, () => setIsDirty(true));
 
   function create() {
-    openModal(<OrganizationUpsert initialId={null} onError={closeModal} cancel={closeModal} onSave={onSave} />);
+    openModal(<OrganizationUpsert initialId={null} onError={closeModal} cancel={closeModal} onSave={onSave} isLocked={false} />);
   }
 
   function renderCard(data: OrganizationResponse) {

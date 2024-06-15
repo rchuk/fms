@@ -10,9 +10,11 @@ import {WorkspaceSource} from "@/lib/components/workspace/Common";
 type WorkspaceUpsertProps = {
   initialId: number | null,
   source: WorkspaceSource,
+  isLocked: boolean
 
   cancel?: () => void,
   onError?: () => void,
+  onDelete?: () => void,
   onSave?: () => void
 };
 
@@ -46,6 +48,10 @@ export default function WorkspaceUpsert(props: WorkspaceUpsertProps) {
     }
   }
 
+  async function handleDelete(id: number) {
+    await workspaceService.deleteWorkspace({ id });
+  }
+
   function validate(view: Partial<WorkspaceUpsertRequest>): WorkspaceUpsertRequest | null {
     const { name, ...other } = view;
     if (name == null)
@@ -62,10 +68,12 @@ export default function WorkspaceUpsert(props: WorkspaceUpsertProps) {
       fetch={fetch}
       create={create}
       update={update}
+      delete={!props.isLocked ? handleDelete : undefined}
       validate={validate}
       cancel={props.cancel}
       onError={props.onError}
       onSave={props.onSave}
+      onDelete={props.onDelete}
       createHeader="Створення робочого простору"
       updateHeader="Редагування робочого простору"
     >
@@ -73,6 +81,7 @@ export default function WorkspaceUpsert(props: WorkspaceUpsertProps) {
         <TextField
           label="Назва"
           required
+          disabled={props.isLocked}
           fullWidth
           value={view.name}
           onChange={e => setView({...view, name: e.target.value})}

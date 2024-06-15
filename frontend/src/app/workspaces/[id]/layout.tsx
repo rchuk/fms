@@ -2,25 +2,40 @@
 
 import PageTabs, {NavigationTabKind} from "@/lib/components/common/PageTabs";
 import {useRouter} from "next/navigation";
-import {useContext, useEffect, useState} from "react";
+import {ReactElement, useContext, useEffect, useState} from "react";
 import {WorkspaceResponse} from "../../../../generated";
 import {ServicesContext} from "@/lib/services/ServiceProvider";
 import {getRequestError} from "@/lib/utils/RequestUtils";
 import {AlertContext} from "@/lib/services/AlertService";
 import ProgressSpinner from "@/lib/components/common/ProgressSpinner";
+import ModalComponent, {useModalClosingCallback, useModalControls} from "@/lib/components/common/ModalComponent";
+import WorkspaceUpsert from "@/lib/components/workspace/WorkspaceUpsert";
 
 export default function WorkspaceLayout({ children, params }: {
   children: React.ReactNode,
   params: { id: number }
 }) {
   const [workspace, setWorkspace] = useState<WorkspaceResponse | null>(null);
+  const [modalContent, setModalContent] = useState<ReactElement | null>(null);
+  const [isDirty, setIsDirty] = useState<boolean>(false);
   const { workspaceService } = useContext(ServicesContext);
   const showAlert = useContext(AlertContext);
   const router = useRouter();
 
+  const [openModal, closeModal] = useModalControls(setModalContent);
+  const onSave = useModalClosingCallback(setModalContent, () => setIsDirty(true));
+  const onDelete = useModalClosingCallback(setModalContent, () => router.back());
+
   useEffect(() => {
     fetch();
   }, [params.id]);
+
+  useEffect(() => {
+    if (isDirty) {
+      fetch();
+      setIsDirty(false);
+    }
+  }, [isDirty]);
 
   function fetch() {
     const fetch = async() => {
@@ -48,12 +63,26 @@ export default function WorkspaceLayout({ children, params }: {
   if (workspace === null)
     return <ProgressSpinner />;
 
-  const canEdit = workspace.role === "OWNER" || workspace.role === "ADMIN";
+  const isOrganizationAdmin = (workspace.role === null && workspace.owner.organization !== undefined);
+  const canEdit = (workspace.role === "OWNER" || workspace.role === "ADMIN") || isOrganizationAdmin;
+  const canDelete = workspace.role === "OWNER";
+
+  function edit() {
+    return openModal(<WorkspaceUpsert
+      isLocked={!canEdit}
+      initialId={params.id}
+      source={null!}
+      cancel={closeModal}
+      onSave={onSave}
+      onDelete={onDelete}
+    />);
+  }
 
   return (
     <>
-      <PageTabs navigate={navigate} mainLabel="Транзакції" header={workspace.name} canEdit={canEdit} />
+      <PageTabs navigate={navigate} mainLabel="Транзакції" header={workspace.name} canEdit={canEdit} onEdit={edit} />
       {children}
+      <ModalComponent content={modalContent} setContent={setModalContent} />
     </>
   )
 }

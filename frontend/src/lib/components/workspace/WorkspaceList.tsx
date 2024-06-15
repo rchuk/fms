@@ -25,7 +25,7 @@ export default function WorkspaceList(props: WorkspaceListProps) {
   const onSave = useModalClosingCallback(setModalContent, () => setIsDirty(true));
 
   function create() {
-    openModal(<WorkspaceUpsert initialId={null} source={props.source} onError={closeModal} cancel={closeModal} onSave={onSave} />);
+    openModal(<WorkspaceUpsert initialId={null} source={props.source} onError={closeModal} cancel={closeModal} onSave={onSave} isLocked={false} />);
   }
 
   function renderCard(data: WorkspaceResponse) {

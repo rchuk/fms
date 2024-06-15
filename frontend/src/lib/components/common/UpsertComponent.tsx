@@ -20,6 +20,7 @@ type UpsertComponentProps<IdT, ViewT> = {
   validate: (view: Partial<ViewT>) => ViewT | null,
 
   onSave?: () => void,
+  onDelete?: () => void,
   cancel?: () => void,
   onError?: (reason: any) => void,
 }
@@ -98,7 +99,7 @@ export default function UpsertComponent<IdT, ViewT>(props: PropsWithChildren<Ups
     const callback = () => {
       props.delete?.(id)
         .then(_ => showAlert("Інформацію видалено", "success"))
-        .then(_ => props.onSave?.())
+        .then(_ => (props.onDelete ?? props.onSave)?.())
         .catch(e => getRequestError(e).then(m => showAlert(m, "error")))
     };
 
@@ -126,7 +127,7 @@ export default function UpsertComponent<IdT, ViewT>(props: PropsWithChildren<Ups
       submit={submit}
       cancel={cancel}
       header={id != null ? props.updateHeader : props.createHeader}
-      delete={props.delete != null ? handleDelete : undefined}
+      delete={(id != null && props.delete != null) ? handleDelete : undefined}
     >
       {props.children}
     </UpsertContainer>

@@ -8,10 +8,12 @@ import {TextField} from "@mui/material";
 
 type OrganizationUpsertProps = {
   initialId: number | null,
+  isLocked: boolean,
 
   cancel?: () => void,
   onError?: () => void,
-  onSave?: () => void
+  onSave?: () => void,
+  onDelete?: () => void
 };
 
 function getDefaultOrganizationView(): Partial<OrganizationUpsertRequest> {
@@ -36,6 +38,10 @@ export default function OrganizationUpsert(props: OrganizationUpsertProps) {
     return await organizationService.createOrganization({ organizationUpsertRequest: view });
   }
 
+  async function handleDelete(id: number) {
+    await organizationService.deleteOrganization({ id });
+  }
+
   function validate(view: Partial<OrganizationUpsertRequest>): OrganizationUpsertRequest | null {
     const { name, ...other } = view;
     if (name == null)
@@ -52,16 +58,19 @@ export default function OrganizationUpsert(props: OrganizationUpsertProps) {
       fetch={fetch}
       create={create}
       update={update}
+      delete={!props.isLocked ? handleDelete : undefined}
       validate={validate}
       cancel={props.cancel}
       onError={props.onError}
       onSave={props.onSave}
+      onDelete={props.onDelete}
       createHeader="Створення організації"
       updateHeader="Редагування організації"
     >
       <Grid xs={12}>
         <TextField
           label="Назва"
+          disabled={props.isLocked}
           required
           fullWidth
           value={view.name}

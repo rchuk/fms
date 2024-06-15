@@ -9,6 +9,8 @@ type PageTabsProps = {
   header: string,
   canEdit: boolean,
 
+  onEdit?: () => void,
+
   navigate: (value: NavigationTabKind) => void,
   mainLabel: string
 }
@@ -31,7 +33,7 @@ export default function PageTabs(props: PageTabsProps) {
           {props.header}
         </Typography>
         <Box display="flex" justifyContent="flex-end" alignItems="center">
-          <IconButton>
+          <IconButton onClick={props.onEdit}>
             {
               props.canEdit
                 ? <EditIcon />

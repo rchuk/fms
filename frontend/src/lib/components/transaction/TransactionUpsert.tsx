@@ -12,6 +12,7 @@ import UserAutocomplete from "@/lib/components/user/UserAutocomplete";
 type TransactionUpsertProps = {
   initialId: number | null,
   workspaceId: number,
+  isLocked: boolean,
 
   cancel?: () => void,
   onError?: () => void,
@@ -54,6 +55,10 @@ export default function TransactionUpsert(props: TransactionUpsertProps) {
   async function create(view: TransactionUpsertRequest) {
     return await transactionService.createTransaction({ workspaceId: props.workspaceId, transactionUpsertRequest: view });
   }
+
+  async function handleDelete(id: number) {
+    await transactionService.deleteTransaction({ id });
+  }
   
   function validate(view: Partial<TransactionUpsertRequest>): TransactionUpsertRequest | null {
     const { categoryId, amount, ...other } = view;
@@ -71,16 +76,18 @@ export default function TransactionUpsert(props: TransactionUpsertProps) {
       fetch={fetch}
       create={create}
       update={update}
+      delete={!props.isLocked ? handleDelete : undefined}
       validate={validate}
       cancel={props.cancel}
       onError={props.onError}
       onSave={props.onSave}
       createHeader="Створення транзакції"
-      updateHeader="Редагування транзакції"
+      updateHeader={props.isLocked ? "Перегляд транзакції" : "Редагування транзакції"}
     >
       <Grid xs={6}>
         <TransactionCategoryAutocomplete
           required
+          disabled={props.isLocked}
           workspaceId={props.workspaceId}
           includeOwner={true}
           initialId={view.categoryId}
@@ -94,6 +101,7 @@ export default function TransactionUpsert(props: TransactionUpsertProps) {
           label="Вартість"
           type="number"
           required
+          disabled={props.isLocked}
           fullWidth
           inputProps={{ min: 1 }}
           value={view.amount != null ? Math.abs(view.amount) : ""}
@@ -109,6 +117,7 @@ export default function TransactionUpsert(props: TransactionUpsertProps) {
             </Grid>
             <Grid xs={6}>
               <FormControlLabel
+                disabled={props.isLocked}
                 control={<Checkbox checked={isMixedSpending} onChange={e => setIsMixedSpending(e.target.checked)} />}
                 label="Витрата"
               />
@@ -122,6 +131,7 @@ export default function TransactionUpsert(props: TransactionUpsertProps) {
       <Grid xs={6}>
         <DateTimePicker
           label="Дата"
+          disabled={props.isLocked}
           disableFuture
           slotProps={{
             actionBar: { actions: ["clear"], hidden: false },
@@ -133,6 +143,7 @@ export default function TransactionUpsert(props: TransactionUpsertProps) {
       </Grid>
       <Grid xs={6}>
         <UserAutocomplete
+          disabled={props.isLocked}
           initialId={view.userId}
           source={{ kind: "workspace", workspaceId: props.workspaceId }}
           setSelectedId={v => setView({...view, userId: v ?? undefined })}
@@ -141,6 +152,7 @@ export default function TransactionUpsert(props: TransactionUpsertProps) {
       <Grid xs={12}>
         <TextField
           label="Опис"
+          disabled={props.isLocked}
           multiline
           fullWidth
           value={view.description}

@@ -40,11 +40,11 @@ export default function TransactionList(props: TransactionListProps) {
   const showStackPlot = criteria.startDate != null && criteria.categoryKind == null;
 
   function create() {
-    openModal(<TransactionUpsert initialId={null} workspaceId={props.workspaceId} onError={closeModal} cancel={closeModal} onSave={onSave} />);
+    openModal(<TransactionUpsert initialId={null} workspaceId={props.workspaceId} onError={closeModal} cancel={closeModal} onSave={onSave} isLocked={false}/>);
   }
   
   function update(id: number) {
-    openModal(<TransactionUpsert initialId={id} workspaceId={props.workspaceId} onError={closeModal} cancel={closeModal} onSave={onSave} />);
+    openModal(<TransactionUpsert initialId={id} workspaceId={props.workspaceId} onError={closeModal} cancel={closeModal} onSave={onSave} isLocked={!props.enableCreation} />);
   }
 
   function renderCard(data: TransactionResponse) {

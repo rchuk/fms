@@ -14,7 +14,8 @@ namespace Fms.Controllers;
 [Produces("application/json")]
 [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status500InternalServerError)]
 public class AuthController(
-    IAuthService authService
+    IAuthService authService,
+    IUserService userService
 ) : ControllerBase
 {
     /// <summary>
@@ -65,6 +66,6 @@ public class AuthController(
     [ProducesResponseType(typeof(PublicErrorDto), StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetCurrentUser()
     {
-        return Ok(UserService.BuildSelfUserResponseDto(await authService.GetCurrentUser()));
+        return Ok(await userService.GetCurrentUser());
     }
 }

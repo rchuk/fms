@@ -19,4 +19,6 @@ public class UserSelfResponseDto
     public required string Email { get; set; }
     [Required]
     public required SubscriptionKind? SubscriptionKind { get; set; }
+    [Required]
+    public WorkspaceResponseDto PrivateWorkspace { get; set; }
 }

@@ -69,7 +69,9 @@ public class WorkspaceToAccountRepository : BaseCrudRepository<WorkspaceToAccoun
 
             query = query.Where(map =>
                 map.Account.Organization != null && map.Account.Organization.Name.ToLower().Contains(needle)
-                || map.Account.User != null && (map.Account.User.FirstName.ToLower().Contains(needle) || map.Account.User.LastName.ToLower().Contains(needle))
+                || map.Account.User != null&& (map.Account.User.FirstName.ToLower().Contains(needle)
+                                               || map.Account.User.LastName.ToLower().Contains(needle)
+                                               || map.Account.User.Email.ToLower().Contains(needle))
             );
         }
 

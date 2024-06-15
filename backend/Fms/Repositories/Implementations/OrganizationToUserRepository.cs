@@ -19,7 +19,8 @@ public class OrganizationToUserRepository : BaseCrudRepository<OrganizationToUse
         if (criteria.Query is { } searchQuery)
         {
             query = query.Where(map => map.User.FirstName.ToLower().Contains(searchQuery.ToLower()) 
-                                       || map.User.LastName.ToLower().Contains(searchQuery.ToLower()));
+                                       || map.User.LastName.ToLower().Contains(searchQuery.ToLower())
+                                       || map.User.Email.ToLower().Contains(searchQuery.ToLower()));
         }
          
         query = query.Include(map => map.User)

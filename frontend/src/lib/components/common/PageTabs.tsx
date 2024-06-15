@@ -29,7 +29,7 @@ export default function PageTabs(props: PageTabsProps) {
   return (
     <Box>
       <Box display="flex" padding={2} justifyContent="space-between">
-        <Typography variant="h3">
+        <Typography variant="h3" fontWeight={600}>
           {props.header}
         </Typography>
         <Box display="flex" justifyContent="flex-end" alignItems="center">

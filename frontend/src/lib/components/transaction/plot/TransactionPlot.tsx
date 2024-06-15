@@ -1,12 +1,16 @@
 import {PropsWithChildren, useContext, useEffect, useState} from "react";
 import {AlertContext} from "@/lib/services/AlertService";
 import {getRequestError} from "@/lib/utils/RequestUtils";
-import {Box, Typography} from "@mui/material";
+import {Box, FormControl, InputLabel, MenuItem, Select, Typography} from "@mui/material";
+import {TransactionPlotKind} from "@/lib/components/transaction/plot/Common";
 
 
 interface TransactionPlotProps<RenderDataT> {
   data: RenderDataT,
   setData: (value: RenderDataT) => void,
+
+  kind: TransactionPlotKind,
+  setKind: (value: TransactionPlotKind) => void,
 
   fetch: () => Promise<[number, RenderDataT]>,
 
@@ -43,9 +47,23 @@ export default function TransactionPlot<RenderDataT>(props: PropsWithChildren<Tr
   return (
     <Box display="flex" flexDirection="column" marginTop={4}>
       {props.children}
-      <Typography variant="h6">
-        Всього: {total}
-      </Typography>
+      <Box display="flex" justifyContent="space-between" alignItems="end">
+        <Typography variant="h6">
+          Всього: {total}
+        </Typography>
+        <FormControl>
+          <InputLabel>Групування</InputLabel>
+          <Select
+            label="Групування"
+            value={props.kind}
+            onChange={e => props.setKind(e.target.value as TransactionPlotKind)}
+            sx={{ width: 200 }}
+          >
+            <MenuItem value={"category"}>Категорія</MenuItem>
+            <MenuItem value={"user"}>Користувач</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
     </Box>
-  )
+  );
 }

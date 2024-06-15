@@ -5,7 +5,7 @@ import ServicesProvider, {createServices, Services} from "@/lib/services/Service
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {createTheme, CssBaseline, responsiveFontSizes, ThemeProvider} from "@mui/material";
 import {LocalizationProvider} from "@mui/x-date-pickers";
-import {Roboto} from "next/font/google";
+import {Roboto, Montserrat} from "next/font/google";
 import { AlertProvider } from "@/lib/services/AlertService";
 import {Configuration} from "../../generated";
 import NextLink, {LinkProps} from 'next/link';
@@ -16,6 +16,12 @@ import ConfirmationDialogProvider from "@/lib/services/ConfirmationDialogService
 const roboto = Roboto({
   weight: "400",
   subsets: ["latin", "cyrillic"]
+});
+
+const montserrat = Montserrat({
+  weight: ["500", "600", "700"],
+  subsets: ["latin", "cyrillic"],
+  fallback: ["Arial", "sans-serif"]
 });
 
 type LinkBehaviourProps = LinkProps & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href'>;
@@ -44,6 +50,23 @@ let theme = createTheme({
       defaultProps: {
         LinkComponent: LinkBehaviour
       }
+    }
+  },
+  typography: {
+    h1: {
+      fontFamily: montserrat.style.fontFamily
+    },
+    h2: {
+      fontFamily: montserrat.style.fontFamily
+    },
+    h3: {
+      fontFamily: montserrat.style.fontFamily
+    },
+    h4: {
+      fontFamily: montserrat.style.fontFamily
+    },
+    h5: {
+      fontFamily: montserrat.style.fontFamily
     }
   }
 });

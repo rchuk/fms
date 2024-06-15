@@ -15,22 +15,24 @@ export default function WorkspaceUsersPage({ params }: { params: { id: number } 
     return await workspaceService.getWorkspace({ id: params.id });
   }
 
-  if (workspace === null)
-    return <ProgressSpinner />;
-
   // TODO: Add join with organization role on the backend. Currently has false positives
-  const canAddUser = workspace.kind !== "PRIVATE" && (workspace.role !== "COLLABORATOR" && workspace.role !== "VIEWER");
-  const addSource = workspace?.owner.organization !== undefined
+  const canAddUser = workspace!= null && workspace.kind !== "PRIVATE"
+    && (workspace.role !== "COLLABORATOR" && workspace.role !== "VIEWER");
+  const addSource = workspace != null && workspace?.owner.organization !== undefined
     ? { kind: "organization", organizationId: workspace.owner.organization.id } as const
     : { kind: "global" } as const;
 
   return (
     <EntityPage id={params.id} entity={workspace} setEntity={setWorkspace} fetch={fetch}>
-      <UserMemberList
-        source={{ kind: "workspace", workspaceId: params.id }}
-        addSource={addSource}
-        enableCreation={canAddUser}
-      />
+      {
+        workspace != null
+          ? <UserMemberList
+            source={{ kind: "workspace", workspaceId: params.id }}
+            addSource={addSource}
+            enableCreation={canAddUser}
+          />
+          : <ProgressSpinner />
+      }
     </EntityPage>
   );
 }

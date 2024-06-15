@@ -2,8 +2,7 @@ import { AppBar, Box, Drawer, IconButton, Toolbar, useTheme } from "@mui/materia
 import { Menu } from "@mui/icons-material";
 import { useState } from "react";
 import DrawerNav from "./DrawerNav";
-
-const drawerWidth = 300
+import {DRAWER_WIDTH} from "@/lib/utils/Constants";
 
 type DrawerNavProps = {
   children: React.ReactNode
@@ -59,7 +58,7 @@ export default function Nav({
       <Box
         component="nav"
         sx={{ 
-          width: { sm: drawerWidth }, 
+          width: { sm: DRAWER_WIDTH },
           flexShrink: { sm: 0 } 
         }}
       >
@@ -78,7 +77,7 @@ export default function Nav({
             },
             '& .MuiDrawer-paper': { 
               boxSizing: 'border-box', 
-              width: drawerWidth 
+              width: DRAWER_WIDTH
             }
           }}
         >
@@ -93,7 +92,7 @@ export default function Nav({
             },
             '& .MuiDrawer-paper': { 
               boxSizing: 'border-box', 
-              width: drawerWidth 
+              width: DRAWER_WIDTH
             }
           }}
           open
@@ -109,7 +108,7 @@ export default function Nav({
           flexGrow: 1,
           p: 2,
           width: { 
-            sm: `calc(100% - ${drawerWidth}px)` 
+            sm: `calc(100% - ${DRAWER_WIDTH}px)`
           }, 
           height: "100%"
         }}

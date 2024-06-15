@@ -15,14 +15,15 @@ export default function WorkspacePage({ params }: { params: { id: number } }) {
     return await workspaceService.getWorkspace({ id: params.id });
   }
 
-  if (workspace === null)
-    return <ProgressSpinner />;
-
-  const canCreateTransaction = workspace?.role !== "VIEWER";
+  const canCreateTransaction = workspace != null && workspace.role !== "VIEWER";
 
   return (
     <EntityPage id={params.id} entity={workspace} setEntity={setWorkspace} fetch={fetch}>
-      <TransactionList workspaceId={params.id} enableCreation={canCreateTransaction} />
+      {
+        workspace != null
+          ? <TransactionList workspaceId={params.id} enableCreation={canCreateTransaction} />
+          : <ProgressSpinner />
+      }
     </EntityPage>
   );
 }

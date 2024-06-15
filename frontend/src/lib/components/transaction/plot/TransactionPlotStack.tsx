@@ -13,6 +13,7 @@ import {LineChartGroupData, mapLineChartData} from "@/lib/utils/PlotUtils";
 type TransactionPlotStackProps = {
   criteria: ListTransactionsRequest,
   kind: TransactionPlotKind,
+  setKind: (value: TransactionPlotKind) => void,
 
   isDirty: boolean,
   setIsDirty: (value: boolean) => void
@@ -35,7 +36,7 @@ export default function TransactionPlotStack(props: TransactionPlotStackProps) {
   } as const;
 
   async function fetch(): Promise<[number, LineChartGroupData]> {
-    switch (props.kind.kind) {
+    switch (props.kind) {
       case "category": {
         const response = await transactionService.listTransactionsGroupByCategory({
           ...props.criteria,
@@ -66,6 +67,8 @@ export default function TransactionPlotStack(props: TransactionPlotStackProps) {
       fetch={fetch}
       isDirty={props.isDirty}
       setIsDirty={props.setIsDirty}
+      kind={props.kind}
+      setKind={props.setKind}
     >
       <LineChart
         xAxis={[{ data: data.xAxis, scaleType: "time" }]}

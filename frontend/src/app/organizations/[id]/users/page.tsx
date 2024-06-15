@@ -15,18 +15,19 @@ export default function OrganizationUsersPage({ params }: { params: { id: number
     return await organizationService.getOrganization({ id: params.id });
   }
 
-  if (organization === null)
-    return <ProgressSpinner />;
-
-  const canAddUsers = organization.role === "OWNER" || organization.role === "ADMIN";
+  const canAddUsers = organization != null && (organization.role === "OWNER" || organization.role === "ADMIN");
 
   return (
     <EntityPage id={params.id} entity={organization} setEntity={setOrganization} fetch={fetch}>
-      <UserMemberList
-        source={{ kind: "organization", organizationId: params.id }}
-        addSource={{ kind: "global" }}
-        enableCreation={canAddUsers}
-      />
+      {
+        organization != null
+          ? <UserMemberList
+            source={{ kind: "organization", organizationId: params.id }}
+            addSource={{ kind: "global" }}
+            enableCreation={canAddUsers}
+          />
+          : <ProgressSpinner />
+      }
     </EntityPage>
   );
 }

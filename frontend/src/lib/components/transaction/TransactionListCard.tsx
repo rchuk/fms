@@ -1,7 +1,7 @@
 "use client";
 
 import {TransactionResponse} from "../../../../generated";
-import {Box, Card, CardActionArea, Typography} from "@mui/material";
+import {Box, Card, CardActionArea, Typography, useTheme} from "@mui/material";
 import ColorCircle from "@/lib/components/common/ColorCircle";
 
 type TransactionListCardProps = {
@@ -11,6 +11,9 @@ type TransactionListCardProps = {
 }
 
 export default function TransactionListCard(props: TransactionListCardProps) {
+  const theme = useTheme();
+  const amountColor = props.item.amount < 0 ? theme.palette.error : theme.palette.success;
+
   return (
     <Card key={props.item.id} variant="elevation" elevation={4}>
       <CardActionArea sx={{ padding: 2, display: "flex", alignItems: "center" }} onClick={() => props.onClick(props.item.id)}>
@@ -20,7 +23,7 @@ export default function TransactionListCard(props: TransactionListCardProps) {
         </Typography>
         <Box display="flex" flex={1}>
           <Box flex={1}></Box>
-          <Typography variant="h6">{props.item.amount}</Typography>
+          <Typography fontSize={26} color={amountColor.main}>{props.item.amount}</Typography>
         </Box>
       </CardActionArea>
     </Card>

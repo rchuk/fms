@@ -74,7 +74,7 @@ export default function OrganizationLayout({ children, params }: {
       initialId={params.id}
       cancel={closeModal}
       onSave={onSave}
-      onDelete={onDelete}
+      onDelete={canDelete ? onDelete : undefined}
     />);
   }
 

@@ -58,7 +58,7 @@ export default function OrganizationUpsert(props: OrganizationUpsertProps) {
       fetch={fetch}
       create={create}
       update={update}
-      delete={!props.isLocked ? handleDelete : undefined}
+      delete={(!props.isLocked && props.onDelete != null) ? handleDelete : undefined}
       validate={validate}
       cancel={props.cancel}
       onError={props.onError}

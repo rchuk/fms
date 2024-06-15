@@ -63,9 +63,9 @@ export default function WorkspaceLayout({ children, params }: {
   if (workspace === null)
     return <ProgressSpinner />;
 
-  const isOrganizationAdmin = (workspace.role === null && workspace.owner.organization !== undefined);
-  const canEdit = (workspace.role === "OWNER" || workspace.role === "ADMIN") || isOrganizationAdmin;
-  const canDelete = workspace.role === "OWNER";
+  // TODO: Add join with organization role on the backend. Currently has false positives
+  const canEdit = workspace.role !== "COLLABORATOR" && workspace.role !== "VIEWER";
+  const canDelete = workspace.role !== "ADMIN" && workspace.role !== "COLLABORATOR" && workspace.role !== "VIEWER";
 
   function edit() {
     return openModal(<WorkspaceUpsert
@@ -74,7 +74,7 @@ export default function WorkspaceLayout({ children, params }: {
       source={null!}
       cancel={closeModal}
       onSave={onSave}
-      onDelete={onDelete}
+      onDelete={canDelete ? onDelete : undefined}
     />);
   }
 

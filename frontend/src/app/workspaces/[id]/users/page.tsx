@@ -5,6 +5,7 @@ import {useContext, useState} from "react";
 import {ServicesContext} from "@/lib/services/ServiceProvider";
 import EntityPage from "@/lib/components/common/EntityPage";
 import UserMemberList from "@/lib/components/user/UserMemberList";
+import ProgressSpinner from "@/lib/components/common/ProgressSpinner";
 
 export default function WorkspaceUsersPage({ params }: { params: { id: number } }) {
   const [workspace, setWorkspace] = useState<WorkspaceResponse | null>(null);
@@ -14,8 +15,11 @@ export default function WorkspaceUsersPage({ params }: { params: { id: number } 
     return await workspaceService.getWorkspace({ id: params.id });
   }
 
-  // TODO: Also join organization role on the backend
-  const canAddUser = workspace?.kind !== "PRIVATE" && (workspace?.role == "OWNER" || workspace?.role === "ADMIN");
+  if (workspace === null)
+    return <ProgressSpinner />;
+
+  // TODO: Add join with organization role on the backend. Currently has false positives
+  const canAddUser = workspace.kind !== "PRIVATE" && (workspace.role !== "COLLABORATOR" && workspace.role !== "VIEWER");
   const addSource = workspace?.owner.organization !== undefined
     ? { kind: "organization", organizationId: workspace.owner.organization.id } as const
     : { kind: "global" } as const;

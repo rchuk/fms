@@ -81,8 +81,7 @@ export default function DrawerNav() {
           />
         </ListItemIcon>
         <ListItemText>
-          <Typography 
-            variant="h5" 
+          <Typography
             color="error"
           >
             Logout

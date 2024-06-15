@@ -11,7 +11,7 @@ export default function WorkspaceLayout({ children, params }: {
 
   function navigate(tab: NavigationTabKind) {
     switch (tab) {
-      case "Transactions":
+      case "Main":
         router.push(`/workspaces/${params.id}`);
         return;
       case "TransactionCategories":
@@ -25,7 +25,7 @@ export default function WorkspaceLayout({ children, params }: {
 
   return (
     <>
-      <PageTabs navigate={navigate} />
+      <PageTabs navigate={navigate} mainLabel="Транзакції"/>
       {children}
     </>
   )

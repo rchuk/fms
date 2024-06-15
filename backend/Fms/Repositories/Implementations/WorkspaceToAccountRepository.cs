@@ -3,6 +3,7 @@ using Fms.Entities;
 using Fms.Entities.Common;
 using Fms.Entities.Criteria;
 using Fms.Entities.Enums;
+using Fms.Entities.Grouped;
 using Fms.Repositories.Common;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,12 +34,27 @@ public class WorkspaceToAccountRepository : BaseCrudRepository<WorkspaceToAccoun
         return result?.Account;
     }
 
-    public async Task<WorkspaceToAccountEntity?> GetPrivateWorkspace(int accountId)
+    public async Task<WorkspaceWithOwner?> GetWithOwner(int workspaceId, int accountId)
+    {
+        var query = Ctx.WorkspaceToAccount
+            .Where(map => map.WorkspaceId == workspaceId)
+            .Where(map => map.AccountId == accountId);
+        var grouped = await GroupWithOwner(query);
+
+        return await grouped.FirstOrDefaultAsync();
+    }
+
+    public async Task<WorkspaceWithOwner?> GetPrivateWorkspace(int accountId)
     {
         var kind = await _workspaceKindRepository.Read(WorkspaceKind.Private);
         return await Ctx.WorkspaceToAccount
             .Where(map => map.AccountId == accountId)
             .Where(map => map.Workspace.Kind == kind)
+            .Select(map => new WorkspaceWithOwner
+            {
+                Map = map,
+                Owner = map.Account
+            })
             .FirstOrDefaultAsync();
     }
     
@@ -56,8 +72,6 @@ public class WorkspaceToAccountRepository : BaseCrudRepository<WorkspaceToAccoun
                 || map.Account.User != null && (map.Account.User.FirstName.ToLower().Contains(needle) || map.Account.User.LastName.ToLower().Contains(needle))
             );
         }
-        
-        query = query.OrderBy(map => map.AccountId);
 
         return (
             query.Count(),
@@ -65,16 +79,19 @@ public class WorkspaceToAccountRepository : BaseCrudRepository<WorkspaceToAccoun
         );
     }
 
-    public async Task<(int total, IEnumerable<WorkspaceToAccountEntity> items)> ListAccountWorkspaces(int accountId, Pagination pagination)
+    public async Task<(int total, IEnumerable<WorkspaceWithOwner> items)> ListAccountWorkspaces(int accountId, Pagination pagination)
     {
         var query = Ctx.WorkspaceToAccount
             .Where(map => map.AccountId == accountId)
             .OrderBy(map => map.WorkspaceId)
             .Include(map => map.Workspace);
-
+        
+        var grouped = await GroupWithOwner(query);
+        grouped = grouped.OrderBy(map => map.Map.AccountId);
+        
         return (
-            query.Count(),
-            await query.Skip(pagination.Offset).Take(pagination.Limit).ToListAsync()
+            grouped.Count(),
+            await grouped.Skip(pagination.Offset).Take(pagination.Limit).ToListAsync()
         );
     }
 
@@ -90,5 +107,20 @@ public class WorkspaceToAccountRepository : BaseCrudRepository<WorkspaceToAccoun
         );
         
         await Ctx.SaveChangesAsync();
+    }
+
+    private async Task<IQueryable<WorkspaceWithOwner>> GroupWithOwner(IQueryable<WorkspaceToAccountEntity> query)
+    {
+        var role = await _workspaceRoleRepository.Read(WorkspaceRole.Owner);
+        return query.Join(
+            Ctx.WorkspaceToAccount
+                .Where(map => map.Role == role),
+            map => map.WorkspaceId,
+            map => map.WorkspaceId,
+            (map1, map2) => new WorkspaceWithOwner {
+                Map = map1,
+                Owner = map2.Account
+            }
+        );
     }
 }

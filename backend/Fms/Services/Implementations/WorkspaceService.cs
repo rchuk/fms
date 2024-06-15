@@ -5,6 +5,7 @@ using Fms.Entities;
 using Fms.Entities.Common;
 using Fms.Entities.Criteria;
 using Fms.Entities.Enums;
+using Fms.Entities.Grouped;
 using Fms.Exceptions;
 using Fms.Repositories;
 using Fms.Repositories.Implementations;
@@ -140,9 +141,12 @@ public class WorkspaceService : IWorkspaceService
             throw new PublicNotFoundException(_localizer[Localization.ErrorMessages.workspace_forbidden]);
         
         var account = await _accountRepository.GetUserAccount(await _authService.GetCurrentUserId());
-        var workspaceToUser = await _workspaceToAccountRepository.Read((id, account!.Id));
+        var workspaceToUser = await _workspaceToAccountRepository.GetWithOwner(id, account!.Id);
 
-        return BuildWorkspaceResponseDto(workspaceToUser!);
+        if (workspaceToUser is null)
+            throw new PublicNotFoundException();
+        
+        return BuildWorkspaceResponseDto(workspaceToUser);
     }
 
     [Transactional]
@@ -330,14 +334,15 @@ public class WorkspaceService : IWorkspaceService
         return map?.Role.ToEnum();
     }
 
-    public static WorkspaceResponseDto BuildWorkspaceResponseDto(WorkspaceToAccountEntity entity)
+    public static WorkspaceResponseDto BuildWorkspaceResponseDto(WorkspaceWithOwner entity)
     {
         return new WorkspaceResponseDto
         {
-            Id = entity.Workspace.Id,
-            Name = entity.Workspace.Name,
-            Kind = entity.Workspace.Kind.ToEnum(),
-            Role = entity.Role.ToEnum()
+            Id = entity.Map.Workspace.Id,
+            Name = entity.Map.Workspace.Name,
+            Kind = entity.Map.Workspace.Kind.ToEnum(),
+            Role = entity.Map.Role.ToEnum(),
+            Owner = AccountService.BuildAccountResponseDto(entity.Owner)
         };
     }
     

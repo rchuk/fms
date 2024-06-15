@@ -1,6 +1,7 @@
 ﻿using Fms.Entities;
 using Fms.Entities.Common;
 using Fms.Entities.Criteria;
+using Fms.Entities.Grouped;
 
 namespace Fms.Repositories;
 
@@ -12,10 +13,11 @@ public interface IWorkspaceToAccountRepository
     Task<bool> Delete((int workspaceId, int accountId) id);
 
     Task<AccountEntity?> GetOwner(int workspaceId);
-    Task<WorkspaceToAccountEntity?> GetPrivateWorkspace(int accountId);
+    Task<WorkspaceWithOwner?> GetWithOwner(int workspaceId, int accountId);
+    Task<WorkspaceWithOwner?> GetPrivateWorkspace(int accountId);
     
     Task<(int total, IEnumerable<WorkspaceToAccountEntity> items)> ListWorkspaceAccounts(int workspaceId, AccountCriteria accountCriteria, Pagination pagination);
-    Task<(int total, IEnumerable<WorkspaceToAccountEntity> items)> ListAccountWorkspaces(int accountId, Pagination pagination);
+    Task<(int total, IEnumerable<WorkspaceWithOwner> items)> ListAccountWorkspaces(int accountId, Pagination pagination);
 
     Task DeleteAccountFromAllOwnedBy(int accountId, int ownerAccountId);
 }

@@ -1,10 +1,24 @@
 "use client";
 
-import {OrganizationResponse} from "../../../../generated";
+import {OrganizationResponse, OrganizationRole, WorkspaceRole} from "../../../../generated";
 import {Box, Card, CardActionArea, Typography} from "@mui/material";
+import {ReactElement} from "react";
+import BackHandIcon from "@mui/icons-material/BackHand";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import EditIcon from "@mui/icons-material/Edit";
 
 type OrganizationListCardProps = {
   item: OrganizationResponse
+}
+
+export function renderOrganizationRole(role: OrganizationRole): () => ReactElement {
+  const icons: Record<OrganizationRole, () => ReactElement> = {
+    [OrganizationRole.Owner]: () => <BackHandIcon />,
+    [OrganizationRole.Admin]: () => <AdminPanelSettingsIcon />,
+    [OrganizationRole.Member]: () => <EditIcon />
+  };
+
+  return icons[role];
 }
 
 export default function OrganizationListCard(props: OrganizationListCardProps) {

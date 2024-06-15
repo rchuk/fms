@@ -2863,6 +2863,7 @@ components:
         - id
         - kind
         - name
+        - owner
         - role
       type: object
       properties:
@@ -2878,6 +2879,8 @@ components:
           $ref: '#/components/schemas/WorkspaceKind'
         role:
           $ref: '#/components/schemas/WorkspaceRole'
+        owner:
+          $ref: '#/components/schemas/AccountResponse'
       additionalProperties: false
     WorkspaceRole:
       enum:

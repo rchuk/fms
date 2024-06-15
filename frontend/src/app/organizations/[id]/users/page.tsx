@@ -4,9 +4,9 @@ import {OrganizationResponse} from "../../../../../generated";
 import {useContext, useState} from "react";
 import {ServicesContext} from "@/lib/services/ServiceProvider";
 import EntityPage from "@/lib/components/common/EntityPage";
-import TransactionCategoryList from "@/lib/components/transaction-category/TransactionCategoryList";
+import UserMemberList from "@/lib/components/user/UserMemberList";
 
-export default function OrganizationTransactionCategoriesPage({ params }: { params: { id: number } }) {
+export default function OrganizationUsersPage({ params }: { params: { id: number } }) {
   const [organization, setOrganization] = useState<OrganizationResponse | null>(null);
   const { organizationService } = useContext(ServicesContext);
 
@@ -14,11 +14,15 @@ export default function OrganizationTransactionCategoriesPage({ params }: { para
     return await organizationService.getOrganization({ id: params.id });
   }
 
-  const canCreateCategory = organization?.role !== undefined && organization?.role !== "MEMBER";
+  const canAddUsers = organization?.role === "OWNER" || organization?.role === "ADMIN";
 
   return (
     <EntityPage id={params.id} entity={organization} setEntity={setOrganization} fetch={fetch}>
-      <TransactionCategoryList source={{ kind: "organization", organizationId: params.id }} enableCreation={canCreateCategory}/>
+      <UserMemberList
+        source={{ kind: "organization", organizationId: params.id }}
+        addSource={{ kind: "global" }}
+        enableCreation={canAddUsers}
+      />
     </EntityPage>
   );
 }

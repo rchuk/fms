@@ -16,6 +16,8 @@ public class WorkspaceResponseDto
     public required WorkspaceKind Kind { get; set; }
     [Required]
     public required WorkspaceRole Role { get; set; }
+    [Required]
+    public required AccountResponseDto Owner { get; set; }
 }
 
 public class WorkspaceListResponseDto : ListResponseDto<WorkspaceResponseDto>;

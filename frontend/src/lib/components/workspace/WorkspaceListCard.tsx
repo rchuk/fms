@@ -13,7 +13,7 @@ type WorkspaceListCardProps = {
   item: WorkspaceResponse
 }
 
-export default function WorkspaceListCard(props: WorkspaceListCardProps) {
+export function renderWorkspaceRole(role: WorkspaceRole): () => ReactElement {
   const icons: Record<WorkspaceRole, () => ReactElement> = {
     [WorkspaceRole.Owner]: () => <BackHandIcon />,
     [WorkspaceRole.Admin]: () => <AdminPanelSettingsIcon />,
@@ -21,6 +21,10 @@ export default function WorkspaceListCard(props: WorkspaceListCardProps) {
     [WorkspaceRole.Viewer]: () => <VisibilityIcon />,
   };
 
+  return icons[role];
+}
+
+export default function WorkspaceListCard(props: WorkspaceListCardProps) {
   return (
     <Card key={props.item.id} variant="elevation" elevation={4}>
       <CardActionArea sx={{ padding: 2, display: "flex", alignItems: "center" }} href={`/workspaces/${props.item.id}`}>
@@ -29,7 +33,7 @@ export default function WorkspaceListCard(props: WorkspaceListCardProps) {
         </Typography>
         <Box display="flex" flex={1} justifyContent="flex-end">
           {props.item.kind == WorkspaceKind.Private && <LockIcon />}
-          {icons[props.item.role]()}
+          {renderWorkspaceRole(props.item.role)()}
         </Box>
       </CardActionArea>
     </Card>

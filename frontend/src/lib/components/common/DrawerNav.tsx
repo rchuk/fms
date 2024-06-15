@@ -27,7 +27,7 @@ export default function DrawerNav() {
       }}
     >
       <ListItem disablePadding>
-        <Box display="flex" flexGrow={1} justifyContent="center">
+        <Box display="flex" flexGrow={1} justifyContent="center" mb={2}>
           <Button disableRipple sx={{ padding: 0 }} onClick={() => router.push("/dashboard")}>
             <Image src={fmsLogo} width={200} height={80} alt="FMS" />
           </Button>

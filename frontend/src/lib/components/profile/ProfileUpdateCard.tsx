@@ -67,8 +67,17 @@ export default function ProfileUpdateCard({
         }
       }}
     >
+      <Typography 
+        variant="h3"
+        sx={{
+          textAlign: "center"
+        }}
+      >
+        Edit profile
+      </Typography>
       <form
         style={{
+          marginTop: "1.5rem",
           width: "100%"
         }}
         onSubmit={onSubmit}

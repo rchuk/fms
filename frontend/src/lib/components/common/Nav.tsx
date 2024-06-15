@@ -1,5 +1,5 @@
-import { AppBar, Box, Divider, Drawer, IconButton, Link, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography, useTheme } from "@mui/material";
-import { AccountCircleOutlined, CorporateFareOutlined, WorkspacesOutlined, SpaceDashboardOutlined, Menu } from "@mui/icons-material";
+import { AppBar, Box, Drawer, IconButton, Toolbar, useTheme } from "@mui/material";
+import { Menu } from "@mui/icons-material";
 import { useState } from "react";
 import DrawerNav from "./DrawerNav";
 
@@ -104,6 +104,8 @@ export default function Nav({
       <Box
         component="main"
         sx={{ 
+          display: "flex",
+          flexDirection: "column",
           flexGrow: 1,
           p: 2,
           width: { 
@@ -120,7 +122,13 @@ export default function Nav({
             }
           }}
         />
-        {children}
+        <Box
+          sx={{
+            flexGrow: 1
+          }}
+        >
+          {children}
+        </Box>
       </Box>
     </Box>
   );

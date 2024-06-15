@@ -13,6 +13,7 @@ import TransactionPlot from "@/lib/components/transaction/plot/TransactionPlot";
 type TransactionPlotPieProps = {
   criteria: ListTransactionsRequest,
   kind: TransactionPlotKind,
+  setKind: (value: TransactionPlotKind) => void,
 
   isDirty: boolean,
   setIsDirty: (value: boolean) => void
@@ -23,7 +24,7 @@ export default function TransactionPlotPie(props: TransactionPlotPieProps) {
   const { transactionService } = useContext(ServicesContext);
 
   async function fetch(): Promise<[number, PieValueType[]]> {
-    switch (props.kind.kind) {
+    switch (props.kind) {
       case "category": {
         const {totalAmount, items} = await transactionService.listTransactionsGroupByCategory({...props.criteria});
         return [totalAmount, items.map(item => {
@@ -59,6 +60,8 @@ export default function TransactionPlotPie(props: TransactionPlotPieProps) {
       fetch={fetch}
       isDirty={props.isDirty}
       setIsDirty={props.setIsDirty}
+      kind={props.kind}
+      setKind={props.setKind}
     >
       <PieChart
         series={[ { data } ]}

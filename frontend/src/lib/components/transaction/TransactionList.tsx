@@ -3,7 +3,7 @@
 import PaginatedList from "@/lib/components/common/PaginatedList";
 import {ListTransactionsRequest, TransactionResponse} from "../../../../generated";
 import TransactionListCard from "@/lib/components/transaction/TransactionListCard";
-import {ReactElement, useContext, useState} from "react";
+import {ReactElement, useContext, useEffect, useState} from "react";
 import {ServicesContext} from "@/lib/services/ServiceProvider";
 import FloatingAddButton from "../common/FloatingAddButton";
 import ModalComponent, {useModalClosingCallback, useModalControls} from "@/lib/components/common/ModalComponent";
@@ -11,6 +11,7 @@ import TransactionUpsert from "@/lib/components/transaction/TransactionUpsert";
 import TransactionFilter from "./TransactionFilter";
 import TransactionPlotPie from "./plot/TransactionPlotPie";
 import TransactionPlotStack from "@/lib/components/transaction/plot/TransactionPlotStack";
+import {TransactionPlotKind} from "@/lib/components/transaction/plot/Common";
 
 type TransactionListProps = {
   workspaceId: number,
@@ -24,9 +25,14 @@ export default function TransactionList(props: TransactionListProps) {
   });
   const [itemsData, setItemsData] = useState<TransactionResponse[]>([]);
   const [modalContent, setModalContent] = useState<ReactElement | null>(null);
+  const [plotKind, setPlotKind] = useState<TransactionPlotKind>("category");
   const [isPlotDirty, setIsPlotDirty] = useState<boolean>(false);
   const [isListDirty, setIsListDirty] = useState<boolean>(false);
   const { transactionService } = useContext(ServicesContext);
+
+  useEffect(() => {
+    setIsPlotDirty(true);
+  }, [plotKind]);
 
   function setDirty() {
     setIsListDirty(true);
@@ -64,12 +70,12 @@ export default function TransactionList(props: TransactionListProps) {
       <TransactionFilter criteria={criteria} setCriteria={setCriteria} onChange={setDirty} />
       {
         showPiePlot
-          ? <TransactionPlotPie kind={{ kind: "category" }} criteria={criteria} isDirty={isPlotDirty} setIsDirty={setIsPlotDirty} />
+          ? <TransactionPlotPie kind={plotKind} setKind={setPlotKind} criteria={criteria} isDirty={isPlotDirty} setIsDirty={setIsPlotDirty} />
           : null
       }
       {
         showStackPlot
-          ? <TransactionPlotStack kind={{ kind: "category" }} criteria={criteria} isDirty={isPlotDirty} setIsDirty={setIsPlotDirty} />
+          ? <TransactionPlotStack kind={plotKind} setKind={setPlotKind} criteria={criteria} isDirty={isPlotDirty} setIsDirty={setIsPlotDirty} />
           : null
       }
     </>

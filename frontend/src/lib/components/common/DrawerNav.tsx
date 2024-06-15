@@ -5,6 +5,7 @@ import DrawerNavButton from "./DrawerNavButton";
 import { useContext } from "react";
 import { SessionServiceContext } from "@/lib/services/SessionService";
 import { useRouter } from "next/navigation";
+import fmsLogo from '@/../public/fms_logo.svg';
 
 
 export default function DrawerNav() {
@@ -28,7 +29,7 @@ export default function DrawerNav() {
       <ListItem disablePadding>
         <Box display="flex" flexGrow={1} justifyContent="center">
           <Button disableRipple sx={{ padding: 0 }} onClick={() => router.push("/dashboard")}>
-            <Image src="fms_logo.svg" width={200} height={80} alt="FMS" priority />
+            <Image src={fmsLogo} width={200} height={80} alt="FMS" />
           </Button>
         </Box>
       </ListItem>

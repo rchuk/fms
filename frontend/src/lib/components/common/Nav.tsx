@@ -32,7 +32,10 @@ export default function Nav({
   };
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ 
+      display: 'flex',
+      height: "100vh" 
+    }}>
       <AppBar
         position="fixed"
         sx={{
@@ -105,7 +108,8 @@ export default function Nav({
           p: 2,
           width: { 
             sm: `calc(100% - ${drawerWidth}px)` 
-          } 
+          }, 
+          height: "100%"
         }}
       >
         <Toolbar 

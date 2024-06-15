@@ -1,17 +1,22 @@
 "use client";
 
-import {Box, Link, Typography} from "@mui/material";
+import { ServicesContext } from "@/lib/services/ServiceProvider";
+import { useRouter } from "next/navigation";
+import { useContext, useEffect } from "react";
 
 export default function DashboardPage() {
-  return (
-    <Box display="flex" flexDirection="column" height="100%" padding={2} boxSizing="border-box">
-      <Typography variant="h4">
-        Dashboard
-      </Typography>
-      <Link href="/workspaces">Workspaces</Link>
-      <Link href="/organizations">Organizations</Link>
-      <Link href="/transaction-categories">Transaction categories</Link>
-      <Link href="/profile">Profile</Link>
-    </Box>
-  );
+  const { authService } = useContext(ServicesContext);
+  const router = useRouter();
+
+  useEffect(() => {
+    authService.getMe()
+    .then((response) => {
+      router.replace("/workspaces/" + response.privateWorkspace.id);
+    })
+    .catch(() => {
+      router.back();
+    })
+  }, []);
+
+  return null;
 }

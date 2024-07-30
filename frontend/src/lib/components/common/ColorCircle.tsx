@@ -1,7 +1,7 @@
 import CircleIcon from '@mui/icons-material/Circle';
 
 type ColorCircleProps = {
-  color?: string
+  color?: string | null
 }
 
 export default function ColorCircle(props: ColorCircleProps) {

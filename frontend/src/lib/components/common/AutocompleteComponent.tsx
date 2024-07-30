@@ -8,7 +8,7 @@ import {BaseEntity, EntityId, findEntity, ListResponse} from "@/lib/utils/Entity
 import {AUTOCOMPLETE_SEARCH_DEBOUNCE_MS} from "@/lib/utils/Constants";
 
 type AutocompleteComponentProps<ItemT extends BaseEntity<IdT>, IdT extends EntityId> = {
-  initialId?: IdT,
+  initialId?: IdT | null,
 
   required?: boolean,
   disabled?: boolean,

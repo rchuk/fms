@@ -6,7 +6,7 @@ import {UserSource} from "@/lib/components/user/Common";
 
 
 type UserAutocompleteProps = {
-  initialId?: number,
+  initialId?: number | null,
   source: UserSource,
 
   required?: boolean,

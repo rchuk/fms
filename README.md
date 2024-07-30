@@ -18,8 +18,9 @@ openapi specification file.
 - Install [Docker](https://www.docker.com/)
 - Clone the repository using `git clone https://github.com/rchuk/fms.git`
 - Run `docker compose up`
+- In case there are some issues, make sure file `./utils/secret_generator/gen.sh` has LF (`\n`) line endings
 
-Website will be avaiable at `localhost:3000`.
+Website will be avaiable at `http://localhost:3000`.
 
 ## Screenshots
 
